@@ -25,3 +25,13 @@ Thumbs.db
 
 # Tests
 coverage/
+
+# TypeScript incremental build info
+*.tsbuildinfo
+
+# Next.js
+next-env.d.ts
+.vercel
+
+# Certificates / private keys
+*.pem

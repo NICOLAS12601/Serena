@@ -1,0 +1,7 @@
+packages:
+  - apps/*
+
+# Dependencies allowed to run install scripts (pnpm blocks them by default).
+allowBuilds:
+  sharp: false
+  unrs-resolver: false
