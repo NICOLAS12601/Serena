@@ -9,7 +9,9 @@ Sitio web + sistema de reservas para **SERENA · Masajes & Bienestar** (Montevid
 
 ## Estado
 - ✅ Diseño y documentación (commit inicial).
-- ⏭️ Próximo paso: esqueleto del monorepo (`apps/web` con Next.js, `apps/api` con NestJS), `.gitattributes` para normalizar los saltos de línea y `.env.example`.
+- ✅ Esqueleto del monorepo con pnpm workspaces (ADR-007): `apps/web` (Next.js 16, App Router, Tailwind 4, puerto 3000) y `apps/api` (NestJS 12, ESM, Vitest, oxlint, puerto 3001). `pnpm dev` levanta ambas.
+- ⏭️ Próximo paso: Prisma + PostgreSQL local (Docker) y el primer modelo de datos. Antes, resolver los puntos abiertos de `docs/pendientes.md` (sección Técnico) que afectan al modelo.
+- Next.js 16 tiene cambios respecto de versiones anteriores: leer `apps/web/AGENTS.md` antes de tocar la web.
 
 ## Decisiones clave (resumen; el detalle está en `docs/decisiones/`)
 - Next.js (web) + NestJS (API) separados, en monorepo; PostgreSQL (Neon) + Prisma.

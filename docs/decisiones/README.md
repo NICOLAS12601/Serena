@@ -10,6 +10,7 @@ Cada archivo registra **una** decisión: el contexto, qué se decidió, qué alt
 | [004](ADR-004-bloqueo-temporal-y-exclusion-constraint.md) | Bloqueo temporal del horario + exclusion constraint en PostgreSQL | Aceptada |
 | [005](ADR-005-pagos-mercadopago-y-transferencia.md) | Seña por MercadoPago (automático) o transferencia (manual, con descuento) | Aceptada |
 | [006](ADR-006-configuracion-desde-el-panel.md) | Todo lo operativo, configurable desde el panel | Aceptada |
+| [007](ADR-007-pnpm-workspaces.md) | pnpm workspaces como gestor del monorepo | Aceptada |
 
 ## Plantilla
 

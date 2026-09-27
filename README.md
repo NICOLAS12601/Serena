@@ -8,7 +8,20 @@
 
 ## Estado / Status
 
-🚧 En diseño — *In design phase.* La documentación de análisis y arquitectura está en [`docs/`](docs/README.md).
+🚧 En desarrollo — *In development.* Esqueleto del monorepo listo; la documentación de análisis y arquitectura está en [`docs/`](docs/README.md).
+
+## Cómo correrlo / Getting started
+
+Requisitos: Node.js 22+ y pnpm (`corepack enable` o `npm i -g pnpm`).
+
+```bash
+pnpm install                              # instala las dependencias de todas las apps
+cp apps/api/.env.example apps/api/.env
+cp apps/web/.env.example apps/web/.env.local
+pnpm dev                                  # web en http://localhost:3000 y API en http://localhost:3001
+```
+
+Otros scripts desde la raíz: `pnpm dev:web`, `pnpm dev:api`, `pnpm build`, `pnpm lint`.
 
 ## Stack
 

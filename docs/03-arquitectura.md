@@ -35,11 +35,16 @@ Por qué Next.js **y** NestJS separados (y no todo en Next): ver [ADR-001](decis
 ```
 serena/
 ├── apps/
-│   ├── web/        ← Next.js
-│   └── api/        ← NestJS (+ esquema de Prisma)
-├── docs/           ← esta documentación
+│   ├── web/                ← Next.js (puerto 3000)
+│   └── api/                ← NestJS + esquema de Prisma (puerto 3001)
+├── docs/                   ← esta documentación
+├── package.json            ← scripts que corren en todas las apps (dev, build, lint)
+├── pnpm-workspace.yaml     ← qué carpetas son apps del monorepo
+├── pnpm-lock.yaml          ← versiones exactas instaladas (se versiona)
 └── README.md
 ```
+
+El gestor del monorepo es **pnpm workspaces** ([ADR-007](decisiones/ADR-007-pnpm-workspaces.md)).
 
 ## Hosting (entorno de producción)
 
