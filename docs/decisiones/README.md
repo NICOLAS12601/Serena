@@ -11,6 +11,8 @@ Cada archivo registra **una** decisión: el contexto, qué se decidió, qué alt
 | [005](ADR-005-pagos-mercadopago-y-transferencia.md) | Seña por MercadoPago (automático) o transferencia (manual, con descuento) | Aceptada |
 | [006](ADR-006-configuracion-desde-el-panel.md) | Todo lo operativo, configurable desde el panel | Aceptada |
 | [007](ADR-007-pnpm-workspaces.md) | pnpm workspaces como gestor del monorepo | Aceptada |
+| [008](ADR-008-descanso-guardado-en-la-reserva.md) | El fin del bloqueo (sesión + descanso) se guarda en cada reserva | Aceptada |
+| [009](ADR-009-reserva-sin-cuenta.md) | Reservar sin contraseña; "Mis reservas" con código por email (fase 2) | Aceptada |
 
 ## Plantilla
 

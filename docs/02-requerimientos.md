@@ -12,7 +12,8 @@
 ### Sitio público
 - **Home:** propuesta de valor, fotos del espacio y llamado a reservar.
 - **Servicios:** descripción, duración y precio (cargados desde el panel).
-- **Reserva online:** elegir servicio, ver horarios libres, completar datos, pagar la seña y recibir confirmación por email.
+- **Reserva online:** elegir servicio, ver horarios libres, completar datos, pagar la seña y recibir confirmación por email. **Sin registro ni contraseña** ([ADR-009](decisiones/ADR-009-reserva-sin-cuenta.md)).
+- **Link de gestión** en el email de confirmación para ver y cancelar esa reserva.
 - **Sobre mí**, **testimonios**, **preguntas frecuentes**, **política de cancelación**.
 - **Contacto:** formulario, botón flotante de WhatsApp con mensaje precargado, link a Instagram, barrio (sin dirección exacta).
 - **Política de privacidad** (requerida por la Ley 18.331; ver [06](06-pagos-y-seguridad.md#datos-personales-ley-18331)).
@@ -23,7 +24,7 @@
 |---|---|
 | Servicio | Lo elige en el calendario |
 | Nombre | Identificación |
-| Edad | Pedido por Micaela (¿atiende menores? → [pendientes](pendientes.md)) |
+| Fecha de nacimiento | Pedido por Micaela; la edad se calcula (¿atiende menores? → [pendientes](pendientes.md)) |
 | Teléfono (WhatsApp) | Contacto |
 | Email | Confirmación, dirección y recordatorios |
 | Motivo de consulta | Pedido por Micaela. **Es un dato de salud** (sensible) |
@@ -63,6 +64,7 @@ Micaela arma la ficha completa del cliente después, en persona.
 > - Hay **15 min de tolerancia**: si llegás tarde, la sesión termina en el horario previsto.
 
 ## Fase 2
+- **"Mis reservas":** el cliente ingresa su email, recibe un código de 6 dígitos y ve sus reservas próximas y pasadas ([ADR-009](decisiones/ADR-009-reserva-sin-cuenta.md)).
 - Recordatorio automático el día anterior (email y, eventualmente, WhatsApp).
 - **Gift cards** y **packs** (cuponeras).
 - Reseñas de Google embebidas.

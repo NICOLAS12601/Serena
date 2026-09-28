@@ -41,7 +41,7 @@ Para un día y un servicio (duración `D`):
 
 1. Tomar las franjas de `WeeklySchedule` de ese día de la semana.
 2. Restar los `TimeOff` que caen ese día.
-3. Restar las reservas que **ocupan el horario** (confirmadas, o pendientes con bloqueo vigente), cada una extendida con el descanso (`bufferMinutes`).
+3. Restar las reservas que **ocupan el horario** (confirmadas, o pendientes con bloqueo vigente), cada una desde `startsAt` hasta `blockedUntil` (fin de la sesión + descanso).
 4. Generar los inicios posibles (ej. cada 15 o 30 min) donde entren `D` minutos.
 5. Descartar los que no cumplan la anticipación mínima o superen la ventana máxima.
 
@@ -55,10 +55,12 @@ Para un día y un servicio (duración `D`):
 -- Requiere la extensión btree_gist
 ALTER TABLE booking ADD CONSTRAINT no_overlapping_bookings
   EXCLUDE USING gist (
-    tstzrange(starts_at, ends_at + buffer, '[)') WITH &&
+    tstzrange(starts_at, blocked_until, '[)') WITH &&
   )
   WHERE (status IN ('PENDING_PAYMENT', 'PENDING_VERIFICATION', 'CONFIRMED'));
 ```
+
+`blocked_until` es el fin de la sesión más el descanso, calculado y guardado al reservar. Así la base también garantiza el descanso, incluso si dos personas reservan horarios contiguos en el mismo instante ([ADR-008](decisiones/ADR-008-descanso-guardado-en-la-reserva.md)).
 
 Si dos pedidos llegan a la vez, **uno se guarda y el otro falla**. La API atrapa ese error y le responde al cliente: *"Ese horario se acaba de ocupar, elegí otro"*.
 
