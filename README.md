@@ -12,9 +12,10 @@
 
 ## Cómo correrlo / Getting started
 
-Requisitos: Node.js 22+ y pnpm (`corepack enable` o `npm i -g pnpm`).
+Requisitos: Node.js 22+, pnpm (`corepack enable` o `npm i -g pnpm`) y Docker.
 
 ```bash
+docker compose up -d                      # levanta PostgreSQL local (puerto 5432)
 pnpm install                              # instala las dependencias de todas las apps
 cp apps/api/.env.example apps/api/.env
 cp apps/web/.env.example apps/web/.env.local

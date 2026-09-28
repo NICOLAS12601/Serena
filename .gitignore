@@ -35,3 +35,6 @@ next-env.d.ts
 
 # Certificates / private keys
 *.pem
+
+# Prisma generated client (rebuilt with `prisma generate`)
+apps/api/src/generated/

@@ -1,0 +1,26 @@
+# Local development services. Start with `docker compose up -d`.
+# Not used in production (the database there is Neon).
+
+services:
+  db:
+    image: postgres:18-alpine
+    container_name: serena-db
+    restart: unless-stopped
+    environment:
+      # Local-only credentials; they must match DATABASE_URL in apps/api/.env
+      POSTGRES_USER: serena
+      POSTGRES_PASSWORD: serena
+      POSTGRES_DB: serena
+    ports:
+      - "5432:5432"
+    volumes:
+      # Keeps the data when the container is removed
+      - serena-db-data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U serena -d serena"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  serena-db-data:

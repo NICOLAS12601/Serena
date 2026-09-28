@@ -1,0 +1,14 @@
+// Database schema. Models (tables) are defined here; see docs/04-modelo-de-datos.md.
+// The connection URL lives in prisma.config.ts (read from DATABASE_URL).
+
+generator client {
+  provider            = "prisma-client"
+  // Generated TypeScript client; inside src/ so Nest compiles it. Not committed.
+  output              = "../src/generated/prisma"
+  moduleFormat        = "esm"
+  importFileExtension = "js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
