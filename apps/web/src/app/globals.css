@@ -1,26 +1,20 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/* SERENA brand palette (approximate; exact hex values pending, see docs/07-marca.md) */
+@theme {
+  --color-cream: #f6efe6;
+  --color-sand: #e8dccb;
+  --color-terracotta: #b8674a;
+  --color-terracotta-dark: #9a5239;
+  --color-sage: #8a9a7b;
+  --color-coffee: #4a3428;
+  --color-taupe: #8c7462;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --font-serif: var(--font-cormorant);
+  --font-sans: var(--font-jost);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-cream);
+  color: var(--color-coffee);
 }
