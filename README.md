@@ -19,10 +19,14 @@ docker compose up -d                      # levanta PostgreSQL local (puerto 543
 pnpm install                              # instala las dependencias de todas las apps
 cp apps/api/.env.example apps/api/.env
 cp apps/web/.env.example apps/web/.env.local
+pnpm --filter api db:migrate              # crea las tablas
+pnpm --filter api db:seed                 # carga configuración, admin y datos de prueba
 pnpm dev                                  # web en http://localhost:3000 y API en http://localhost:3001
 ```
 
 Otros scripts desde la raíz: `pnpm dev:web`, `pnpm dev:api`, `pnpm build`, `pnpm lint`.
+
+Base de datos (desde `apps/api`): `pnpm db:migrate`, `pnpm db:seed`, `pnpm db:studio` (ver los datos en el navegador), `pnpm db:reset` (⚠️ borra todo y vuelve a crear).
 
 ## Stack
 

@@ -51,7 +51,7 @@ Micaela atiende en su casa:
 
 ## Seguridad general
 
-- **Panel de admin** protegido con login (contraseña guardada con hash, por ejemplo argon2 o bcrypt) y sesión con JWT o cookie segura.
+- **Panel de admin** protegido con login y sesión con JWT o cookie segura. La contraseña se guarda con hash **scrypt** (incluido en Node, sin dependencias; `apps/api/src/auth/password.ts`): sal aleatoria por contraseña y comparación en tiempo constante. El primer usuario lo crea el seed con `ADMIN_EMAIL` y `ADMIN_PASSWORD` del entorno.
 - **Secretos** solo en variables de entorno. `.env` está en `.gitignore`.
 - **Validación** de todos los datos de entrada en la API (DTOs con class-validator).
 - **Rate limiting** en los endpoints públicos (crear reserva, contacto) para evitar spam.
