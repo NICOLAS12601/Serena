@@ -9,7 +9,7 @@ Algunos sitios de turnos exigen crear una cuenta para reservar (por ejemplo, [Pe
 ## Decisión
 - **Para reservar no se pide registro ni contraseña.** El cliente completa sus datos en el formulario.
 - **El cliente se reconoce por su email** (único en `Client`): si ya existe, la reserva se asocia a él; si no, se crea.
-- **Fase 1 · Link de gestión:** el email de confirmación incluye un link a esa reserva (con un token largo y aleatorio, `Booking.manageToken`) para verla y cancelarla con un clic.
+- **Fase 1 · Link de gestión:** el email de confirmación incluye un link a esa reserva (con un token largo y aleatorio; en la base se guarda su hash, `Booking.manageTokenHash`) para verla y cancelarla con un clic.
 - **Fase 2 · "Mis reservas":** el cliente escribe su email, recibe un **código de 6 dígitos** (válido 10 min, de un solo uso, guardado hasheado en `ClientLoginCode`) y, al ingresarlo, ve sus reservas próximas y pasadas. Es un login sin contraseña.
 - La única cuenta con contraseña es la de Micaela, para el panel (`AdminUser`).
 

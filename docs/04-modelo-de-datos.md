@@ -34,7 +34,7 @@
 Service         name, description, durationMin, price, imageUrl, active, sortOrder
                 → los servicios que ofrece (terapéutico, relajante, piedras calientes...)
 
-WeeklySchedule  weekday, startTime, endTime
+WeeklySchedule  weekday, startMinutes, endMinutes (minutos desde medianoche: 540 = 09:00)
                 → su horario habitual. Puede haber varias franjas por día (ej. 9–13 y 15–19)
 
 TimeOff         startsAt, endsAt, reason
@@ -49,7 +49,7 @@ ClientLoginCode client, codeHash, expiresAt, usedAt                             
 
 Booking         client, service, startsAt, endsAt, blockedUntil, status, paymentMethod,
                 priceSnapshot, depositAmount, holdExpiresAt, reason (motivo de consulta),
-                privacyConsentAt, manageToken, createdAt
+                privacyConsentAt, manageTokenHash, createdAt
                 → la reserva (el turno)
 
 Payment         booking, amount, status, mercadoPagoPaymentId (único), verifiedAt
@@ -96,7 +96,7 @@ AdminUser       email (único), passwordHash
 - **Fecha de nacimiento, no edad** (`Client.birthDate`): la edad cambia con el tiempo y quedaría desactualizada; se calcula cuando hace falta.
 - **El medio de pago se guarda una sola vez**, en `Booking.paymentMethod` (define el estado inicial y el tiempo de bloqueo). `Payment` no lo repite, para que no puedan contradecirse.
 - **`privacyConsentAt`** registra cuándo el cliente aceptó la política de privacidad (Ley 18.331).
-- **`manageToken`** es el secreto del link personal para ver o cancelar la reserva sin cuenta ([ADR-009](decisiones/ADR-009-reserva-sin-cuenta.md)).
+- **`manageTokenHash`** es el hash del secreto del link personal para ver o cancelar la reserva sin cuenta ([ADR-009](decisiones/ADR-009-reserva-sin-cuenta.md)).
 
 ## Normalización
 
@@ -123,7 +123,8 @@ El modelo está en **tercera forma normal**: cada dato vive en un solo lugar (el
 | `reason` | Motivo de consulta |
 | `birthDate` | Fecha de nacimiento |
 | `privacyConsentAt` | Fecha de aceptación de la política de privacidad |
-| `manageToken` | Clave del link para gestionar la reserva |
+| `manageTokenHash` | Hash de la clave del link para gestionar la reserva |
+| `startMinutes` / `endMinutes` | Hora de inicio / fin, en minutos desde medianoche |
 | `durationMin` | Duración en minutos |
 | `sortOrder` | Orden en que se muestra |
 | `weekday` | Día de la semana |

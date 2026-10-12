@@ -27,7 +27,7 @@
 | Fecha de nacimiento | Pedido por Micaela; la edad se calcula (¿atiende menores? → [pendientes](pendientes.md)) |
 | Teléfono (WhatsApp) | Contacto |
 | Email | Confirmación, dirección y recordatorios |
-| Motivo de consulta | Pedido por Micaela. **Es un dato de salud** (sensible) |
+| Motivo de consulta (opcional) | Pedido por Micaela. **Es un dato de salud** (sensible). Opcional: ella completa la ficha después, por WhatsApp o en persona |
 | Consentimiento | Checkbox con link a la política de privacidad |
 
 Micaela arma la ficha completa del cliente después, en persona.

@@ -10,7 +10,8 @@ Sitio web + sistema de reservas para **SERENA · Masajes & Bienestar** (Montevid
 ## Estado
 - ✅ Diseño y documentación (commit inicial).
 - ✅ Esqueleto del monorepo con pnpm workspaces (ADR-007): `apps/web` (Next.js 16, App Router, Tailwind 4, puerto 3000) y `apps/api` (NestJS 12, ESM, Vitest, oxlint, puerto 3001). `pnpm dev` levanta ambas.
-- ⏭️ Próximo paso: Prisma + PostgreSQL local (Docker) y el primer modelo de datos. Antes, resolver los puntos abiertos de `docs/pendientes.md` (sección Técnico) que afectan al modelo.
+- ✅ PostgreSQL 18 local con Docker Compose (`compose.yaml`) y Prisma 7.10 (versión fijada: la etiqueta `latest` de `prisma` llegó a apuntar a una RC). Esquema de la fase 1 en `apps/api/prisma/schema.prisma`.
+- ⏭️ Próximo paso: primera migración (con la exclusion constraint y los CHECK en SQL manual), seed y el primer módulo de la API.
 - Next.js 16 tiene cambios respecto de versiones anteriores: leer `apps/web/AGENTS.md` antes de tocar la web.
 
 ## Decisiones clave (resumen; el detalle está en `docs/decisiones/`)
@@ -24,7 +25,8 @@ Sitio web + sistema de reservas para **SERENA · Masajes & Bienestar** (Montevid
 - **Documentación en español; código, identificadores y commits en inglés.**
 - **El repo es público:** nunca poner en el código la dirección, los datos bancarios, el teléfono ni los precios reales (van en la base de datos), ni secretos (van en `.env`).
 - Las decisiones nuevas o los cambios de decisión se registran como ADR nueva en `docs/decisiones/`.
-- Datos del cliente al reservar: nombre, edad, teléfono, email, servicio y motivo de consulta (dato de salud: Ley 18.331, requiere consentimiento y solo es visible en el panel).
+- Datos del cliente al reservar: nombre, fecha de nacimiento, teléfono, email, servicio y motivo de consulta opcional (dato de salud: Ley 18.331, requiere consentimiento y solo es visible en el panel). Sin registro ni contraseña: el cliente se reconoce por email (ADR-009).
+- Nombres de tablas y campos en inglés; el glosario en español está en `docs/04-modelo-de-datos.md`.
 
 ## Cómo trabajar con el desarrollador
 - Quiere **aprender** y tener control del código. No hay apuro.

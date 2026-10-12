@@ -1,5 +1,10 @@
-// Database schema. Models (tables) are defined here; see docs/04-modelo-de-datos.md.
-// The connection URL lives in prisma.config.ts (read from DATABASE_URL).
+// Database schema. Each model is a table; see docs/04-modelo-de-datos.md
+// (includes a Spanish glossary). The connection URL lives in prisma.config.ts.
+//
+// Conventions:
+// - Money is stored as whole Uruguayan pesos (Int).
+// - Instants use timestamptz (@db.Timestamptz) so they are unambiguous in UTC;
+//   the business runs in America/Montevideo.
 
 generator client {
   provider            = "prisma-client"
@@ -11,4 +16,150 @@ generator client {
 
 datasource db {
   provider = "postgresql"
+}
+
+// ─── Catalog and availability ────────────────────────────────────────────────
+
+model Service {
+  id          Int       @id @default(autoincrement())
+  name        String
+  description String?
+  durationMin Int
+  price       Int
+  imageUrl    String?
+  active      Boolean   @default(true)
+  sortOrder   Int       @default(0)
+  createdAt   DateTime  @default(now()) @db.Timestamptz(3)
+  updatedAt   DateTime  @updatedAt @db.Timestamptz(3)
+  bookings    Booking[]
+}
+
+// Recurring opening hours. Several rows per weekday allow split shifts
+// (e.g. 09:00–13:00 and 15:00–19:00).
+model WeeklySchedule {
+  id           Int @id @default(autoincrement())
+  weekday      Int // 0 = Sunday … 6 = Saturday
+  startMinutes Int // minutes since midnight, e.g. 540 = 09:00
+  endMinutes   Int
+}
+
+// Periods when no bookings are accepted (holidays, vacations, errands).
+model TimeOff {
+  id       Int      @id @default(autoincrement())
+  startsAt DateTime @db.Timestamptz(3)
+  endsAt   DateTime @db.Timestamptz(3)
+  reason   String?
+}
+
+// ─── Clients and bookings ────────────────────────────────────────────────────
+
+// No password: a client is recognized by email (ADR-009).
+model Client {
+  id        Int       @id @default(autoincrement())
+  name      String
+  email     String    @unique
+  phone     String
+  birthDate DateTime  @db.Date
+  createdAt DateTime  @default(now()) @db.Timestamptz(3)
+  updatedAt DateTime  @updatedAt @db.Timestamptz(3)
+  bookings  Booking[]
+}
+
+enum BookingStatus {
+  PENDING_PAYMENT // paying with Mercado Pago; holds the slot until holdExpiresAt
+  PENDING_VERIFICATION // paid by bank transfer; waiting for manual check
+  CONFIRMED
+  COMPLETED
+  NO_SHOW
+  CANCELLED
+  EXPIRED // hold ran out without payment; slot released
+}
+
+enum PaymentMethod {
+  MERCADO_PAGO
+  BANK_TRANSFER
+}
+
+model Booking {
+  id               Int           @id @default(autoincrement())
+  clientId         Int
+  client           Client        @relation(fields: [clientId], references: [id])
+  serviceId        Int
+  service          Service       @relation(fields: [serviceId], references: [id])
+  startsAt         DateTime      @db.Timestamptz(3)
+  endsAt           DateTime      @db.Timestamptz(3)
+  // endsAt + buffer in force when booked; the no-overlap constraint uses
+  // [startsAt, blockedUntil) (ADR-008). Added by a manual SQL migration.
+  blockedUntil     DateTime      @db.Timestamptz(3)
+  status           BookingStatus
+  paymentMethod    PaymentMethod
+  // Agreed at booking time; later price changes do not affect this booking.
+  priceSnapshot    Int
+  depositAmount    Int
+  holdExpiresAt    DateTime?     @db.Timestamptz(3)
+  // Reason for the visit (optional; Micaela follows up by WhatsApp).
+  // Health data (Law 18.331): admin panel only.
+  reason           String?
+  privacyConsentAt DateTime      @db.Timestamptz(3)
+  // Hash of the secret in the management link sent by email (ADR-009).
+  manageTokenHash  String        @unique
+  createdAt        DateTime      @default(now()) @db.Timestamptz(3)
+  updatedAt        DateTime      @updatedAt @db.Timestamptz(3)
+  payments         Payment[]
+
+  @@index([clientId])
+  @@index([serviceId])
+  @@index([startsAt])
+}
+
+// ─── Payments ────────────────────────────────────────────────────────────────
+
+enum PaymentStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  REFUNDED
+}
+
+// The payment method is stored once, in Booking.paymentMethod.
+model Payment {
+  id                   Int           @id @default(autoincrement())
+  bookingId            Int
+  booking              Booking       @relation(fields: [bookingId], references: [id])
+  amount               Int
+  status               PaymentStatus
+  // Set for Mercado Pago payments; unique so a repeated webhook cannot
+  // record the same payment twice.
+  mercadoPagoPaymentId String?       @unique
+  verifiedAt           DateTime?     @db.Timestamptz(3)
+  createdAt            DateTime      @default(now()) @db.Timestamptz(3)
+
+  @@index([bookingId])
+}
+
+// ─── Configuration and admin ─────────────────────────────────────────────────
+
+// Single row (id = 1) with the settings editable from the admin panel (ADR-006).
+model Settings {
+  id                      Int      @id @default(1)
+  depositPercent          Int      @default(50)
+  transferDiscountPercent Int      @default(10)
+  mpHoldMinutes           Int      @default(10)
+  transferHoldHours       Int      @default(2)
+  bufferMinutes           Int      @default(15)
+  minAdvanceHours         Int      @default(12)
+  maxAdvanceDays          Int      @default(30)
+  // Real business data is loaded from the panel, never committed (public repo).
+  bankDetails             String?
+  address                 String? // sent only in the confirmation email
+  neighborhood            String? // shown on the public site
+  cancellationPolicyText  String?
+  updatedAt               DateTime @updatedAt @db.Timestamptz(3)
+}
+
+model AdminUser {
+  id           Int      @id @default(autoincrement())
+  email        String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now()) @db.Timestamptz(3)
 }
