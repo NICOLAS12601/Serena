@@ -13,7 +13,7 @@ Sitio web + sistema de reservas para **SERENA · Masajes & Bienestar** (Montevid
 - ✅ PostgreSQL 18 local con Docker Compose (`compose.yaml`) y Prisma 7.10 (versión fijada: la etiqueta `latest` de `prisma` llegó a apuntar a una RC). Esquema de la fase 1 en `apps/api/prisma/schema.prisma`.
 - ✅ Migración inicial (exclusion constraint + CHECK en SQL manual, probadas en vivo) y seed idempotente (Settings, primer admin desde `.env`, datos de prueba solo fuera de producción).
 - ✅ Primer recorrido completo: `PrismaModule` global + `GET /services` en la API; la home de la web los muestra con la paleta y tipografías de la marca (colores aproximados).
-- ⏭️ Próximo paso: cálculo de horarios libres (`GET /availability`), luego la creación de reservas con bloqueo temporal.
+- ⏭️ Próximo paso: el primer ítem sin tachar de la **hoja de ruta** en `docs/pendientes.md` (hoy: horarios libres). Ahí también está cómo levantar el entorno.
 - Pendientes de explicar al desarrollador: hosting y webhooks. Decisión abierta: pago de MercadoPago que llega tarde (ver `docs/pendientes.md`).
 - Next.js 16 tiene cambios respecto de versiones anteriores: leer `apps/web/AGENTS.md` antes de tocar la web.
 
