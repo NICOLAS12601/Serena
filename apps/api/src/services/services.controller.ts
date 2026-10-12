@@ -1,0 +1,13 @@
+import { Controller, Get } from '@nestjs/common';
+import { ServicesService } from './services.service.js';
+
+@Controller('services')
+export class ServicesController {
+  constructor(private readonly servicesService: ServicesService) {}
+
+  // GET /services
+  @Get()
+  findActive() {
+    return this.servicesService.findActive();
+  }
+}
