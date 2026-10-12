@@ -21,4 +21,4 @@ Detalle: [05 · Flujo de reserva](../05-flujo-de-reserva.md).
 
 ## Consecuencias
 - ➕ La garantía la da la base de datos, así que es imposible guardar dos reservas superpuestas aunque haya un bug en la aplicación.
-- ➖ Prisma no soporta exclusion constraints en el esquema: va en una **migración SQL manual** y requiere la extensión `btree_gist`.
+- ➖ Prisma no soporta exclusion constraints en el esquema: va en una **migración SQL manual** (`apps/api/prisma/migrations/..._init`). *Nota (2026-10-12): al implementarla se vio que no requiere la extensión `btree_gist`, porque solo compara rangos; además, `COMPLETED` y `NO_SHOW` también ocupan el horario: solo lo liberan `CANCELLED` y `EXPIRED`.*

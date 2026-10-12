@@ -52,15 +52,15 @@ Para un día y un servicio (duración `D`):
 **La solución: que la base de datos lo haga imposible.** PostgreSQL tiene las **exclusion constraints**: una regla que impide guardar dos filas cuyos rangos de tiempo se superpongan. Conceptualmente:
 
 ```sql
--- Requiere la extensión btree_gist
-ALTER TABLE booking ADD CONSTRAINT no_overlapping_bookings
+-- GiST compara rangos de forma nativa: no hace falta ninguna extensión
+ALTER TABLE "Booking" ADD CONSTRAINT "Booking_no_overlap"
   EXCLUDE USING gist (
-    tstzrange(starts_at, blocked_until, '[)') WITH &&
+    tstzrange("startsAt", "blockedUntil", '[)') WITH &&
   )
-  WHERE (status IN ('PENDING_PAYMENT', 'PENDING_VERIFICATION', 'CONFIRMED'));
+  WHERE ("status" NOT IN ('CANCELLED', 'EXPIRED'));
 ```
 
-`blocked_until` es el fin de la sesión más el descanso, calculado y guardado al reservar. Así la base también garantiza el descanso, incluso si dos personas reservan horarios contiguos en el mismo instante ([ADR-008](decisiones/ADR-008-descanso-guardado-en-la-reserva.md)).
+`blockedUntil` es el fin de la sesión más el descanso, calculado y guardado al reservar. Así la base también garantiza el descanso, incluso si dos personas reservan horarios contiguos en el mismo instante ([ADR-008](decisiones/ADR-008-descanso-guardado-en-la-reserva.md)).
 
 Si dos pedidos llegan a la vez, **uno se guarda y el otro falla**. La API atrapa ese error y le responde al cliente: *"Ese horario se acaba de ocupar, elegí otro"*.
 
@@ -68,4 +68,4 @@ Si dos pedidos llegan a la vez, **uno se guarda y el otro falla**. La API atrapa
 - **Antes de crear una reserva**, dentro de la misma transacción, se marcan como `EXPIRED` las pendientes vencidas que se superponen.
 - Además, una **tarea periódica** (cada minuto) expira las pendientes vencidas, para mantener la tabla prolija.
 
-(Ver [ADR-004](decisiones/ADR-004-bloqueo-temporal-y-exclusion-constraint.md). La sintaxis exacta con Prisma se resuelve en la implementación: Prisma no soporta exclusion constraints en el esquema, así que va en una migración SQL manual.)
+(Ver [ADR-004](decisiones/ADR-004-bloqueo-temporal-y-exclusion-constraint.md). Prisma no soporta exclusion constraints en el esquema, así que la regla está escrita a mano al final de la primera migración, `apps/api/prisma/migrations/20261012214526_init/migration.sql`, junto con los controles de valores (`CHECK`). Se probó en vivo: con dos reservas simultáneas al mismo horario, la segunda espera a que la primera termine y es rechazada.)

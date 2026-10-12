@@ -82,8 +82,8 @@ AdminUser       email (único), passwordHash
 | `PENDING_PAYMENT` | ✅ (hasta `holdExpiresAt`) | Eligió horario, está pagando en MercadoPago |
 | `PENDING_VERIFICATION` | ✅ (hasta `holdExpiresAt`) | Eligió transferencia; falta que Micaela vea la plata |
 | `CONFIRMED` | ✅ | Seña cobrada. Se le envió la dirección |
-| `COMPLETED` | — | La sesión se realizó |
-| `NO_SHOW` | — | No se presentó |
+| `COMPLETED` | ✅ (ya pasó, pero el horario sigue ocupado) | La sesión se realizó |
+| `NO_SHOW` | ✅ (ídem) | No se presentó |
 | `CANCELLED` | ❌ | Cancelada (por el cliente o por Micaela) |
 | `EXPIRED` | ❌ | Venció el bloqueo sin pago; el horario se liberó |
 
