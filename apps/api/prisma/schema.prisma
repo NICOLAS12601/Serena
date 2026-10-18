@@ -86,6 +86,12 @@ enum PaymentMethod {
   BANK_TRANSFER
 }
 
+// How much the client pays online when booking; the rest is paid after the session.
+enum PaymentPlan {
+  DEPOSIT // only the deposit (depositAmount)
+  FULL // the whole price (priceSnapshot)
+}
+
 model Booking {
   id               Int           @id @default(autoincrement())
   clientId         Int
@@ -99,8 +105,12 @@ model Booking {
   blockedUntil     DateTime      @db.Timestamptz(3)
   status           BookingStatus
   paymentMethod    PaymentMethod
+  paymentPlan      PaymentPlan
   // Agreed at booking time; later price changes do not affect this booking.
+  // The transfer discount, if any, is already applied.
   priceSnapshot    Int
+  // The non-refundable part: lost when cancelling with less notice than the
+  // policy allows; otherwise it carries over to the rescheduled booking.
   depositAmount    Int
   holdExpiresAt    DateTime?     @db.Timestamptz(3)
   // Reason for the visit (optional; Micaela follows up by WhatsApp).
@@ -158,6 +168,8 @@ model Settings {
   // Real business data is loaded from the panel, never committed (public repo).
   bankDetails             String?
   address                 String? // sent only in the confirmation email
+  // For the "send transfer receipt by WhatsApp" button and the contact button.
+  whatsappNumber          String?
   neighborhood            String? // shown on the public site
   cancellationPolicyText  String?
   updatedAt               DateTime @updatedAt @db.Timestamptz(3)
