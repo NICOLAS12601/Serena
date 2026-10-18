@@ -821,6 +821,11 @@ function DoneScreen({
               <MessageCircle className="h-5 w-5" strokeWidth={1.25} />
               Enviar comprobante por WhatsApp
             </a>
+            {/* A wa.me link can carry text but not files: the client attaches it. */}
+            <p className="mt-3 text-sm text-taupe">
+              Se abre WhatsApp con el mensaje listo: adjuntá la captura o el PDF del
+              comprobante con el clip 📎 y envialo.
+            </p>
           </>
         ) : (
           <p className="mt-3 leading-relaxed text-taupe">
