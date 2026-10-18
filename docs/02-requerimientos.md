@@ -65,7 +65,7 @@ Micaela arma la ficha completa del cliente después, en persona.
 | Datos bancarios | Vacío (los carga ella) |
 
 ### Política de cancelación (acordada en octubre 2026, editable)
-> - Con **12 h o más** de anticipación, el turno **se reprograma** para otra fecha y la seña queda para el nuevo turno (no se reintegra).
+> - Con **12 h o más** de anticipación, el turno **se reprograma** para otra fecha y la seña queda para el nuevo turno (no se reintegra). Si pagó **el total**, puede pedir que se le devuelva lo que supera la seña y pagarlo después, antes o después del masaje reprogramado.
 > - Con **menos de 12 h** o si no te presentás, la seña se pierde.
 > - Hay **15 min de tolerancia**: si llegás tarde, la sesión termina en el horario previsto.
 
