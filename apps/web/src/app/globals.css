@@ -1,15 +1,15 @@
 @import "tailwindcss";
 
-/* SERENA palette, sampled from Micaela's designs (exact logo values still pending,
-   see docs/07-marca.md). */
+/* SERENA palette: terracotta is the exact color of the official logo; the rest is
+   sampled from Micaela's designs (see docs/07-marca.md). */
 @theme {
   --color-cream: #f6ebe3; /* page background */
   --color-blush: #efdcd0; /* warm cards */
   --color-linen: #ddd6c6; /* green-grey cards */
   --color-line: #e3cfc2; /* borders, dividers */
   --color-mist: #e9e1db; /* unavailable / disabled */
-  --color-terracotta: #a8614a; /* primary action */
-  --color-terracotta-dark: #8e4e3a;
+  --color-terracotta: #a14d29; /* logo color, primary action */
+  --color-terracotta-dark: #86401f;
   --color-olive: #666b4a; /* secondary action, leaves */
   --color-olive-dark: #545839;
   --color-coffee: #3a2820; /* titles and text */

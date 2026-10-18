@@ -738,8 +738,8 @@ function ConfirmStep({
           />
         </div>
         <p className="mt-4 text-xs text-taupe">
-          La seña no se devuelve: si avisás con más de 12 horas, se usa para reprogramar tu
-          turno. La dirección exacta te llega por email cuando se confirma el pago.
+          Para reagendar sin perder la seña, avisanos con más de 12 horas de anticipación.
+          La dirección exacta te llega por email cuando se confirma el pago.
         </p>
       </section>
 

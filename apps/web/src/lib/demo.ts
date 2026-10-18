@@ -38,9 +38,9 @@ export function getDemoSlots(date: Date): Slot[] {
 
 /**
  * Replaced by Settings.cancellationPolicyText, edited by Micaela from the panel.
- * Agreed rules: with 12+ hours of notice the booking is rescheduled and the
- * deposit carries over (it is not refunded); whoever paid in full may ask for
- * the amount above the deposit back. With less notice the deposit is lost.
+ * Basic rule: with 12+ hours of notice the booking is rescheduled and the
+ * deposit is kept; with less notice it is lost. Micaela handles special cases
+ * (e.g. full payments) one by one.
  */
 export const DEMO_POLICIES = [
   {
@@ -56,11 +56,11 @@ export const DEMO_POLICIES = [
   {
     icon: "clock",
     title: "Reprogramación",
-    text: "Si necesitás cambiar tu turno, avisanos con más de 12 horas de anticipación y lo reprogramamos para otra fecha: tu seña queda para el nuevo turno. Si pagaste el total, podés pedir que te devolvamos lo que supera la seña y abonarlo más adelante.",
+    text: "Si necesitás cambiar tu turno, avisanos con más de 12 horas de anticipación y lo reagendamos sin que pierdas la seña.",
   },
   {
     icon: "x",
     title: "Cancelaciones con menos de 12 horas de anticipación",
-    text: "Si cancelás con menos de 12 horas de anticipación o no te presentás, se pierde la seña.",
+    text: "Si avisás con menos de 12 horas de anticipación o no te presentás, se pierde la seña.",
   },
 ] as const;
