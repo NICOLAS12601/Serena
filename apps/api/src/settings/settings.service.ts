@@ -1,4 +1,5 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { normalizeMobile } from '../common/phone.js';
 import { PrismaService } from '../prisma/prisma.service.js';
 import type { UpdateSettingsDto } from './settings.dto.js';
 
@@ -44,6 +45,15 @@ export class SettingsService {
         typeof value === 'string' && value.trim() === '' ? null : value,
       ]),
     );
+    if (typeof cleaned.whatsappNumber === 'string') {
+      const phone = normalizeMobile(cleaned.whatsappNumber);
+      if (!phone) {
+        throw new BadRequestException(
+          'El WhatsApp no parece un celular válido. Usá el formato 099 123 456 o, si es de otro país, +código de país y número.',
+        );
+      }
+      cleaned.whatsappNumber = phone;
+    }
     return this.prisma.settings.update({ where: { id: 1 }, data: cleaned });
   }
 }

@@ -21,11 +21,13 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import type { CountryCode } from "libphonenumber-js/mobile";
+import { useMemo, useState } from "react";
 import { ActionButton } from "@/components/action-button";
 import { BrandLogo } from "@/components/brand-logo";
 import { PageShell } from "@/components/page-shell";
 import { formatPrice, type PublicSettings, type Service } from "@/lib/api";
+import { checkMobile, countryOptions } from "@/lib/phone";
 import {
   DEMO_POLICIES,
   getDemoSlots,
@@ -45,7 +47,11 @@ const ORDER: Step[] = [
 
 export type ClientDetails = {
   name: string;
+  /** As typed by the client; validated with phoneCountry on "Continuar". */
   phone: string;
+  phoneCountry: CountryCode;
+  /** Validated number in E.164 (e.g. "+59899230654"): the one that is stored. */
+  phoneE164: string;
   email: string;
   birthDate: string;
   reason: string;
@@ -55,6 +61,8 @@ export type ClientDetails = {
 const EMPTY_DETAILS: ClientDetails = {
   name: "",
   phone: "",
+  phoneCountry: "UY",
+  phoneE164: "",
   email: "",
   birthDate: "",
   reason: "",
@@ -588,12 +596,22 @@ function DetailsStep({
     value: ClientDetails[K],
   ) => onChange({ ...details, [key]: value });
   const todayIso = new Date().toISOString().slice(0, 10);
+  const countries = useMemo(() => countryOptions(), []);
+  const [phoneError, setPhoneError] = useState<string | null>(null);
 
   return (
     <form
       className="flex flex-col"
       onSubmit={(event) => {
         event.preventDefault();
+        const phone = checkMobile(details.phone, details.phoneCountry);
+        if (!phone.ok) {
+          setPhoneError(phone.message);
+          document.getElementById("phone")?.focus();
+          return;
+        }
+        setPhoneError(null);
+        onChange({ ...details, phoneE164: phone.e164 });
         onContinue();
       }}
     >
@@ -612,17 +630,44 @@ function DetailsStep({
             className="w-full bg-transparent outline-none placeholder:text-taupe"
           />
         </Field>
-        <Field icon={Phone}>
-          <input
-            required
-            type="tel"
-            autoComplete="tel"
-            placeholder="Teléfono (WhatsApp)"
-            value={details.phone}
-            onChange={(event) => set("phone", event.target.value)}
-            className="w-full bg-transparent outline-none placeholder:text-taupe"
-          />
-        </Field>
+        <div className="flex flex-col gap-1">
+          <Field icon={Phone}>
+            <select
+              aria-label="País del teléfono"
+              value={details.phoneCountry}
+              onChange={(event) => {
+                set("phoneCountry", event.target.value as CountryCode);
+                setPhoneError(null);
+              }}
+              className="w-32 shrink-0 bg-transparent text-sm outline-none"
+            >
+              {countries.map((country) => (
+                <option key={country.code} value={country.code}>
+                  {country.label}
+                </option>
+              ))}
+            </select>
+            <input
+              id="phone"
+              required
+              type="tel"
+              autoComplete="tel"
+              placeholder="Celular (WhatsApp)"
+              value={details.phone}
+              aria-invalid={phoneError !== null}
+              onChange={(event) => {
+                set("phone", event.target.value);
+                setPhoneError(null);
+              }}
+              className="w-full bg-transparent outline-none placeholder:text-taupe"
+            />
+          </Field>
+          {phoneError && (
+            <p role="alert" className="text-sm text-terracotta">
+              {phoneError}
+            </p>
+          )}
+        </div>
         <Field icon={Mail}>
           <input
             required

@@ -31,7 +31,7 @@ Las pantallas siguen los **diseños de Micaela** (octubre 2026): una columna pen
 | Servicio | Lo elige en el calendario |
 | Nombre | Identificación |
 | Fecha de nacimiento | Pedido por Micaela; la edad se calcula (¿atiende menores? → [pendientes](pendientes.md)) |
-| Teléfono (WhatsApp) | Contacto |
+| Celular (WhatsApp) | Contacto. **Se valida** con las reglas de libphonenumber (Google): tiene que ser un celular válido del país elegido (Uruguay por defecto, ej. 099 123 456; extranjeros con su código de país). Se guarda en formato internacional (`+59899123456`). Valida el formato, no que el número sea de esa persona |
 | Email | Confirmación, dirección y recordatorios |
 | Motivo de consulta (opcional) | Pedido por Micaela. **Es un dato de salud** (sensible). Opcional: ella completa la ficha después, por WhatsApp o en persona |
 | Consentimiento | Checkbox con link a la política de privacidad |

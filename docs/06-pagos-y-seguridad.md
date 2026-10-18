@@ -55,6 +55,6 @@ Micaela atiende en su casa:
 
 - **Panel de admin** protegido con login y sesión con JWT o cookie segura. La contraseña se guarda con hash **scrypt** (incluido en Node, sin dependencias; `apps/api/src/auth/password.ts`): sal aleatoria por contraseña y comparación en tiempo constante. El primer usuario lo crea el seed con `ADMIN_EMAIL` y `ADMIN_PASSWORD` del entorno.
 - **Secretos** solo en variables de entorno. `.env` está en `.gitignore`.
-- **Validación** de todos los datos de entrada en la API (DTOs con class-validator).
+- **Validación** de todos los datos de entrada en la API (DTOs con class-validator). Los celulares se validan con `libphonenumber-js` (reglas de Google, versión "mobile") en la web y en la API (`apps/api/src/common/phone.ts`), y se guardan en formato E.164.
 - **Rate limiting** en los endpoints públicos (crear reserva, contacto) para evitar spam.
 - **HTTPS** en todos lados (lo da el hosting).

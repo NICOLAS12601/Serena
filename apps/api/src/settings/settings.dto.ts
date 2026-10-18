@@ -2,7 +2,6 @@ import {
   IsInt,
   IsOptional,
   IsString,
-  Matches,
   Max,
   MaxLength,
   Min,
@@ -67,13 +66,10 @@ export class UpdateSettingsDto {
   @MaxLength(100)
   neighborhood?: string | null;
 
-  /** Digits, spaces, dashes and an optional leading +. */
+  /** Validated and normalized to E.164 by SettingsService (common/phone.ts). */
   @IsOptional()
   @IsString()
-  @Matches(/^\+?[\d\s-]{8,20}$/, {
-    message:
-      'El WhatsApp tiene que ser un número de teléfono, por ejemplo +598 99 123 456.',
-  })
+  @MaxLength(30)
   whatsappNumber?: string | null;
 
   @IsOptional()
