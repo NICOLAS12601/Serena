@@ -4,24 +4,24 @@
 
 - **Nombre:** SERENA · Masajes & Bienestar
 - **Tagline:** *Un momento para vos.*
-- **Logo:** trazo fino de manos sobre una silueta, con "SERENA" en serif espaciada.
+- **Logo:** una mano en trazo fino sobre una silueta ondulada, "SERENA" en serif terracota y "MASAJES & BIENESTAR" en verde oliva entre dos líneas.
 - **Tono:** cálido, calmo, cercano (voseo), sin tecnicismos.
 
-## Paleta (aproximada, a ajustar con los archivos originales del logo)
+## Paleta
 
-Valores tomados de los diseños de Micaela; están definidos en `apps/web/src/app/globals.css`.
+La **terracota** es el color exacto del logo oficial; el resto sale de los diseños de Micaela. Están definidos en `apps/web/src/app/globals.css`.
 
 | Rol | Color | Hex | Uso |
 |---|---|---|---|
 | Fondo | Crema rosado | `#f6ebe3` | Fondo general |
 | Tarjeta cálida | Rosa empolvado | `#efdcd0` | Tarjetas, recuadros |
 | Tarjeta verde | Lino | `#ddd6c6` | Tarjeta "Ya soy cliente", íconos alternados |
-| Acción principal | Terracota | `#a8614a` | Botones "Continuar", "Reservar turno", selección |
+| Acción principal | Terracota (logo) | `#a14d29` | Logo, botones "Continuar", "Reservar turno", selección |
 | Acción secundaria | Verde oliva | `#666b4a` | Botones alternados, hojas, check final |
 | Texto | Marrón café | `#3a2820` | Títulos y texto principal |
 | Texto secundario | Topo | `#8c7365` | Descripciones, rótulos |
 
-> Pendiente: confirmar los **hex exactos** con el archivo original del logo.
+> El verde del texto "MASAJES & BIENESTAR" del logo es `#535234`; para los botones se usa el oliva un poco más claro de los diseños.
 
 ## Tipografía
 - **Títulos:** *Cormorant Garamond* (serif elegante), con números de altura pareja.
@@ -29,7 +29,7 @@ Valores tomados de los diseños de Micaela; están definidos en `apps/web/src/ap
 - **Tagline:** *Sacramento* (manuscrita) para "Un momento para vos."
 
 ## Elementos visuales
-- **Logo:** por ahora, una versión de texto con un trazo simplificado (`apps/web/src/components/brand-logo.tsx`). Se reemplaza por el **SVG original** cuando esté disponible.
+- **Logo oficial** (PNG con fondo transparente): `apps/web/public/logo-serena.png`, recortado del archivo original. Debajo se agrega la frase manuscrita "Un momento para vos." como en los diseños (el logo no la incluye). El ícono de la pestaña (`apps/web/src/app/icon.png`) es la "S" del logo.
 - **Hojas de olivo** en las esquinas y **formas suaves** de fondo (`decorations.tsx`).
 - **Íconos de línea** (librería `lucide-react`); el loto y el rodillo de maderoterapia están dibujados a mano. Cada servicio guarda su ícono en `Service.icon`.
 - **Botones** redondeados con flecha, terracota u oliva alternados.

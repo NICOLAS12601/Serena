@@ -24,5 +24,4 @@
 - ➕ Más flexibilidad para el cliente; Micaela puede cobrar todo por adelantado.
 - ➕ El flujo del comprobante usa la herramienta que Micaela ya usa (WhatsApp) y no agrega código complejo.
 - ➖ Hay que registrar el **resto** cobrado después del masaje (en el panel, al marcar la reserva como completada).
-- Con 12 h o más de aviso, quien pagó **el total** puede pedir que se le devuelva lo que supera la seña; el turno se reprograma con la seña y el resto se paga después (precisado el 2026-10-18). La devolución la hace Micaela (desde MercadoPago o por transferencia) y se registra como un `Payment` con estado `REFUNDED`.
-- ➖ Queda por definir qué pasa si alguien que **pagó el total** cancela con **menos** de 12 h: ¿pierde solo la seña o todo? (ver [pendientes](../pendientes.md)).
+- La regla publicada es la básica: con 12 h o más de aviso se reagenda sin perder la seña; con menos, se pierde. Los casos particulares (por ejemplo, devoluciones a quien pagó el total) los resuelve Micaela caso a caso; si devuelve dinero, se registra como un `Payment` con estado `REFUNDED` (precisado el 2026-10-18).

@@ -4,7 +4,7 @@
 
 - Porcentaje configurable (**50%** por defecto) sobre el precio del servicio.
 - El cliente puede pagar **solo la seña** (el resto, después del masaje) o **el total** por adelantado ([ADR-010](decisiones/ADR-010-pago-de-sena-o-total.md)).
-- La seña **no se devuelve**: con 12 h o más de aviso pasa al turno reprogramado; con menos, se pierde.
+- Regla básica: con 12 h o más de aviso el turno se reagenda y **no se pierde la seña**; con menos, se pierde. Los casos particulares los maneja Micaela.
 
 ## MercadoPago (Checkout Pro)
 

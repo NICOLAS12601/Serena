@@ -21,11 +21,11 @@ Lo que falta definir. Cuando algo se resuelve, se tacha y se anota dónde quedó
 - [ ] **WhatsApp automático:** el diseño dice "te enviamos los detalles a tu WhatsApp". Mandar WhatsApp automáticos requiere la API de WhatsApp Business (tiene costo); por ahora solo email (fase 2).
 - [ ] **Precios en la lista de masajes:** el diseño no los muestra; se agregaron chicos debajo de la descripción (los precios visibles generan confianza, ver [01](01-analisis-mercado.md)).
 - [x] ~~**Encuentro inicial:**~~ → el cliente nuevo no elige masaje: Micaela lo define en la entrevista. El precio ($1.200) lo carga ella desde el panel (no va en el código).
-- [ ] **Pago total y cancelación tardía:** con 12 h o más de aviso ya está definido (puede pedir la devolución de lo que supera la seña y se reprograma). Falta: si pagó **el total** y cancela con **menos** de 12 h, ¿pierde solo la seña y se le devuelve el resto, o pierde todo?
+- [x] ~~**Pago total y cancelación tardía:**~~ → se publica solo la regla básica (12 h para reagendar sin perder la seña); los casos particulares los maneja Micaela caso a caso.
 - [x] ~~**¿Se verifica que sea cliente nuevo?**~~ → por ahora no: se confía en la buena fe del cliente. Micaela decide más adelante si quiere ser más estricta.
 
 ## Técnico
-- [ ] **Archivos del logo** (SVG o PNG en alta) para reemplazar la versión de texto, y confirmar los hex exactos.
+- [x] ~~**Archivos del logo**~~ → logo oficial en `apps/web/public/logo-serena.png`; terracota exacta `#a14d29` ([07](07-marca.md)).
 - [ ] Nombre y compra del dominio.
 - [ ] Revisar los límites vigentes de los planes gratuitos (Render, Neon, Resend, Netlify) antes de desplegar.
 - [x] ~~Decidir el gestor de monorepo (npm workspaces, pnpm o Turborepo).~~ → pnpm workspaces ([ADR-007](decisiones/ADR-007-pnpm-workspaces.md)).
