@@ -17,7 +17,8 @@ Las pantallas siguen los **diseños de Micaela** (octubre 2026): una columna pen
 - **Primera vez** (`/primera-vez`): presenta el **Encuentro inicial** (90 min: entrevista, masaje personalizado y un café o té al final) y lleva a reservarlo. Es un servicio marcado `isFirstVisit`; no aparece en la lista de clientes que vuelven.
 - **Servicios** (`/masajes`, para quien ya es cliente): ícono, nombre, descripción, duración y precio de cada masaje (cargados desde el panel).
 - **Reserva online** (`/reservar`), en pasos: **fecha** (calendario) → **horario** (agrupado en mañana, tarde y noche; los ocupados se ven tachados) → **políticas** (hay que aceptarlas) → **datos** → **confirmación** (resumen y seña) → **listo**. **Sin registro ni contraseña** ([ADR-009](decisiones/ADR-009-reserva-sin-cuenta.md)).
-- **Link de gestión** en el email de confirmación para ver y cancelar esa reserva.
+- **Link de gestión** en el email de confirmación para ver esa reserva y **reprogramarla** (con 12 h o más de anticipación, la seña pasa al nuevo turno).
+- **Pago de la seña:** el cliente elige **MercadoPago** (se confirma solo) o **transferencia** con descuento (queda reservado hasta que Micaela ve la plata); ver [06](06-pagos-y-seguridad.md).
 - **Sobre mí**, **testimonios**, **preguntas frecuentes**, **política de cancelación**.
 - **Contacto:** formulario, botón flotante de WhatsApp con mensaje precargado, link a Instagram, barrio (sin dirección exacta).
 - **Política de privacidad** (requerida por la Ley 18.331; ver [06](06-pagos-y-seguridad.md#datos-personales-ley-18331)).
@@ -62,9 +63,9 @@ Micaela arma la ficha completa del cliente después, en persona.
 | Horario semanal | Vacío (lo carga ella) |
 | Datos bancarios | Vacío (los carga ella) |
 
-### Política de cancelación (borrador, editable)
-> - Cancelando o reprogramando con **24 h o más** de anticipación, la seña queda a favor para otra fecha.
-> - Con **menos de 24 h** o si no te presentás, la seña no se reintegra.
+### Política de cancelación (acordada en octubre 2026, editable)
+> - Con **12 h o más** de anticipación, el turno **se reprograma** para otra fecha y la seña queda para el nuevo turno (no se reintegra).
+> - Con **menos de 12 h** o si no te presentás, la seña se pierde.
 > - Hay **15 min de tolerancia**: si llegás tarde, la sesión termina en el horario previsto.
 
 ## Fase 2

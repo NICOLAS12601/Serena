@@ -13,10 +13,11 @@ Lo que falta definir. Cuando algo se resuelve, se tacha y se anota dónde quedó
 - [ ] Sesión de fotos del espacio ([07](07-marca.md#fotos-del-espacio)).
 
 ### Preguntas que surgieron de los diseños (octubre 2026)
-- [ ] **Medios de pago:** el diseño muestra solo **transferencia**. ¿Se saca MercadoPago ([ADR-005](decisiones/ADR-005-pagos-mercadopago-y-transferencia.md))? Si es así, se simplifica mucho (sin webhooks) y hay que registrarlo en una ADR nueva.
-- [ ] **Fecha de nacimiento:** el formulario del diseño no la pide; los requerimientos sí. Por ahora está en el formulario. ¿Se mantiene?
-- [ ] **Anticipación para cancelar:** el diseño dice **12 horas**; el borrador de la política decía 24.
-- [ ] **Pantalla final:** el diseño dice "¡Tu reserva está confirmada!", pero con transferencia queda pendiente hasta que Micaela vea la plata. Se usó "¡Tu turno está reservado!" y se explica que falta la seña.
+- [x] ~~**Medios de pago:**~~ → se mantienen **MercadoPago y transferencia** ([ADR-005](decisiones/ADR-005-pagos-mercadopago-y-transferencia.md)). El cliente elige en la confirmación.
+- [x] ~~**Fecha de nacimiento:**~~ → se mantiene en el formulario.
+- [x] ~~**Anticipación para cancelar:**~~ → **12 horas**, y con aviso a tiempo el turno se **reprograma** (la seña pasa al nuevo turno). Ver [02](02-requerimientos.md#política-de-cancelación-acordada-en-octubre-2026-editable).
+- [x] ~~**Pantalla final:**~~ → con MercadoPago, "¡Tu reserva está confirmada!"; con transferencia, "¡Tu turno está reservado!" hasta que llega la seña.
+- [ ] **Comprobante de transferencia:** propuesta (pendiente de confirmar): en la pantalla final, los datos bancarios, un **código de reserva** para poner como referencia de la transferencia y un botón **"Enviar comprobante por WhatsApp"** con el mensaje ya escrito. El comprobante ayuda a identificar el pago, pero **no es prueba**: Micaela confirma al ver la plata en el banco. Requiere el número de WhatsApp de Micaela en `Settings` (nunca en el código). Subir el comprobante a la web queda como opción para la fase 2.
 - [ ] **WhatsApp automático:** el diseño dice "te enviamos los detalles a tu WhatsApp". Mandar WhatsApp automáticos requiere la API de WhatsApp Business (tiene costo); por ahora solo email (fase 2).
 - [ ] **Precios en la lista de masajes:** el diseño no los muestra; se agregaron chicos debajo de la descripción (los precios visibles generan confianza, ver [01](01-analisis-mercado.md)).
 - [ ] **Encuentro inicial:** precio y si solo lo pueden reservar clientes nuevos (hoy cada uno elige su camino; no se verifica).
