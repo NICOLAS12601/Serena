@@ -14,6 +14,7 @@ Cada archivo registra **una** decisión: el contexto, qué se decidió, qué alt
 | [008](ADR-008-descanso-guardado-en-la-reserva.md) | El fin del bloqueo (sesión + descanso) se guarda en cada reserva | Aceptada |
 | [009](ADR-009-reserva-sin-cuenta.md) | Reservar sin contraseña; "Mis reservas" con código por email (fase 2) | Aceptada |
 | [010](ADR-010-pago-de-sena-o-total.md) | El cliente elige pagar la seña o el total; comprobante de transferencia por WhatsApp | Aceptada |
+| [011](ADR-011-panel-de-administracion.md) | Panel de administración: sesión con cookie segura, solo computadora y aviso por WhatsApp con un botón | Aceptada |
 
 ## Plantilla
 
