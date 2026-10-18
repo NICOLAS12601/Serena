@@ -31,8 +31,9 @@
 ## Entidades
 
 ```
-Service         name, description, durationMin, price, imageUrl, active, sortOrder
-                → los servicios que ofrece (terapéutico, relajante, piedras calientes...)
+Service         name, description, durationMin, price, imageUrl, icon, isFirstVisit, active, sortOrder
+                → los servicios que ofrece (encuentro inicial, relajante, descontracturante,
+                  drenaje linfático, maderoterapia...)
 
 WeeklySchedule  weekday, startMinutes, endMinutes (minutos desde medianoche: 540 = 09:00)
                 → su horario habitual. Puede haber varias franjas por día (ej. 9–13 y 15–19)
@@ -127,6 +128,8 @@ El modelo está en **tercera forma normal**: cada dato vive en un solo lugar (el
 | `startMinutes` / `endMinutes` | Hora de inicio / fin, en minutos desde medianoche |
 | `durationMin` | Duración en minutos |
 | `sortOrder` | Orden en que se muestra |
+| `icon` | Ícono del servicio (lotus, leaf, waves, wood-roller) |
+| `isFirstVisit` | Es el "Encuentro inicial" para clientes nuevos |
 | `weekday` | Día de la semana |
 | `bufferMinutes` | Descanso entre sesiones (min) |
 | `status` | Estado |

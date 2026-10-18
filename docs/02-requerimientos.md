@@ -10,9 +10,13 @@
 ## Fase 1 · Lanzamiento
 
 ### Sitio público
-- **Home:** propuesta de valor, fotos del espacio y llamado a reservar.
-- **Servicios:** descripción, duración y precio (cargados desde el panel).
-- **Reserva online:** elegir servicio, ver horarios libres, completar datos, pagar la seña y recibir confirmación por email. **Sin registro ni contraseña** ([ADR-009](decisiones/ADR-009-reserva-sin-cuenta.md)).
+
+Las pantallas siguen los **diseños de Micaela** (octubre 2026): una columna pensada para celular, con el logo arriba y hojas decorativas.
+
+- **Home:** logo y **dos caminos**: *"Es mi primer masaje en Serena"* y *"Ya soy cliente"*.
+- **Primera vez** (`/primera-vez`): presenta el **Encuentro inicial** (90 min: entrevista, masaje personalizado y un café o té al final) y lleva a reservarlo. Es un servicio marcado `isFirstVisit`; no aparece en la lista de clientes que vuelven.
+- **Servicios** (`/masajes`, para quien ya es cliente): ícono, nombre, descripción, duración y precio de cada masaje (cargados desde el panel).
+- **Reserva online** (`/reservar`), en pasos: **fecha** (calendario) → **horario** (agrupado en mañana, tarde y noche; los ocupados se ven tachados) → **políticas** (hay que aceptarlas) → **datos** → **confirmación** (resumen y seña) → **listo**. **Sin registro ni contraseña** ([ADR-009](decisiones/ADR-009-reserva-sin-cuenta.md)).
 - **Link de gestión** en el email de confirmación para ver y cancelar esa reserva.
 - **Sobre mí**, **testimonios**, **preguntas frecuentes**, **política de cancelación**.
 - **Contacto:** formulario, botón flotante de WhatsApp con mensaje precargado, link a Instagram, barrio (sin dirección exacta).

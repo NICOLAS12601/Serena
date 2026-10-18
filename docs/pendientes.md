@@ -12,8 +12,17 @@ Lo que falta definir. Cuando algo se resuelve, se tacha y se anota dónde quedó
 - [ ] Textos: "Sobre mí", descripciones de servicios, preguntas frecuentes.
 - [ ] Sesión de fotos del espacio ([07](07-marca.md#fotos-del-espacio)).
 
+### Preguntas que surgieron de los diseños (octubre 2026)
+- [ ] **Medios de pago:** el diseño muestra solo **transferencia**. ¿Se saca MercadoPago ([ADR-005](decisiones/ADR-005-pagos-mercadopago-y-transferencia.md))? Si es así, se simplifica mucho (sin webhooks) y hay que registrarlo en una ADR nueva.
+- [ ] **Fecha de nacimiento:** el formulario del diseño no la pide; los requerimientos sí. Por ahora está en el formulario. ¿Se mantiene?
+- [ ] **Anticipación para cancelar:** el diseño dice **12 horas**; el borrador de la política decía 24.
+- [ ] **Pantalla final:** el diseño dice "¡Tu reserva está confirmada!", pero con transferencia queda pendiente hasta que Micaela vea la plata. Se usó "¡Tu turno está reservado!" y se explica que falta la seña.
+- [ ] **WhatsApp automático:** el diseño dice "te enviamos los detalles a tu WhatsApp". Mandar WhatsApp automáticos requiere la API de WhatsApp Business (tiene costo); por ahora solo email (fase 2).
+- [ ] **Precios en la lista de masajes:** el diseño no los muestra; se agregaron chicos debajo de la descripción (los precios visibles generan confianza, ver [01](01-analisis-mercado.md)).
+- [ ] **Encuentro inicial:** precio y si solo lo pueden reservar clientes nuevos (hoy cada uno elige su camino; no se verifica).
+
 ## Técnico
-- [ ] Colores hex exactos y archivos del logo (SVG/PNG en alta).
+- [ ] **Archivos del logo** (SVG o PNG en alta) para reemplazar la versión de texto, y confirmar los hex exactos.
 - [ ] Nombre y compra del dominio.
 - [ ] Revisar los límites vigentes de los planes gratuitos (Render, Neon, Resend, Netlify) antes de desplegar.
 - [x] ~~Decidir el gestor de monorepo (npm workspaces, pnpm o Turborepo).~~ → pnpm workspaces ([ADR-007](decisiones/ADR-007-pnpm-workspaces.md)).
@@ -32,7 +41,8 @@ Orden de construcción. Al retomar, seguir por el primer ítem sin tachar.
 
 - [x] ~~Esqueleto del monorepo, PostgreSQL en Docker, Prisma, esquema, migración inicial y seed.~~
 - [x] ~~`GET /services` y home de la web que los muestra (demo).~~
-- [ ] **Horarios libres** (`GET /availability?serviceId&date`): franjas del horario semanal − bloqueos − reservas que ocupan, con descanso, anticipación mínima, ventana máxima y zona horaria `America/Montevideo` ([05](05-flujo-de-reserva.md#cálculo-de-horarios-libres)). Explicar la lógica con un ejemplo antes de programar.
+- [x] ~~**Front según los diseños de Micaela:** home con dos caminos, primera vez, lista de masajes y el flujo de reserva completo. Los horarios, la seña y las políticas son **datos de demostración** (`apps/web/src/lib/demo.ts`) y la reserva todavía no se guarda.~~
+- [ ] **Horarios libres** (`GET /availability?serviceId&date`): franjas del horario semanal − bloqueos − reservas que ocupan, con descanso, anticipación mínima, ventana máxima y zona horaria `America/Montevideo` ([05](05-flujo-de-reserva.md#cálculo-de-horarios-libres)). Explicar la lógica con un ejemplo antes de programar. Al terminar, reemplazar `getDemoSlots` / `isDemoDayAvailable` en la web.
 - [ ] **Crear reserva** con bloqueo temporal, expiración de pendientes y manejo del error de superposición.
 - [ ] **Pagos:** MercadoPago (modo de pruebas, webhook verificado) y transferencia.
 - [ ] **Emails** (Resend): confirmación con la dirección y el link de gestión.
