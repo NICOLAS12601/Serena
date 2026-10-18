@@ -22,7 +22,8 @@ export type PublicSettings = {
   whatsappNumber: string | null; // digits only, e.g. "59899123456"
 };
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001";
+// Server-side only (pages render on the server); browsers use the /api proxy.
+const API_URL = process.env.API_URL ?? "http://localhost:3001";
 
 export async function getServices(): Promise<Service[]> {
   const response = await fetch(`${API_URL}/services`);
