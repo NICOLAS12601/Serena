@@ -34,7 +34,7 @@ Sitio web + sistema de reservas para **SERENA · Masajes & Bienestar** (Montevid
 - **Documentación en español; código, identificadores y commits en inglés.**
 - **El repo es público:** nunca poner en el código la dirección, los datos bancarios, el teléfono ni los precios reales (van en la base de datos), ni secretos (van en `.env`).
 - Las decisiones nuevas o los cambios de decisión se registran como ADR nueva en `docs/decisiones/`.
-- Datos del cliente al reservar: nombre, fecha de nacimiento, teléfono, email, servicio y motivo de consulta opcional (dato de salud: Ley 18.331, requiere consentimiento y solo es visible en el panel). Sin registro ni contraseña: el cliente se reconoce por email (ADR-009).
+- Datos del cliente al reservar: nombre, fecha de nacimiento, celular, email opcional, servicio y motivo de consulta opcional (dato de salud: Ley 18.331, requiere consentimiento y solo es visible en el panel). Sin registro ni contraseña: el cliente se reconoce por su **celular** en E.164 (ADR-009, ADR-012). En la fase 1 no se mandan emails a clientes: Micaela confirma por WhatsApp con el botón del panel.
 - Nombres de tablas y campos en inglés; el glosario en español está en `docs/04-modelo-de-datos.md`.
 
 ## Cómo trabajar con el desarrollador

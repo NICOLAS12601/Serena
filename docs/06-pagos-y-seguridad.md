@@ -32,7 +32,7 @@
 - Precio con **descuento** configurable (**10%** por defecto), porque no hay comisión de MercadoPago.
 - La reserva queda en `PENDING_VERIFICATION` con un bloqueo más largo (**2 h** por defecto).
 - Se le muestran al cliente los **datos bancarios** (cargados en el panel), se le pide poner **su nombre** como referencia y se le ofrece un botón **"Enviar comprobante por WhatsApp"** con el mensaje ya escrito (número de `Settings.whatsappNumber`). Un link de WhatsApp no puede adjuntar archivos: el cliente adjunta la captura o el PDF en el chat.
-- **Flujo de confirmación:** Micaela revisa su cuenta bancaria → al ver la plata, confirma la reserva desde el panel → la reserva pasa a `CONFIRMED` y la app le manda al cliente el **email de confirmación con la dirección**.
+- **Flujo de confirmación:** Micaela revisa su cuenta bancaria → al ver la plata, confirma la reserva desde el panel → la reserva pasa a `CONFIRMED` y Micaela le avisa al cliente con el botón **"Avisar por WhatsApp"** (mensaje con la confirmación y la dirección).
 - Micaela **confirma manualmente** desde el panel.
 
 > ⚠️ **Regla de oro: confirmar solo al ver la plata acreditada en la cuenta del banco, nunca por un comprobante o captura de pantalla.** Las capturas truchas son el fraude más común.
@@ -41,7 +41,7 @@
 
 Micaela atiende en su casa:
 - El sitio muestra **solo el barrio**.
-- La dirección exacta se envía **únicamente en el email de confirmación**, después de cobrada la seña.
+- La dirección exacta se envía **únicamente en el WhatsApp de confirmación**, después de cobrada la seña.
 - La dirección vive en la base de datos (`Settings`), **nunca en el código** (el repo es público).
 
 ## Datos personales (Ley 18.331)

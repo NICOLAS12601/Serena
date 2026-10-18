@@ -12,9 +12,10 @@ Cada archivo registra **una** decisión: el contexto, qué se decidió, qué alt
 | [006](ADR-006-configuracion-desde-el-panel.md) | Todo lo operativo, configurable desde el panel | Aceptada |
 | [007](ADR-007-pnpm-workspaces.md) | pnpm workspaces como gestor del monorepo | Aceptada |
 | [008](ADR-008-descanso-guardado-en-la-reserva.md) | El fin del bloqueo (sesión + descanso) se guarda en cada reserva | Aceptada |
-| [009](ADR-009-reserva-sin-cuenta.md) | Reservar sin contraseña; "Mis reservas" con código por email (fase 2) | Aceptada |
+| [009](ADR-009-reserva-sin-cuenta.md) | Reservar sin contraseña; "Mis reservas" con código por email (fase 2) | Reemplazada en parte por ADR-012 |
 | [010](ADR-010-pago-de-sena-o-total.md) | El cliente elige pagar la seña o el total; comprobante de transferencia por WhatsApp | Aceptada |
 | [011](ADR-011-panel-de-administracion.md) | Panel de administración: sesión con cookie segura, solo computadora y aviso por WhatsApp con un botón | Aceptada |
+| [012](ADR-012-cliente-por-celular-y-aviso-por-whatsapp.md) | El cliente se reconoce por su celular; email opcional; confirmación manual por WhatsApp | Aceptada |
 
 ## Plantilla
 

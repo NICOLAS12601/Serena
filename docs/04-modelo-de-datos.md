@@ -41,8 +41,8 @@ WeeklySchedule  weekday, startMinutes, endMinutes (minutos desde medianoche: 540
 TimeOff         startsAt, endsAt, reason
                 → días u horas bloqueados (vacaciones, feriados, trámites)
 
-Client          name, email (único), phone, birthDate
-                → quien reserva. Sin contraseña: se reconoce por su email (ADR-009)
+Client          name, phone (único, E.164), email (opcional, único), birthDate
+                → quien reserva. Sin contraseña: se reconoce por su celular (ADR-012)
 
 ClientLoginCode client, codeHash, expiresAt, usedAt                                    (fase 2)
                 → códigos de 6 dígitos para entrar a "Mis reservas". Vencen a los 10 min,
@@ -58,7 +58,7 @@ Payment         booking, amount, status, mercadoPagoPaymentId (único), verified
 
 Settings        depositPercent, transferDiscountPercent, mpHoldMinutes, transferHoldHours,
                 bufferMinutes, minAdvanceHours, maxAdvanceDays, bankDetails,
-                address (solo se envía en el email de confirmación), neighborhood (barrio, público),
+                address (solo se envía en el WhatsApp de confirmación), neighborhood (barrio, público),
                 whatsappNumber (botón de comprobante y de contacto),
                 cancellationPolicyText
                 → una sola fila con la configuración editable desde el panel

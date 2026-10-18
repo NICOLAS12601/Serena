@@ -7,7 +7,7 @@
 3. Elige horario y completa sus **datos**.
 4. Elige **medio de pago**: MercadoPago o transferencia (esta última muestra el precio con descuento).
 5. Se crea la reserva **bloqueando el horario** temporalmente.
-6. Paga, y cuando el pago se confirma recibe un **email con la confirmación y la dirección**.
+6. Paga. Cuando el pago se confirma, Micaela le escribe **por WhatsApp** con la confirmación y la dirección, desde el botón del panel ([ADR-012](decisiones/ADR-012-cliente-por-celular-y-aviso-por-whatsapp.md)).
 
 ## Bloqueo temporal (patrón "venta de entradas")
 
@@ -28,7 +28,7 @@ Redirección a MercadoPago (la preferencia de pago también vence a los 10 min)
 Paga a tiempo       No paga / cierra           Paga tarde (raro)
 MP avisa (webhook)  Pasado holdExpiresAt,      Si el horario sigue libre → se confirma.
 → CONFIRMED         la reserva pasa a EXPIRED  Si no → se devuelve el dinero
-→ email + dirección y el horario se libera     (alerta a Micaela)
+→ aviso a Micaela    y el horario se libera     (alerta a Micaela)
 ```
 
 Para **transferencia** el flujo es el mismo, con dos diferencias: el estado es `PENDING_VERIFICATION` y el bloqueo dura más (2 h por defecto), porque la confirmación es manual. Ver [06](06-pagos-y-seguridad.md#transferencia-bancaria).

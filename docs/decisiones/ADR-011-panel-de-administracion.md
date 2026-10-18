@@ -13,7 +13,7 @@ Micaela necesita un panel para manejar su negocio sin tocar código ni la base d
 - **Un solo dominio para el navegador:** la web reenvía a la API todo lo que va a `/api/...` (*rewrites* de Next.js). Así la cookie es "de primera parte" y los navegadores no la bloquean.
 - **Protección del login:** límite de intentos por minuto (*rate limiting*) y contraseña verificada con scrypt en tiempo constante.
 - **Validación** de todos los datos que llegan al panel con DTOs (`class-validator`).
-- **Aviso al cliente al confirmar una reserva:** email automático + botón **"Avisar por WhatsApp"** en el panel, que abre el chat del cliente en el WhatsApp de Micaela con el mensaje ya escrito.
+- **Aviso al cliente al confirmar una reserva:** botón **"Avisar por WhatsApp"** en el panel, que abre el chat del cliente en el WhatsApp de Micaela con el mensaje ya escrito (sin email automático: [ADR-012](ADR-012-cliente-por-celular-y-aviso-por-whatsapp.md)).
 
 ## Alternativas consideradas
 - **Token (JWT) guardado en el navegador** y enviado en cada pedido: más simple entre dominios distintos, pero un script malicioso que llegara a correr en la página podría robarlo y entrar al panel.

@@ -18,7 +18,7 @@ Lo que falta definir. Cuando algo se resuelve, se tacha y se anota dónde quedó
 - [x] ~~**Anticipación para cancelar:**~~ → **12 horas**, y con aviso a tiempo el turno se **reprograma** (la seña pasa al nuevo turno). Ver [02](02-requerimientos.md#política-de-cancelación-acordada-en-octubre-2026-editable).
 - [x] ~~**Pantalla final:**~~ → con MercadoPago, "¡Tu reserva está confirmada!"; con transferencia, "¡Tu turno está reservado!" hasta que llega la seña.
 - [x] ~~**Comprobante de transferencia:**~~ → botón "Enviar comprobante por WhatsApp" con el mensaje ya escrito; como referencia, **el nombre** (sin código de reserva) ([ADR-010](decisiones/ADR-010-pago-de-sena-o-total.md)).
-- [ ] **WhatsApp automático:** el diseño dice "te enviamos los detalles a tu WhatsApp". Mandar WhatsApp automáticos requiere la API de WhatsApp Business (tiene costo); por ahora solo email (fase 2).
+- [ ] **WhatsApp automático:** el diseño dice "te enviamos los detalles a tu WhatsApp". Mandar WhatsApp automáticos requiere la API de WhatsApp Business (tiene costo); en la fase 1 Micaela los manda con el botón del panel ([ADR-012](decisiones/ADR-012-cliente-por-celular-y-aviso-por-whatsapp.md)).
 - [ ] **Precios en la lista de masajes:** el diseño no los muestra; se agregaron chicos debajo de la descripción (los precios visibles generan confianza, ver [01](01-analisis-mercado.md)).
 - [x] ~~**Encuentro inicial:**~~ → el cliente nuevo no elige masaje: Micaela lo define en la entrevista. El precio ($1.200) lo carga ella desde el panel (no va en el código).
 - [x] ~~**Pago total y cancelación tardía:**~~ → se publica solo la regla básica (12 h para reagendar sin perder la seña); los casos particulares los maneja Micaela caso a caso.
@@ -37,7 +37,9 @@ Lo que falta definir. Cuando algo se resuelve, se tacha y se anota dónde quedó
 - [x] ~~**Descanso entre sesiones en la exclusion constraint.**~~ → se guarda `blockedUntil` en cada reserva ([ADR-008](decisiones/ADR-008-descanso-guardado-en-la-reserva.md)).
 - [x] ~~**Dirección en `Settings`.**~~ → agregada a [04](04-modelo-de-datos.md), junto con el barrio (público).
 - [ ] **Pago de MercadoPago que llega tarde con el horario ya ocupado** ([05](05-flujo-de-reserva.md#bloqueo-temporal-patrón-venta-de-entradas)): definir si el reintegro es automático (API de MercadoPago) o lo hace Micaela a mano.
-- [ ] **Qué datos del `Client` se actualizan** cuando alguien reserva con un email que ya existe (nombre, teléfono, fecha de nacimiento) ([ADR-009](decisiones/ADR-009-reserva-sin-cuenta.md)).
+- [ ] **Qué datos del `Client` se actualizan** cuando alguien reserva con un celular que ya existe (nombre, email, fecha de nacimiento) ([ADR-012](decisiones/ADR-012-cliente-por-celular-y-aviso-por-whatsapp.md)).
+- [x] ~~**¿Email obligatorio?**~~ → el cliente se reconoce por su **celular**; el email es opcional y por ahora no se usa; la confirmación va por WhatsApp ([ADR-012](decisiones/ADR-012-cliente-por-celular-y-aviso-por-whatsapp.md)).
+- [ ] **Aviso a Micaela de cada reserva nueva** (para revisar el pago y tocar "Avisar por WhatsApp"): elegir el canal.
 
 ## Para explicar antes de avanzar
 - [ ] **Hosting:** cómo se conectan Netlify/Cloudflare (web), Render (API) y Neon (base) y qué es cada uno.
@@ -55,7 +57,7 @@ Orden de construcción. Al retomar, seguir por el primer ítem sin tachar.
 - [ ] **Crear reserva** con bloqueo temporal, expiración de pendientes y manejo del error de superposición.
 - [ ] **Panel: sección de reservas** (agenda, pendientes, confirmar pago, cancelar, reprogramar, completar) con el botón "Avisar por WhatsApp" al confirmar.
 - [ ] **Pagos:** MercadoPago (modo de pruebas, webhook verificado) y transferencia.
-- [ ] **Emails** (Resend): confirmación con la dirección y el link de gestión.
+- [ ] **Aviso a Micaela de cada reserva nueva** (canal a definir). Los emails a clientes quedan fuera de la fase 1 ([ADR-012](decisiones/ADR-012-cliente-por-celular-y-aviso-por-whatsapp.md)).
 - [ ] **Páginas públicas:** sobre mí, preguntas frecuentes, política de cancelación, política de privacidad, contacto y WhatsApp.
 - [ ] **Despliegue** en la nube (ver límites de los planes gratuitos).
 

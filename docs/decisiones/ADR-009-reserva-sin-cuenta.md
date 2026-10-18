@@ -1,6 +1,6 @@
 # ADR-009 · Reservar sin contraseña; "Mis reservas" con código por email
 
-- **Estado:** Aceptada
+- **Estado:** Reemplazada en parte por [ADR-012](ADR-012-cliente-por-celular-y-aviso-por-whatsapp.md): el cliente se reconoce por su **celular** (no por email) y la confirmación va por **WhatsApp**. Sigue vigente el resto (sin contraseña, link de gestión).
 - **Fecha:** 2026-09-27
 
 ## Contexto
