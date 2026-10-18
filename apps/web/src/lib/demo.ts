@@ -10,6 +10,9 @@ export const DEMO_TRANSFER_DISCOUNT_PERCENT = 10;
 /** Replaced by Settings.transferHoldHours. */
 export const DEMO_TRANSFER_HOLD_HOURS = 2;
 
+/** Replaced by Settings.whatsappNumber (international format, digits only, e.g. 598...). */
+export const DEMO_WHATSAPP_NUMBER: string | null = null;
+
 /** Replaced by Settings.maxAdvanceDays. */
 export const DEMO_MAX_ADVANCE_DAYS = 30;
 
