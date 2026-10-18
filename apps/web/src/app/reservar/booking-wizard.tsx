@@ -29,6 +29,8 @@ import {
   DEMO_DEPOSIT_PERCENT,
   DEMO_MAX_ADVANCE_DAYS,
   DEMO_POLICIES,
+  DEMO_TRANSFER_DISCOUNT_PERCENT,
+  DEMO_TRANSFER_HOLD_HOURS,
   getDemoSlots,
   isDemoDayAvailable,
   type Slot,
@@ -62,6 +64,7 @@ export function BookingWizard({ service, backHref }: { service: Service; backHre
   const [time, setTime] = useState<string | null>(null);
   const [policiesAccepted, setPoliciesAccepted] = useState(false);
   const [details, setDetails] = useState<ClientDetails>(EMPTY_DETAILS);
+  const [method, setMethod] = useState<PaymentMethod | null>(null);
 
   const go = (next: Step) => {
     setStep(next);
@@ -73,8 +76,8 @@ export function BookingWizard({ service, backHref }: { service: Service; backHre
     else go(ORDER[index - 1]);
   };
 
-  if (step === "done" && date && time) {
-    return <DoneScreen service={service} date={date} time={time} />;
+  if (step === "done" && date && time && method) {
+    return <DoneScreen service={service} date={date} time={time} method={method} />;
   }
 
   return (
@@ -111,7 +114,14 @@ export function BookingWizard({ service, backHref }: { service: Service; backHre
         <DetailsStep details={details} onChange={setDetails} onContinue={() => go("confirm")} />
       )}
       {step === "confirm" && date && time && (
-        <ConfirmStep service={service} date={date} time={time} onConfirm={() => go("done")} />
+        <ConfirmStep
+          service={service}
+          date={date}
+          time={time}
+          method={method}
+          onMethodChange={setMethod}
+          onConfirm={() => go("done")}
+        />
       )}
     </PageShell>
   );
@@ -577,19 +587,32 @@ function Field({ icon: Icon, children }: { icon: typeof User; children: React.Re
 
 // ─── Step 4: confirm ────────────────────────────────────────────────────────
 
-function depositOf(service: Service) {
-  return Math.round((service.price * DEMO_DEPOSIT_PERCENT) / 100);
+export type PaymentMethod = "MERCADO_PAGO" | "BANK_TRANSFER";
+
+/** Price actually charged: bank transfers get a discount (no Mercado Pago fee). */
+function priceFor(service: Service, method: PaymentMethod) {
+  return method === "BANK_TRANSFER"
+    ? Math.round((service.price * (100 - DEMO_TRANSFER_DISCOUNT_PERCENT)) / 100)
+    : service.price;
+}
+
+function depositFor(service: Service, method: PaymentMethod) {
+  return Math.round((priceFor(service, method) * DEMO_DEPOSIT_PERCENT) / 100);
 }
 
 function ConfirmStep({
   service,
   date,
   time,
+  method,
+  onMethodChange,
   onConfirm,
 }: {
   service: Service;
   date: Date;
   time: string;
+  method: PaymentMethod | null;
+  onMethodChange: (method: PaymentMethod) => void;
   onConfirm: () => void;
 }) {
   const rows = [
@@ -598,6 +621,18 @@ function ConfirmStep({
     { icon: Clock, label: "Horario", value: `${time} hs` },
     { icon: Hourglass, label: "Duración", value: `${service.durationMin} minutos` },
     { icon: MapPin, label: "Ubicación", value: "Serena | Masajes & Bienestar" },
+  ];
+  const options: { value: PaymentMethod; title: string; detail: string }[] = [
+    {
+      value: "MERCADO_PAGO",
+      title: "Mercado Pago",
+      detail: `Seña de ${formatPrice(depositFor(service, "MERCADO_PAGO"))}. Pagás con tarjeta, débito o saldo y tu turno se confirma al instante.`,
+    },
+    {
+      value: "BANK_TRANSFER",
+      title: `Transferencia bancaria · ${DEMO_TRANSFER_DISCOUNT_PERCENT}% de descuento`,
+      detail: `Precio ${formatPrice(priceFor(service, "BANK_TRANSFER"))}, seña de ${formatPrice(depositFor(service, "BANK_TRANSFER"))}. Te guardamos el turno ${DEMO_TRANSFER_HOLD_HOURS} horas para transferir; se confirma cuando Micaela recibe la seña.`,
+    },
   ];
   return (
     <>
@@ -617,15 +652,40 @@ function ConfirmStep({
       <section className="mt-5 rounded-3xl bg-blush/70 p-5">
         <h2 className="font-serif text-xl">Para confirmar tu turno</h2>
         <p className="mt-2 text-sm text-taupe">
-          Realizá una seña del {DEMO_DEPOSIT_PERCENT}% del valor del servicio (
-          {formatPrice(depositOf(service))} de {formatPrice(service.price)}) mediante
-          transferencia bancaria. Los datos para transferir te aparecen en la siguiente pantalla y
-          también te los enviamos por email. La dirección exacta te llega cuando se confirma la
-          seña.
+          Realizá una seña del {DEMO_DEPOSIT_PERCENT}% del valor del servicio. Elegí cómo
+          pagarla:
+        </p>
+        <div className="mt-4 flex flex-col gap-3" role="radiogroup">
+          {options.map((option) => {
+            const checked = method === option.value;
+            return (
+              <label
+                key={option.value}
+                className={`flex cursor-pointer gap-3 rounded-2xl border p-4 transition-colors ${
+                  checked ? "border-terracotta bg-white/60" : "border-taupe/30 bg-white/30"
+                }`}
+              >
+                <input
+                  type="radio"
+                  name="payment-method"
+                  checked={checked}
+                  onChange={() => onMethodChange(option.value)}
+                  className="mt-1 h-4 w-4 accent-terracotta"
+                />
+                <span>
+                  <span className="block font-serif text-lg">{option.title}</span>
+                  <span className="block text-sm text-taupe">{option.detail}</span>
+                </span>
+              </label>
+            );
+          })}
+        </div>
+        <p className="mt-4 text-xs text-taupe">
+          La dirección exacta te llega por email cuando se confirma la seña.
         </p>
       </section>
-      <ActionButton onClick={onConfirm} className="mt-8 w-full">
-        Realizar seña y confirmar
+      <ActionButton onClick={onConfirm} disabled={!method} className="mt-8 w-full">
+        {method === "MERCADO_PAGO" ? "Pagar seña con Mercado Pago" : "Realizar seña y confirmar"}
       </ActionButton>
     </>
   );
@@ -633,7 +693,18 @@ function ConfirmStep({
 
 // ─── Done ───────────────────────────────────────────────────────────────────
 
-function DoneScreen({ service, date, time }: { service: Service; date: Date; time: string }) {
+function DoneScreen({
+  service,
+  date,
+  time,
+  method,
+}: {
+  service: Service;
+  date: Date;
+  time: string;
+  method: PaymentMethod;
+}) {
+  const transfer = method === "BANK_TRANSFER";
   return (
     <PageShell showLogo={false}>
       <div className="flex flex-1 flex-col items-center justify-center text-center">
@@ -641,25 +712,38 @@ function DoneScreen({ service, date, time }: { service: Service; date: Date; tim
         <span className="mt-10 flex h-16 w-16 items-center justify-center rounded-full bg-olive text-cream">
           <Check className="h-8 w-8" strokeWidth={1.25} />
         </span>
-        <h1 className="mt-6 font-serif text-5xl font-medium">¡Tu turno está reservado!</h1>
+        <h1 className="mt-6 font-serif text-5xl font-medium">
+          {transfer ? "¡Tu turno está reservado!" : "¡Tu reserva está confirmada!"}
+        </h1>
         <p className="mt-5 text-lg leading-relaxed">
           {service.name}, {formatLongDate(date)} a las {time} hs.
         </p>
-        <p className="mt-3 leading-relaxed text-taupe">
-          Para confirmarlo, transferí la seña de {formatPrice(depositOf(service))}. Te
-          enviamos los datos de pago por email y, cuando la recibamos, tu reserva queda
-          confirmada. ¡Nos vemos pronto!
-        </p>
-        <section className="mt-6 w-full rounded-3xl bg-blush/70 p-5 text-left">
-          <h2 className="font-serif text-xl">Datos para la transferencia</h2>
-          {/* Replaced by Settings.bankDetails, loaded by Micaela from the panel. */}
-          <p className="mt-2 text-sm text-taupe">
-            Acá van a aparecer el banco, la cuenta y el titular que cargue Micaela desde el
-            panel.
+        {transfer ? (
+          <>
+            <p className="mt-3 leading-relaxed text-taupe">
+              Para confirmarlo, transferí la seña de{" "}
+              {formatPrice(depositFor(service, method))} dentro de las próximas{" "}
+              {DEMO_TRANSFER_HOLD_HOURS} horas. Cuando Micaela la reciba, te llega la
+              confirmación por email con la dirección.
+            </p>
+            <section className="mt-6 w-full rounded-3xl bg-blush/70 p-5 text-left">
+              <h2 className="font-serif text-xl">Datos para la transferencia</h2>
+              {/* Replaced by Settings.bankDetails, loaded by Micaela from the panel. */}
+              <p className="mt-2 text-sm text-taupe">
+                Acá van a aparecer el banco, la cuenta y el titular que cargue Micaela desde
+                el panel.
+              </p>
+            </section>
+          </>
+        ) : (
+          <p className="mt-3 leading-relaxed text-taupe">
+            Recibimos tu seña. Te enviamos todos los detalles y la dirección por email.
+            ¡Nos vemos pronto!
           </p>
-        </section>
+        )}
         <p className="mt-6 rounded-xl border border-dashed border-terracotta/50 px-4 py-2 text-xs text-terracotta">
-          Modo demostración: esta reserva no se guardó.
+          Modo demostración: esta reserva no se guardó
+          {transfer ? "." : " y no se cobró nada."}
         </p>
         <ActionButton href="/" className="mt-8">
           Volver al inicio

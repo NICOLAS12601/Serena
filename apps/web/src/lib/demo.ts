@@ -4,6 +4,12 @@
 /** Replaced by Settings.depositPercent (public settings endpoint). */
 export const DEMO_DEPOSIT_PERCENT = 50;
 
+/** Replaced by Settings.transferDiscountPercent. */
+export const DEMO_TRANSFER_DISCOUNT_PERCENT = 10;
+
+/** Replaced by Settings.transferHoldHours. */
+export const DEMO_TRANSFER_HOLD_HOURS = 2;
+
 /** Replaced by Settings.maxAdvanceDays. */
 export const DEMO_MAX_ADVANCE_DAYS = 30;
 
@@ -29,8 +35,8 @@ export function getDemoSlots(date: Date): Slot[] {
 
 /**
  * Replaced by Settings.cancellationPolicyText, edited by Micaela from the panel.
- * Wording from her designs; the 12-hour limit is pending confirmation
- * (the requirements draft said 24 hours).
+ * Agreed rules: with 12+ hours of notice the booking is rescheduled and the
+ * deposit carries over (it is not refunded); with less notice it is lost.
  */
 export const DEMO_POLICIES = [
   {
@@ -45,12 +51,12 @@ export const DEMO_POLICIES = [
   },
   {
     icon: "clock",
-    title: "Cancelación y reprogramación",
-    text: "Si necesitás cancelar o reprogramar tu turno con más de 12 horas de anticipación, podés hacerlo sin perder la seña ni el turno.",
+    title: "Reprogramación",
+    text: "Si necesitás cambiar tu turno, avisanos con más de 12 horas de anticipación y lo reprogramamos para otra fecha: tu seña queda para el nuevo turno.",
   },
   {
     icon: "x",
     title: "Cancelaciones con menos de 12 horas de anticipación",
-    text: "Si cancelás con menos de 12 horas de anticipación, se pierde la seña y el turno.",
+    text: "Si cancelás con menos de 12 horas de anticipación o no te presentás, se pierde la seña.",
   },
 ] as const;
