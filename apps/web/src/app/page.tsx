@@ -1,75 +1,66 @@
-import { connection } from "next/server";
-import { formatPrice, getServices, type Service } from "@/lib/api";
+import { ArrowRight, Heart, Leaf } from "lucide-react";
+import Link from "next/link";
+import { BrandLogo } from "@/components/brand-logo";
+import { PageDecorations } from "@/components/decorations";
 
-export default async function Home() {
-  // Render on every request so prices are always current (they live in the
-  // database and Micaela edits them from the admin panel).
-  await connection();
-
-  let services: Service[] | null = null;
-  try {
-    services = await getServices();
-  } catch (error) {
-    console.error(error);
-  }
-
+// Entry point: new clients go to the first-visit session, returning clients
+// choose their massage.
+export default function Home() {
   return (
-    <main className="flex flex-1 flex-col">
-      <section className="flex flex-col items-center px-6 pt-24 pb-16 text-center">
-        <p className="text-xs uppercase tracking-[0.4em] text-sage">
-          Masajes &amp; Bienestar
-        </p>
-        <h1 className="mt-4 font-serif text-5xl font-medium tracking-[0.25em] sm:text-7xl">
-          SERENA
-        </h1>
-        <p className="mt-6 font-serif text-2xl italic text-taupe">
-          Un momento para vos.
-        </p>
-      </section>
+    <div className="relative mx-auto flex min-h-screen w-full max-w-lg flex-col justify-center overflow-hidden px-6 py-16">
+      <PageDecorations />
+      <div className="relative">
+        <BrandLogo size="lg" />
+        <nav className="mt-16 flex flex-col gap-5">
+          <EntryCard
+            href="/primera-vez"
+            label="Es mi primer masaje en Serena"
+            icon={<Leaf className="h-9 w-9" strokeWidth={1.1} />}
+            cardClass="bg-blush"
+            iconClass="bg-[#e5c4b3]"
+            arrowClass="bg-terracotta"
+          />
+          <EntryCard
+            href="/masajes"
+            label="Ya soy cliente"
+            icon={<Heart className="h-9 w-9" strokeWidth={1.1} />}
+            cardClass="bg-linen"
+            iconClass="bg-[#cfc6b2]"
+            arrowClass="bg-olive"
+          />
+        </nav>
+      </div>
+    </div>
+  );
+}
 
-      <section className="mx-auto w-full max-w-4xl px-6 pb-24">
-        <h2 className="mb-8 text-center text-xs uppercase tracking-[0.3em] text-taupe">
-          Servicios
-        </h2>
+type EntryCardProps = {
+  href: string;
+  label: string;
+  icon: React.ReactNode;
+  cardClass: string;
+  iconClass: string;
+  arrowClass: string;
+};
 
-        {services === null ? (
-          <p className="text-center text-taupe">
-            No pudimos cargar los servicios en este momento.
-          </p>
-        ) : services.length === 0 ? (
-          <p className="text-center text-taupe">
-            Pronto vas a ver acá nuestros servicios.
-          </p>
-        ) : (
-          <ul className="grid gap-6 sm:grid-cols-3">
-            {services.map((service) => (
-              <li
-                key={service.id}
-                className="flex flex-col rounded-sm border border-sand bg-white/50 p-6 text-center"
-              >
-                <h3 className="font-serif text-2xl">{service.name}</h3>
-                {service.description && (
-                  <p className="mt-2 text-sm text-taupe">{service.description}</p>
-                )}
-                <p className="mt-4 text-sm uppercase tracking-widest text-sage">
-                  {service.durationMin} min
-                </p>
-                <p className="mt-1 text-lg">{formatPrice(service.price)}</p>
-              </li>
-            ))}
-          </ul>
-        )}
-
-        <div className="mt-12 text-center">
-          <span className="inline-block rounded-full bg-terracotta px-8 py-3 text-sm uppercase tracking-widest text-cream">
-            Reservas online muy pronto
-          </span>
-        </div>
-      </section>
-
-      <footer className="mt-auto border-t border-sand py-6 text-center text-xs uppercase tracking-[0.3em] text-taupe">
-        Montevideo · Uruguay
-      </footer>
-    </main>
+function EntryCard({ href, label, icon, cardClass, iconClass, arrowClass }: EntryCardProps) {
+  return (
+    <Link
+      href={href}
+      className={`flex items-center gap-5 rounded-3xl p-6 transition-transform hover:-translate-y-0.5 ${cardClass}`}
+    >
+      <span
+        className={`flex h-16 w-16 shrink-0 items-center justify-center rounded-[40%_60%_55%_45%] text-coffee ${iconClass}`}
+      >
+        {icon}
+      </span>
+      <span className="h-14 border-l border-taupe/40" />
+      <span className="flex-1 font-serif text-2xl leading-tight">{label}</span>
+      <span
+        className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-cream ${arrowClass}`}
+      >
+        <ArrowRight className="h-5 w-5" strokeWidth={1.25} />
+      </span>
+    </Link>
   );
 }
