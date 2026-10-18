@@ -92,7 +92,7 @@ export type AdminSettings = {
 export type ClientSummary = {
   id: number;
   name: string;
-  email: string;
+  email: string | null;
   phone: string;
   birthDate: string;
   createdAt: string;

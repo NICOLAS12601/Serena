@@ -29,7 +29,7 @@ export default function ClientsAdminPage() {
     <>
       <PageHeader
         title="Clientes"
-        description="Se crean solos cuando alguien reserva. Se reconocen por su email."
+        description="Se crean solos cuando alguien reserva. Se reconocen por su celular."
       />
       <input
         type="search"

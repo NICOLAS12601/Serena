@@ -138,7 +138,7 @@ export default function SettingsAdminPage() {
             <div className="col-span-2">
               <Field
                 label="Dirección exacta"
-                hint="Privada: solo se envía en el email de confirmación, cuando se cobra la seña."
+                hint="Privada: solo va en el WhatsApp de confirmación, cuando se cobra la seña."
               >
                 <input
                   value={settings.address ?? ""}

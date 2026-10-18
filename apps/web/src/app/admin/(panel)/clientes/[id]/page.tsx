@@ -71,7 +71,7 @@ export default function ClientDetailPage() {
             </div>
             <div>
               <dt className="text-taupe">Email</dt>
-              <dd>{client.email}</dd>
+              <dd>{client.email ?? "—"}</dd>
             </div>
             <div>
               <dt className="text-taupe">Cliente desde</dt>

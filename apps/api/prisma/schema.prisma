@@ -59,12 +59,13 @@ model TimeOff {
 
 // ─── Clients and bookings ────────────────────────────────────────────────────
 
-// No password: a client is recognized by email (ADR-009).
+// No password: a client is recognized by their mobile phone, stored in E.164
+// (ADR-012). Email is optional and not used to send anything yet.
 model Client {
   id        Int       @id @default(autoincrement())
   name      String
-  email     String    @unique
-  phone     String
+  phone     String    @unique
+  email     String?   @unique
   birthDate DateTime  @db.Date
   createdAt DateTime  @default(now()) @db.Timestamptz(3)
   updatedAt DateTime  @updatedAt @db.Timestamptz(3)
@@ -117,7 +118,7 @@ model Booking {
   // Health data (Law 18.331): admin panel only.
   reason           String?
   privacyConsentAt DateTime      @db.Timestamptz(3)
-  // Hash of the secret in the management link sent by email (ADR-009).
+  // Hash of the secret in the management link (ADR-009, ADR-012).
   manageTokenHash  String        @unique
   createdAt        DateTime      @default(now()) @db.Timestamptz(3)
   updatedAt        DateTime      @updatedAt @db.Timestamptz(3)
@@ -167,7 +168,7 @@ model Settings {
   maxAdvanceDays          Int      @default(30)
   // Real business data is loaded from the panel, never committed (public repo).
   bankDetails             String?
-  address                 String? // sent only in the confirmation email
+  address                 String? // sent only once the booking is confirmed
   // For the "send transfer receipt by WhatsApp" button and the contact button.
   whatsappNumber          String?
   neighborhood            String? // shown on the public site

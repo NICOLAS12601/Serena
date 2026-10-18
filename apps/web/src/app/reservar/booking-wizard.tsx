@@ -670,10 +670,9 @@ function DetailsStep({
         </div>
         <Field icon={Mail}>
           <input
-            required
             type="email"
             autoComplete="email"
-            placeholder="Email"
+            placeholder="Email (opcional)"
             value={details.email}
             onChange={(event) => set("email", event.target.value)}
             className="w-full bg-transparent outline-none placeholder:text-taupe"
@@ -924,8 +923,8 @@ function ConfirmStep({
           </div>
           <p className="mt-4 text-xs text-taupe">
             Para reagendar sin perder la seña, avisanos con más de 12 horas de
-            anticipación. La dirección exacta te llega por email cuando se
-            confirma el pago.
+            anticipación. Cuando se confirma el pago, Micaela te escribe por
+            WhatsApp con la dirección exacta.
           </p>
         </section>
       </div>
@@ -998,7 +997,7 @@ function DoneScreen({
               {firstName}, para confirmarlo transferí {formatPrice(paid)} dentro
               de las próximas {settings.transferHoldHours} horas y poné{" "}
               <strong>tu nombre</strong> como referencia. Cuando Micaela reciba
-              el pago, te llega la confirmación por email con la dirección.
+              el pago, te confirma por WhatsApp y te pasa la dirección.
             </p>
             <section className="mt-6 w-full rounded-3xl bg-blush/70 p-5 text-left">
               <h2 className="font-serif text-xl">
@@ -1030,8 +1029,8 @@ function DoneScreen({
           </>
         ) : (
           <p className="mt-3 leading-relaxed text-taupe">
-            Recibimos tu pago de {formatPrice(paid)}. Te enviamos todos los
-            detalles y la dirección por email. ¡Nos vemos pronto!
+            Recibimos tu pago de {formatPrice(paid)}. Micaela te va a escribir
+            por WhatsApp con la confirmación y la dirección. ¡Nos vemos pronto!
           </p>
         )}
 
