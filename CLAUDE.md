@@ -14,6 +14,8 @@ Sitio web + sistema de reservas para **SERENA · Masajes & Bienestar** (Montevid
 - ✅ Migración inicial (exclusion constraint + CHECK en SQL manual, probadas en vivo) y seed idempotente (Settings, primer admin desde `.env`, datos de prueba solo fuera de producción).
 - ✅ Primer recorrido completo: `PrismaModule` global + `GET /services` en la API; la home de la web los muestra con la paleta y tipografías de la marca (colores aproximados).
 - ✅ Front según los **diseños de Micaela**: home con dos caminos (primera vez / ya soy cliente), `/primera-vez`, `/masajes` y el flujo de reserva `/reservar` en pasos. Horarios, seña y políticas son datos de demostración (`apps/web/src/lib/demo.ts`); la reserva todavía no se guarda. Hay preguntas abiertas de los diseños en `docs/pendientes.md`.
+- ✅ `GET /settings/public` (seña, descuento, plazos, barrio y WhatsApp; nunca dirección ni datos bancarios): la web ya no usa constantes de demo para eso. El número de WhatsApp de Micaela se carga en `Settings.whatsappNumber` (hoy con `pnpm db:studio`, después desde el panel).
+- ✅ Web responsive (celular y computadora). Formato del código con Prettier: `pnpm format` en `apps/web` y `apps/api`.
 - ⏭️ Próximo paso: el primer ítem sin tachar de la **hoja de ruta** en `docs/pendientes.md` (hoy: horarios libres). Ahí también está cómo levantar el entorno.
 - Pendientes de explicar al desarrollador: hosting y webhooks. Decisión abierta: pago de MercadoPago que llega tarde (ver `docs/pendientes.md`).
 - Next.js 16 tiene cambios respecto de versiones anteriores: leer `apps/web/AGENTS.md` antes de tocar la web.

@@ -23,7 +23,7 @@ Las pantallas siguen los **diseños de Micaela** (octubre 2026): una columna pen
 - **Sobre mí**, **testimonios**, **preguntas frecuentes**, **política de cancelación**.
 - **Contacto:** formulario, botón flotante de WhatsApp con mensaje precargado, link a Instagram, barrio (sin dirección exacta).
 - **Política de privacidad** (requerida por la Ley 18.331; ver [06](06-pagos-y-seguridad.md#datos-personales-ley-18331)).
-- Pensado primero para **celular** y con **SEO local** ("masajes en Montevideo / [barrio]").
+- **Responsive:** pensado primero para **celular** y adaptado a **computadora**, con **SEO local** ("masajes en Montevideo / [barrio]").
 
 ### Datos que se piden al reservar
 | Dato | Motivo |

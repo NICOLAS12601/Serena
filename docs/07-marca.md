@@ -34,6 +34,9 @@ La **terracota** es el color exacto del logo oficial; el resto sale de los dise�
 - **Íconos de línea** (librería `lucide-react`); el loto y el rodillo de maderoterapia están dibujados a mano. Cada servicio guarda su ícono en `Service.icon`.
 - **Botones** redondeados con flecha, terracota u oliva alternados.
 
+## Responsive
+Los diseños de Micaela son para celular; la versión para computadora es una adaptación que mantiene el mismo estilo. En celular, una columna como en los diseños. Desde tablet (`md`, 768 px) el contenido se reparte en columnas: las dos tarjetas del inicio lado a lado, el texto y la foto de "primera vez" en paralelo, los masajes en dos columnas, y en la reserva el calendario junto al texto, los datos en dos columnas y el resumen junto a las opciones de pago.
+
 ## Instagram
 Hay una grilla de contenido planificada (bienvenida, el espacio, servicios, beneficios, sobre mí, reservas...). Cuando el sitio esté en línea, cambiar en la bio "Reservas por mensaje" por **"Reservá online"** con el link al sitio.
 

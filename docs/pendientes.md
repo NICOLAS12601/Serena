@@ -56,4 +56,4 @@ Orden de construcción. Al retomar, seguir por el primer ítem sin tachar.
 ## Cómo retomar el entorno
 1. Abrir **Docker Desktop** (la base corre en el contenedor `serena-db`; si está apagado: `docker compose up -d`).
 2. `pnpm dev` desde la raíz → web en http://localhost:3000 y API en http://localhost:3001.
-3. Para ver los datos: `pnpm db:studio` desde `apps/api`.
+3. Para ver o editar los datos: `pnpm db:studio` desde `apps/api`. Ahí se carga, por ejemplo, el número de WhatsApp de Micaela (tabla `Settings`, campo `whatsappNumber`) hasta que exista el panel.
