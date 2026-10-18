@@ -24,6 +24,8 @@ pnpm --filter api db:seed                 # carga configuración, admin y datos 
 pnpm dev                                  # web en http://localhost:3000 y API en http://localhost:3001
 ```
 
+Panel de administración: http://localhost:3000/admin (usuario y contraseña de `ADMIN_EMAIL` y `ADMIN_PASSWORD` en `apps/api/.env`, creados por el seed).
+
 Otros scripts desde la raíz: `pnpm dev:web`, `pnpm dev:api`, `pnpm build`, `pnpm lint`.
 
 Base de datos (desde `apps/api`): `pnpm db:migrate`, `pnpm db:seed`, `pnpm db:studio` (ver los datos en el navegador), `pnpm db:reset` (⚠️ borra todo y vuelve a crear).

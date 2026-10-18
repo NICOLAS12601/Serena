@@ -45,15 +45,16 @@ Orden de construcción. Al retomar, seguir por el primer ítem sin tachar.
 - [x] ~~Esqueleto del monorepo, PostgreSQL en Docker, Prisma, esquema, migración inicial y seed.~~
 - [x] ~~`GET /services` y home de la web que los muestra (demo).~~
 - [x] ~~**Front según los diseños de Micaela:** home con dos caminos, primera vez, lista de masajes y el flujo de reserva completo. Los horarios, la seña y las políticas son **datos de demostración** (`apps/web/src/lib/demo.ts`) y la reserva todavía no se guarda.~~
+- [x] ~~**Panel de Micaela, primera parte** (`/admin`, solo computadora): login seguro, servicios, horarios y bloqueos, configuración, clientes y mi cuenta ([ADR-011](decisiones/ADR-011-panel-de-administracion.md)).~~
 - [ ] **Horarios libres** (`GET /availability?serviceId&date`): franjas del horario semanal − bloqueos − reservas que ocupan, con descanso, anticipación mínima, ventana máxima y zona horaria `America/Montevideo` ([05](05-flujo-de-reserva.md#cálculo-de-horarios-libres)). Explicar la lógica con un ejemplo antes de programar. Al terminar, reemplazar `getDemoSlots` / `isDemoDayAvailable` en la web.
 - [ ] **Crear reserva** con bloqueo temporal, expiración de pendientes y manejo del error de superposición.
+- [ ] **Panel: sección de reservas** (agenda, pendientes, confirmar pago, cancelar, reprogramar, completar) con el botón "Avisar por WhatsApp" al confirmar.
 - [ ] **Pagos:** MercadoPago (modo de pruebas, webhook verificado) y transferencia.
 - [ ] **Emails** (Resend): confirmación con la dirección y el link de gestión.
-- [ ] **Panel de Micaela** (dentro de la web, con login): reservas, servicios, horarios, bloqueos y configuración. *Micaela no usa Prisma Studio: es una herramienta solo para desarrollo.*
 - [ ] **Páginas públicas:** sobre mí, preguntas frecuentes, política de cancelación, política de privacidad, contacto y WhatsApp.
 - [ ] **Despliegue** en la nube (ver límites de los planes gratuitos).
 
 ## Cómo retomar el entorno
 1. Abrir **Docker Desktop** (la base corre en el contenedor `serena-db`; si está apagado: `docker compose up -d`).
 2. `pnpm dev` desde la raíz → web en http://localhost:3000 y API en http://localhost:3001.
-3. Para ver o editar los datos: `pnpm db:studio` desde `apps/api`. Ahí se carga, por ejemplo, el número de WhatsApp de Micaela (tabla `Settings`, campo `whatsappNumber`) hasta que exista el panel.
+3. Panel: http://localhost:3000/admin (usuario de prueba en `apps/api/.env`). Para ver la base cruda: `pnpm db:studio` desde `apps/api` (solo desarrollo).

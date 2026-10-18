@@ -72,6 +72,10 @@ En vez de instalar y mantener PostgreSQL en un servidor propio (backups, actuali
 
 Por qué la PC de casa no es producción: [ADR-003](decisiones/ADR-003-hosting-nube-y-pc-de-casa.md).
 
+## Cómo se comunica el navegador con la API
+
+El navegador **nunca llama directo a la API**: pide `/api/...` a la web y Next.js lo reenvía a la API (*rewrite* en `apps/web/next.config.ts`, variable `API_URL`). Así la cookie de sesión del panel es "de primera parte" y los navegadores no la bloquean ([ADR-011](decisiones/ADR-011-panel-de-administracion.md)). Las páginas públicas que se arman en el servidor llaman a la API con la misma `API_URL`.
+
 ## Secretos y configuración
 
 - Las **claves** (MercadoPago, base de datos, Resend, JWT) van en variables de entorno (`.env`), **nunca en el repo**. Se versiona un `.env.example` con valores falsos.

@@ -43,12 +43,17 @@ Micaela arma la ficha completa del cliente después, en persona.
 - **MercadoPago:** confirmación automática.
 - **Transferencia bancaria:** precio con descuento (configurable) y confirmación manual por parte de Micaela, **después de ver la plata en su cuenta**.
 
-### Panel de administración (solo Micaela)
-- Ver las reservas (lista y calendario). Confirmar transferencias, cancelar, marcar "completada" o "no asistió".
-- Gestionar **servicios** (alta, baja, precio, duración, foto, orden).
-- Definir el **horario semanal** y los **días bloqueados** (vacaciones, feriados).
-- **Configuración:** ver la tabla de abajo.
-- Editar los **textos de las políticas** (cancelación).
+### Panel de administración (solo Micaela, en `/admin`, pensado para computadora)
+
+Decisiones en [ADR-011](decisiones/ADR-011-panel-de-administracion.md). Estado: ✅ = ya funciona.
+
+- ✅ **Login** con email y contraseña (sesión segura de 7 días, límite de intentos) y **Mi cuenta** para cambiar la contraseña.
+- ✅ **Servicios:** alta, edición, baja (solo si no tienen reservas; si no, se desactivan), precio, duración, descripción, ícono, orden, activo y "encuentro inicial".
+- ✅ **Horarios y bloqueos:** horario semanal con varias franjas por día y días bloqueados (vacaciones, feriados).
+- ✅ **Configuración:** WhatsApp, barrio, dirección, seña, descuento, plazos para pagar, datos bancarios, descanso, anticipación, ventana y texto de las políticas (ver la tabla de abajo).
+- ✅ **Clientes:** búsqueda, contacto, edad e historial de reservas con el motivo de consulta.
+- ⏳ **Reservas** (cuando el sitio las guarde): agenda, pendientes con el tiempo que les queda, confirmar el pago (seña o total), cancelar, reprogramar, marcar "completada" o "no vino", registrar el resto cobrado. Al confirmar: email automático al cliente y botón **"Avisar por WhatsApp"** que abre el chat del cliente con el mensaje ya escrito.
+- Más adelante: subir fotos desde el panel.
 
 ### Configuración inicial (editable desde el panel)
 
