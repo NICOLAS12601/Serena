@@ -29,30 +29,37 @@ export default async function FirstVisitPage() {
 
   return (
     <PageShell backHref="/">
-      <h1 className="font-serif text-5xl leading-none font-medium">
-        Tu primera experiencia en Serena
-      </h1>
-      <span className="mt-5 block h-0.5 w-14 bg-terracotta" />
-      <p className="mt-5 text-lg leading-relaxed">
-        En tu primera visita te dedico un encuentro completo
-        {firstVisit && ` de ${firstVisit.durationMin} minutos`}, donde comenzamos con
-        una entrevista inicial para conocerte, escuchar tus necesidades y adaptar el
-        masaje especialmente para vos.
-      </p>
+      {/* Desktop: intro text and photo side by side. */}
+      <div className="md:grid md:grid-cols-2 md:items-center md:gap-10">
+        <div>
+          <h1 className="font-serif text-5xl leading-none font-medium">
+            Tu primera experiencia en Serena
+          </h1>
+          <span className="mt-5 block h-0.5 w-14 bg-terracotta" />
+          <p className="mt-5 text-lg leading-relaxed">
+            En tu primera visita te dedico un encuentro completo
+            {firstVisit && ` de ${firstVisit.durationMin} minutos`}, donde
+            comenzamos con una entrevista inicial para conocerte, escuchar tus
+            necesidades y adaptar el masaje especialmente para vos.
+          </p>
+        </div>
 
-      {/* Placeholder until the photo session of the space (docs/07-marca.md). */}
-      <div className="mt-8 flex aspect-[4/3] items-center justify-center rounded-[2rem_6rem_2rem_6rem] bg-gradient-to-br from-blush via-[#e7c9b8] to-[#c99a83] text-sm tracking-widest text-cream uppercase">
-        Foto del espacio
+        {/* Placeholder until the photo session of the space (docs/07-marca.md). */}
+        <div className="mt-8 flex aspect-[4/3] items-center md:mt-0 justify-center rounded-[2rem_6rem_2rem_6rem] bg-gradient-to-br from-blush via-[#e7c9b8] to-[#c99a83] text-sm tracking-widest text-cream uppercase">
+          Foto del espacio
+        </div>
       </div>
 
-      <section className="mt-8 rounded-3xl bg-blush/80 p-6">
+      <section className="mt-8 rounded-3xl bg-blush/80 p-6 md:p-8">
         <div className="flex items-center gap-5">
           <span className="flex h-16 w-16 items-center justify-center rounded-[40%_60%_55%_45%] bg-[#e5c4b3]">
             <Leaf className="h-9 w-9" strokeWidth={1.1} />
           </span>
           <span className="h-14 border-l border-terracotta/40" />
           <div>
-            <h2 className="font-serif text-3xl">{firstVisit?.name ?? "Encuentro inicial"}</h2>
+            <h2 className="font-serif text-3xl">
+              {firstVisit?.name ?? "Encuentro inicial"}
+            </h2>
             {firstVisit && (
               <p className="font-serif text-2xl text-terracotta">
                 {firstVisit.durationMin} minutos
@@ -60,7 +67,7 @@ export default async function FirstVisitPage() {
             )}
           </div>
         </div>
-        <ul className="mt-6 flex flex-col gap-5">
+        <ul className="mt-6 grid gap-5 md:grid-cols-3">
           {STEPS.map(({ icon: Icon, title, text }) => (
             <li key={title} className="flex gap-4">
               <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#e5c4b3]">
@@ -77,7 +84,10 @@ export default async function FirstVisitPage() {
 
       <div className="mt-8 flex flex-col items-center gap-3">
         {firstVisit ? (
-          <ActionButton href={`/reservar?servicio=${firstVisit.id}`} className="w-full">
+          <ActionButton
+            href={`/reservar?servicio=${firstVisit.id}`}
+            className="w-full md:w-auto md:min-w-80"
+          >
             Reservar turno
           </ActionButton>
         ) : (

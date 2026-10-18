@@ -13,14 +13,19 @@ type Props = {
 };
 
 /** Mobile-first column with the logo header and the decorative background. */
-export function PageShell({ children, backHref, onBack, showLogo = true }: Props) {
+export function PageShell({
+  children,
+  backHref,
+  onBack,
+  showLogo = true,
+}: Props) {
   const back = (
     <span className="flex items-center gap-2 text-sm">
       <ArrowLeft className="h-4 w-4" strokeWidth={1.5} /> Volver
     </span>
   );
   return (
-    <div className="relative mx-auto flex min-h-screen w-full max-w-lg flex-col overflow-hidden px-6 pt-8 pb-12">
+    <div className="relative mx-auto flex min-h-screen w-full max-w-lg flex-col px-6 pt-8 pb-12 md:max-w-3xl md:px-10 lg:max-w-5xl">
       <PageDecorations />
       <div className="relative flex min-h-6 items-center">
         {onBack ? (

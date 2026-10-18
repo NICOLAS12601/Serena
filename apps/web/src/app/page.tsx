@@ -7,11 +7,11 @@ import { PageDecorations } from "@/components/decorations";
 // choose their massage.
 export default function Home() {
   return (
-    <div className="relative mx-auto flex min-h-screen w-full max-w-lg flex-col justify-center overflow-hidden px-6 py-16">
+    <div className="relative mx-auto flex min-h-screen w-full max-w-lg flex-col justify-center px-6 py-16 md:max-w-4xl md:px-10">
       <PageDecorations />
       <div className="relative">
         <BrandLogo size="lg" />
-        <nav className="mt-16 flex flex-col gap-5">
+        <nav className="mt-16 grid gap-5 md:grid-cols-2">
           <EntryCard
             href="/primera-vez"
             label="Es mi primer masaje en Serena"
@@ -43,7 +43,14 @@ type EntryCardProps = {
   arrowClass: string;
 };
 
-function EntryCard({ href, label, icon, cardClass, iconClass, arrowClass }: EntryCardProps) {
+function EntryCard({
+  href,
+  label,
+  icon,
+  cardClass,
+  iconClass,
+  arrowClass,
+}: EntryCardProps) {
   return (
     <Link
       href={href}

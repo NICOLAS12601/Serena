@@ -1,7 +1,13 @@
 import { Flower2, Leaf, Waves } from "lucide-react";
 
 /** Draws the icon stored in Service.icon. Unknown keys fall back to a flower. */
-export function ServiceIcon({ icon, className }: { icon: string | null; className?: string }) {
+export function ServiceIcon({
+  icon,
+  className,
+}: {
+  icon: string | null;
+  className?: string;
+}) {
   switch (icon) {
     case "lotus":
       return <LotusIcon className={className} />;

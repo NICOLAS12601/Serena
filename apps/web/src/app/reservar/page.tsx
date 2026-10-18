@@ -3,7 +3,9 @@ import { PageShell } from "@/components/page-shell";
 import { getPublicSettingsOrNull, getServicesOrNull } from "@/lib/api";
 import { BookingWizard } from "./booking-wizard";
 
-export default async function BookingPage({ searchParams }: PageProps<"/reservar">) {
+export default async function BookingPage({
+  searchParams,
+}: PageProps<"/reservar">) {
   await connection();
   const { servicio } = await searchParams;
   const serviceId = Number(servicio);

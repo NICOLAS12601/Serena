@@ -46,7 +46,9 @@ export async function getPublicSettingsOrNull(): Promise<PublicSettings | null> 
   try {
     const response = await fetch(`${API_URL}/settings/public`);
     if (!response.ok) {
-      throw new Error(`GET /settings/public failed with status ${response.status}`);
+      throw new Error(
+        `GET /settings/public failed with status ${response.status}`,
+      );
     }
     return await response.json();
   } catch (error) {

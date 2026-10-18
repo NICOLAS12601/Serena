@@ -36,7 +36,10 @@ export function LeafBranch({ className }: { className?: string }) {
 /** Branches in two corners of the screen and a soft blob, behind the page content. */
 export function PageDecorations() {
   return (
-    <div className="pointer-events-none fixed inset-0 overflow-hidden" aria-hidden="true">
+    <div
+      className="pointer-events-none fixed inset-0 overflow-hidden"
+      aria-hidden="true"
+    >
       <LeafBranch className="absolute -top-2 -right-4 h-32 w-32" />
       <LeafBranch className="absolute -bottom-4 -left-6 h-28 w-28 rotate-180" />
       <div className="absolute -right-24 -bottom-24 h-64 w-64 rounded-full bg-blush/70" />

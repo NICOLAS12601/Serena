@@ -7,12 +7,16 @@ import { formatPrice, getServicesOrNull } from "@/lib/api";
 // Returning clients: every active service except the first-visit session.
 export default async function ServicesPage() {
   await connection();
-  const services = (await getServicesOrNull())?.filter((service) => !service.isFirstVisit);
+  const services = (await getServicesOrNull())?.filter(
+    (service) => !service.isFirstVisit,
+  );
 
   return (
     <PageShell backHref="/">
       <h1 className="font-serif text-5xl font-medium">Elegí tu masaje</h1>
-      <p className="mt-2 text-xs tracking-[0.4em] uppercase">Ya sos cliente de Serena</p>
+      <p className="mt-2 text-xs tracking-[0.4em] uppercase">
+        Ya sos cliente de Serena
+      </p>
       <span className="mt-5 block h-0.5 w-14 bg-terracotta" />
       <p className="mt-5 text-lg">
         Reservá el masaje que mejor se adapte a lo que tu cuerpo necesita hoy.
@@ -23,12 +27,15 @@ export default async function ServicesPage() {
           No pudimos cargar los servicios en este momento.
         </p>
       ) : (
-        <ul className="mt-8 flex flex-col gap-5">
+        <ul className="mt-8 grid gap-5 md:grid-cols-2">
           {services.map((service, index) => {
             const alternate = index % 2 === 1;
             return (
-              <li key={service.id} className="rounded-3xl bg-blush/70 p-6">
-                <div className="flex gap-4">
+              <li
+                key={service.id}
+                className="flex flex-col rounded-3xl bg-blush/70 p-6"
+              >
+                <div className="flex flex-1 gap-4">
                   <span
                     className={`flex h-16 w-16 shrink-0 items-center justify-center rounded-full ${
                       alternate ? "bg-linen" : "bg-[#e5c4b3]"
@@ -37,7 +44,9 @@ export default async function ServicesPage() {
                     <ServiceIcon icon={service.icon} className="h-9 w-9" />
                   </span>
                   <div className="flex-1">
-                    <h2 className="font-serif text-2xl leading-tight">{service.name}</h2>
+                    <h2 className="font-serif text-2xl leading-tight">
+                      {service.name}
+                    </h2>
                     {service.description && (
                       <p className="mt-2 text-sm leading-relaxed text-taupe">
                         {service.description}

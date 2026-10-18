@@ -41,7 +41,12 @@ export function ActionButton({
     );
   }
   return (
-    <button type={type} onClick={onClick} disabled={disabled} className={classes}>
+    <button
+      type={type}
+      onClick={onClick}
+      disabled={disabled}
+      className={classes}
+    >
       {content}
     </button>
   );
