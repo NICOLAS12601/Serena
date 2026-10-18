@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service.js';
+import type { UpdateSettingsDto } from './settings.dto.js';
 
 @Injectable()
 export class SettingsService {
@@ -27,5 +28,22 @@ export class SettingsService {
       // Keep digits only, as wa.me links expect (e.g. "+598 99 123 456" -> "59899123456").
       whatsappNumber: settings.whatsappNumber?.replace(/\D/g, '') || null,
     };
+  }
+
+  // ─── Admin ──────────────────────────────────────────────────────────────
+
+  findAll() {
+    return this.prisma.settings.findUniqueOrThrow({ where: { id: 1 } });
+  }
+
+  /** Empty texts are stored as null, so "not set" has a single meaning. */
+  update(data: UpdateSettingsDto) {
+    const cleaned = Object.fromEntries(
+      Object.entries(data).map(([key, value]) => [
+        key,
+        typeof value === 'string' && value.trim() === '' ? null : value,
+      ]),
+    );
+    return this.prisma.settings.update({ where: { id: 1 }, data: cleaned });
   }
 }
