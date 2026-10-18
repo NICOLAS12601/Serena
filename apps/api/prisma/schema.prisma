@@ -171,6 +171,8 @@ model Settings {
   address                 String? // sent only once the booking is confirmed
   // For the "send transfer receipt by WhatsApp" button and the contact button.
   whatsappNumber          String?
+  // Where Micaela gets an email for each new booking (ADR-012).
+  notificationEmail       String?
   neighborhood            String? // shown on the public site
   cancellationPolicyText  String?
   updatedAt               DateTime @updatedAt @db.Timestamptz(3)

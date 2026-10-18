@@ -1,4 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
+import { isEmail } from 'class-validator';
 import { normalizeMobile } from '../common/phone.js';
 import { PrismaService } from '../prisma/prisma.service.js';
 import type { UpdateSettingsDto } from './settings.dto.js';
@@ -53,6 +54,15 @@ export class SettingsService {
         );
       }
       cleaned.whatsappNumber = phone;
+    }
+    if (typeof cleaned.notificationEmail === 'string') {
+      const email = cleaned.notificationEmail.trim().toLowerCase();
+      if (!isEmail(email)) {
+        throw new BadRequestException(
+          'El email para avisos no parece válido. Revisalo, por ejemplo nombre@gmail.com.',
+        );
+      }
+      cleaned.notificationEmail = email;
     }
     return this.prisma.settings.update({ where: { id: 1 }, data: cleaned });
   }

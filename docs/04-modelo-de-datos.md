@@ -60,6 +60,7 @@ Settings        depositPercent, transferDiscountPercent, mpHoldMinutes, transfer
                 bufferMinutes, minAdvanceHours, maxAdvanceDays, bankDetails,
                 address (solo se envía en el WhatsApp de confirmación), neighborhood (barrio, público),
                 whatsappNumber (botón de comprobante y de contacto),
+                notificationEmail (donde le llega a Micaela el aviso de cada reserva),
                 cancellationPolicyText
                 → una sola fila con la configuración editable desde el panel
 
@@ -125,6 +126,7 @@ El modelo está en **tercera forma normal**: cada dato vive en un solo lugar (el
 | `depositAmount` | Monto de la seña (no se devuelve) |
 | `paymentPlan` | Qué pagó por adelantado: seña (`DEPOSIT`) o total (`FULL`) |
 | `whatsappNumber` | Número de WhatsApp de Micaela |
+| `notificationEmail` | Email de Micaela para los avisos de reservas nuevas |
 | `reason` | Motivo de consulta |
 | `birthDate` | Fecha de nacimiento |
 | `privacyConsentAt` | Fecha de aceptación de la política de privacidad |

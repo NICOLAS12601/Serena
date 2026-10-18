@@ -14,6 +14,7 @@ import {
 
 type TextKey =
   | "whatsappNumber"
+  | "notificationEmail"
   | "neighborhood"
   | "address"
   | "bankDetails"
@@ -32,6 +33,7 @@ const EDITABLE: (keyof AdminSettings)[] = [
   "address",
   "neighborhood",
   "whatsappNumber",
+  "notificationEmail",
   "cancellationPolicyText",
 ];
 
@@ -42,6 +44,7 @@ export default function SettingsAdminPage() {
     text: string;
   } | null>(null);
   const [saving, setSaving] = useState(false);
+  const [testing, setTesting] = useState(false);
 
   useEffect(() => {
     adminFetch<AdminSettings>("/admin/settings").then(setSettings);
@@ -76,6 +79,28 @@ export default function SettingsAdminPage() {
       setNotice({ kind: "error", text: (error as Error).message });
     }
     setSaving(false);
+    window.scrollTo({ top: 0 });
+  }
+
+  async function sendTestEmail() {
+    setTesting(true);
+    setNotice(null);
+    try {
+      const { result, to } = await adminFetch<{
+        result: "sent" | "logged";
+        to: string;
+      }>("/admin/notifications/test", { method: "POST" });
+      setNotice({
+        kind: "ok",
+        text:
+          result === "sent"
+            ? `Listo: se envió un mail de prueba a ${to}. Si no lo ves, revisá la carpeta de spam.`
+            : `Modo desarrollo (sin RESEND_API_KEY): el mail para ${to} se escribió en la consola de la API.`,
+      });
+    } catch (error) {
+      setNotice({ kind: "error", text: (error as Error).message });
+    }
+    setTesting(false);
     window.scrollTo({ top: 0 });
   }
 
@@ -146,6 +171,33 @@ export default function SettingsAdminPage() {
                   className={INPUT}
                 />
               </Field>
+            </div>
+          </div>
+        </Card>
+
+        <Card title="Avisos de reservas">
+          <div className="grid grid-cols-2 items-start gap-6">
+            <Field
+              label="Email para avisos"
+              hint="Te llega un mail cada vez que alguien reserva, para que revises el pago y le avises por WhatsApp."
+            >
+              <input
+                type="email"
+                value={settings.notificationEmail ?? ""}
+                onChange={(e) => setText("notificationEmail", e.target.value)}
+                className={INPUT}
+              />
+            </Field>
+            <div className="flex flex-col gap-1 pt-6 text-xs text-taupe">
+              <Button
+                variant="secondary"
+                className="self-start"
+                disabled={testing}
+                onClick={sendTestEmail}
+              >
+                {testing ? "Enviando…" : "Enviar mail de prueba"}
+              </Button>
+              <span>Guardá los cambios antes de probar.</span>
             </div>
           </div>
         </Card>

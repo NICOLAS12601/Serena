@@ -17,6 +17,7 @@ Sitio web + sistema de reservas para **SERENA · Masajes & Bienestar** (Montevid
 - ✅ `GET /settings/public` (seña, descuento, plazos, barrio y WhatsApp; nunca dirección ni datos bancarios): la web ya no usa constantes de demo para eso. El número de WhatsApp de Micaela se carga desde el panel (Configuración).
 - ✅ Web responsive (celular y computadora). Formato del código con Prettier: `pnpm format` en `apps/web` y `apps/api`.
 - ✅ **Panel de Micaela** en `/admin` (solo computadora, ADR-011): login con cookie `httpOnly` + tabla `AdminSession` (hash del token), límite de 5 intentos/min, proxy `/api/*` → API en `next.config.ts`; secciones servicios, horarios y bloqueos, configuración, clientes y mi cuenta. Endpoints `/admin/*` protegidos con `AdminGuard`; DTOs con `class-validator`. Falta la sección de reservas.
+- ✅ Cliente reconocido por su **celular** (E.164, único); email opcional (ADR-012). Aviso a Micaela por **email con Resend** (`NotificationsService`, sin SDK); botón "Enviar mail de prueba" en Configuración. Sin `RESEND_API_KEY` el mail se escribe en la consola.
 - ⏭️ Próximo paso: el primer ítem sin tachar de la **hoja de ruta** en `docs/pendientes.md` (hoy: horarios libres). Ahí también está cómo levantar el entorno.
 - Pendientes de explicar al desarrollador: hosting y webhooks. Decisión abierta: pago de MercadoPago que llega tarde (ver `docs/pendientes.md`).
 - Next.js 16 tiene cambios respecto de versiones anteriores: leer `apps/web/AGENTS.md` antes de tocar la web.

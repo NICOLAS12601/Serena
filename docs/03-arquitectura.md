@@ -12,7 +12,7 @@
 └──────────────────┘               └──────────────────┘        └──────────────┘
                                        │         ▲
                               envía    ▼         │ webhook ("hubo un pago")
-                              emails  Resend   MercadoPago
+                        aviso a Mica  Resend   MercadoPago
 ```
 
 ## Las piezas
@@ -24,7 +24,7 @@
 | **PostgreSQL** | Base de datos relacional | Guardar servicios, horarios, reservas, pagos y configuración |
 | **Prisma** | ORM | Definir las tablas en un esquema tipado y consultarlas desde TypeScript |
 | **MercadoPago** | Pasarela de pagos | Cobrar la seña con tarjeta u otros medios |
-| **Resend** | Servicio de email | Fase 2: en la fase 1 no se mandan emails a clientes, la confirmación va por WhatsApp ([ADR-012](decisiones/ADR-012-cliente-por-celular-y-aviso-por-whatsapp.md)) |
+| **Resend** | Servicio de email | Avisarle a Micaela de cada reserva nueva. A los clientes no se les manda email en la fase 1: la confirmación va por WhatsApp ([ADR-012](decisiones/ADR-012-cliente-por-celular-y-aviso-por-whatsapp.md)) |
 
 > **Analogía:** Next.js es la vidriera y el mostrador; NestJS es la trastienda y la caja registradora; PostgreSQL es el cuaderno donde se anota todo.
 
@@ -53,7 +53,7 @@ El gestor del monorepo es **pnpm workspaces** ([ADR-007](decisiones/ADR-007-pnpm
 | Web | Netlify o Cloudflare Pages | Gratis | El plan gratis de **Vercel no permite uso comercial**, por eso no lo usamos |
 | API | Render (free) | Gratis | La API "se duerme" después de un rato sin uso: la primera visita tarda ~30–50 s. Plan pago ≈ US$7/mes si molesta |
 | Base de datos | Neon (free) | Gratis | Sobra para este volumen |
-| Emails | Resend (free) | Gratis | Solo si se suman emails (fase 2) |
+| Emails | Resend (free) | Gratis | Solo los avisos a Micaela; sobra el límite diario |
 | Dominio | `.uy` / `.com.uy` | **Pago anual** | Se puede arrancar con el subdominio gratis del hosting |
 | MercadoPago | — | Comisión por venta | Sin costo fijo |
 

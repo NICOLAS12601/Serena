@@ -39,7 +39,7 @@ Lo que falta definir. Cuando algo se resuelve, se tacha y se anota dónde quedó
 - [ ] **Pago de MercadoPago que llega tarde con el horario ya ocupado** ([05](05-flujo-de-reserva.md#bloqueo-temporal-patrón-venta-de-entradas)): definir si el reintegro es automático (API de MercadoPago) o lo hace Micaela a mano.
 - [ ] **Qué datos del `Client` se actualizan** cuando alguien reserva con un celular que ya existe (nombre, email, fecha de nacimiento) ([ADR-012](decisiones/ADR-012-cliente-por-celular-y-aviso-por-whatsapp.md)).
 - [x] ~~**¿Email obligatorio?**~~ → el cliente se reconoce por su **celular**; el email es opcional y por ahora no se usa; la confirmación va por WhatsApp ([ADR-012](decisiones/ADR-012-cliente-por-celular-y-aviso-por-whatsapp.md)).
-- [ ] **Aviso a Micaela de cada reserva nueva** (para revisar el pago y tocar "Avisar por WhatsApp"): elegir el canal.
+- [x] ~~**Aviso a Micaela de cada reserva nueva:**~~ → **email a su casilla con Resend** (`Settings.notificationEmail`), con botón de prueba en Configuración ([ADR-012](decisiones/ADR-012-cliente-por-celular-y-aviso-por-whatsapp.md)).
 
 ## Para explicar antes de avanzar
 - [ ] **Hosting:** cómo se conectan Netlify/Cloudflare (web), Render (API) y Neon (base) y qué es cada uno.
@@ -57,9 +57,16 @@ Orden de construcción. Al retomar, seguir por el primer ítem sin tachar.
 - [ ] **Crear reserva** con bloqueo temporal, expiración de pendientes y manejo del error de superposición.
 - [ ] **Panel: sección de reservas** (agenda, pendientes, confirmar pago, cancelar, reprogramar, completar) con el botón "Avisar por WhatsApp" al confirmar.
 - [ ] **Pagos:** MercadoPago (modo de pruebas, webhook verificado) y transferencia.
-- [ ] **Aviso a Micaela de cada reserva nueva** (canal a definir). Los emails a clientes quedan fuera de la fase 1 ([ADR-012](decisiones/ADR-012-cliente-por-celular-y-aviso-por-whatsapp.md)).
+- [x] ~~**Aviso a Micaela por email** (Resend): servicio de envío y botón "Enviar mail de prueba" en Configuración.~~ El aviso de cada reserva se dispara al hacer "crear reserva". Los emails a clientes quedan fuera de la fase 1 ([ADR-012](decisiones/ADR-012-cliente-por-celular-y-aviso-por-whatsapp.md)).
 - [ ] **Páginas públicas:** sobre mí, preguntas frecuentes, política de cancelación, política de privacidad, contacto y WhatsApp.
 - [ ] **Despliegue** en la nube (ver límites de los planes gratuitos).
+
+## Para probar los avisos por email con Resend
+1. Micaela crea una cuenta en [resend.com](https://resend.com) **con el mismo email** donde quiere recibir los avisos.
+2. En Resend, *API Keys* → crear una con permiso *Sending access* y copiarla en `apps/api/.env` como `RESEND_API_KEY` (nunca en el repo).
+3. Reiniciar la API, cargar ese email en Configuración → *Avisos de reservas*, guardar y tocar **"Enviar mail de prueba"**.
+
+Sin `RESEND_API_KEY` la API no envía nada: escribe el mail en su consola (modo desarrollo).
 
 ## Cómo retomar el entorno
 1. Abrir **Docker Desktop** (la base corre en el contenedor `serena-db`; si está apagado: `docker compose up -d`).

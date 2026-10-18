@@ -72,6 +72,12 @@ export class UpdateSettingsDto {
   @MaxLength(30)
   whatsappNumber?: string | null;
 
+  /** Validated and lowercased by SettingsService. */
+  @IsOptional()
+  @IsString()
+  @MaxLength(254)
+  notificationEmail?: string | null;
+
   @IsOptional()
   @IsString()
   @MaxLength(4000)

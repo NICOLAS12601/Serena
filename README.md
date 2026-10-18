@@ -38,7 +38,7 @@ Base de datos (desde `apps/api`): `pnpm db:migrate`, `pnpm db:seed`, `pnpm db:st
 | Backend (API) | NestJS (TypeScript) |
 | Base de datos | PostgreSQL (Neon) + Prisma ORM |
 | Pagos | MercadoPago Checkout Pro + transferencia bancaria |
-| Avisos | WhatsApp (botón con mensaje armado); emails con Resend en fase 2 |
+| Avisos | WhatsApp al cliente (botón con mensaje armado) y email a Micaela con Resend |
 
 ## Highlights técnicos / Technical highlights
 

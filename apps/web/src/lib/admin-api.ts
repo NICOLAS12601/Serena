@@ -86,6 +86,7 @@ export type AdminSettings = {
   address: string | null;
   neighborhood: string | null;
   whatsappNumber: string | null;
+  notificationEmail: string | null;
   cancellationPolicyText: string | null;
 };
 

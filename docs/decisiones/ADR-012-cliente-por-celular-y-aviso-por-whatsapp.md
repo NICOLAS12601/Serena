@@ -16,16 +16,19 @@ Los clientes de SERENA llegan desde Instagram y se comunican con Micaela por Wha
   3. En el panel toca **"Avisar por WhatsApp"**: se abre el chat del cliente con el mensaje ya escrito (confirmación, día y hora, **dirección** y link de gestión) y ella lo envía.
 - La **dirección exacta** viaja solo en ese mensaje, después de cobrada la seña.
 - El **link de gestión** de la reserva (ADR-009) se muestra en la pantalla final y va en el mensaje de Micaela. Como en la base se guarda solo el hash del token, el botón genera un token nuevo al armar el mensaje (se define al hacer la sección de reservas).
+- **Aviso a Micaela de cada reserva nueva: por email** a su casilla (`Settings.notificationEmail`, se carga en el panel), enviado con **Resend** desde la API. Es el único email de la fase 1 y va a una sola persona. Mientras no haya dominio verificado en Resend se envía desde `onboarding@resend.dev`, que solo puede mandar al email de la cuenta de Resend: alcanza, porque la destinataria es ella. En Configuración hay un botón **"Enviar mail de prueba"**.
 
 ## Alternativas consideradas
 - **Sin email en el formulario:** igual de simple, pero si algún día se suman los emails no habría datos de los clientes anteriores.
 - **Email opcional y confirmación por Resend a quien lo deje:** mantiene toda la complejidad de los emails para una parte de los clientes.
+- **Aviso a Micaela por Telegram** (bot): instantáneo y gratis, pero tendría que instalar Telegram solo para esto.
+- **Notificación del navegador** (Web Push): más compleja y solo le llega a la computadora.
 - **WhatsApp automático** (API oficial de WhatsApp Business de Meta): requiere verificar el negocio, plantillas aprobadas por Meta y se paga por conversación. Más complejo que los emails. Queda para la fase 2 si el volumen lo justifica.
 
 ## Consecuencias
-- ➕ Una pieza menos (sin Resend ni DNS de emails en la fase 1) y el canal es el que usan los clientes.
+- ➕ Sin emails a clientes: no hacen falta registros DNS de email ni pelear con el spam, y el canal es el que usan los clientes. Resend se usa solo para avisarle a Micaela.
 - ➕ Se piden menos datos obligatorios (Ley 18.331).
 - ➖ Cada confirmación depende de que Micaela toque el botón; las reservas de la noche se confirman a la mañana. El cliente igual ve en pantalla que su turno quedó reservado.
 - ➖ No hay recordatorios automáticos el día anterior (Micaela puede mandarlos a mano).
 - ➖ "Mis reservas" con código (fase 2 de ADR-009) necesitaría mandar el código por WhatsApp automático o al email opcional; se decide en la fase 2.
-- ➖ Micaela necesita enterarse de cada reserva nueva para revisarla: queda pendiente definir cómo se le avisa ([pendientes](../pendientes.md)).
+- ➖ Si Micaela no ve el mail de aviso, la reserva queda pendiente: la sección de reservas del panel destaca las pendientes con el tiempo que les queda.
