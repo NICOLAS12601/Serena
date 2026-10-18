@@ -17,6 +17,8 @@ export class ServicesService {
         durationMin: true,
         price: true,
         imageUrl: true,
+        icon: true,
+        isFirstVisit: true,
       },
     });
   }

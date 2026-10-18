@@ -1,4 +1,5 @@
-// Initial data ("day zero"). Run with `pnpm db:seed`; also runs after `pnpm db:reset`.
+// Initial data ("day zero"). Run with `pnpm db:seed` (also after `pnpm db:reset`,
+// which in Prisma 7 no longer runs the seed by itself).
 // Safe to run more than once: it only creates what is missing, never overwrites.
 //
 // - Always: the single Settings row (defaults from schema.prisma) and the first
@@ -46,28 +47,58 @@ async function seedAdmin() {
 async function seedSampleData() {
   if ((await prisma.service.count()) === 0) {
     await prisma.service.createMany({
+      // Names and descriptions follow Micaela's designs (public copy);
+      // prices and most durations are placeholders.
       data: [
         {
+          name: 'Encuentro inicial',
+          description:
+            'Una entrevista para conocerte, un masaje personalizado según lo conversado y, para cerrar, un café o té en un ambiente tranquilo.',
+          durationMin: 90,
+          price: 1500,
+          icon: 'leaf',
+          isFirstVisit: true,
+          sortOrder: 0,
+        },
+        {
           name: 'Masaje relajante',
+          description:
+            'Ayuda a disminuir el estrés, relajar la mente y el cuerpo, mejorar la calidad del descanso y generar una sensación de bienestar general.',
           durationMin: 60,
           price: 1000,
+          icon: 'lotus',
           sortOrder: 1,
         },
         {
-          name: 'Masaje terapéutico',
+          name: 'Masaje descontracturante',
+          description:
+            'Alivia tensiones musculares, reduce contracturas y mejora la movilidad. Ideal para quienes sienten molestias por estrés, malas posturas o actividad física.',
           durationMin: 60,
           price: 1100,
+          icon: 'leaf',
           sortOrder: 2,
         },
         {
-          name: 'Piedras calientes',
-          durationMin: 90,
-          price: 1500,
+          name: 'Drenaje linfático',
+          description:
+            'Estimula la circulación linfática, ayuda a reducir la retención de líquidos y favorece la sensación de liviandad.',
+          durationMin: 60,
+          price: 1100,
+          icon: 'waves',
           sortOrder: 3,
+        },
+        {
+          name: 'Masaje con maderoterapia',
+          description:
+            'Técnica que utiliza elementos de madera para estimular la circulación, ayudar a modelar, reducir la retención de líquidos y mejorar el tono de la piel.',
+          durationMin: 60,
+          price: 1200,
+          icon: 'wood-roller',
+          sortOrder: 4,
         },
       ],
     });
-    console.log('✔ Sample services created (fake prices)');
+    console.log('✔ Sample services created (placeholder prices)');
   }
 
   if ((await prisma.weeklySchedule.count()) === 0) {

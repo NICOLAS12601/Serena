@@ -18,6 +18,8 @@ describe('ServicesService', () => {
       'durationMin',
       'price',
       'imageUrl',
+      'icon',
+      'isFirstVisit',
     ]);
   });
 });

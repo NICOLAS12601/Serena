@@ -21,17 +21,23 @@ datasource db {
 // ─── Catalog and availability ────────────────────────────────────────────────
 
 model Service {
-  id          Int       @id @default(autoincrement())
-  name        String
-  description String?
-  durationMin Int
-  price       Int
-  imageUrl    String?
-  active      Boolean   @default(true)
-  sortOrder   Int       @default(0)
-  createdAt   DateTime  @default(now()) @db.Timestamptz(3)
-  updatedAt   DateTime  @updatedAt @db.Timestamptz(3)
-  bookings    Booking[]
+  id           Int       @id @default(autoincrement())
+  name         String
+  description  String?
+  durationMin  Int
+  price        Int
+  imageUrl     String?
+  // Icon shown next to the service (key of a fixed set drawn by the web app,
+  // e.g. "lotus", "leaf", "waves", "wood-roller").
+  icon         String?
+  // The first-visit session ("Encuentro inicial"): offered only on the
+  // "Es mi primer masaje" path, hidden from the returning-client list.
+  isFirstVisit Boolean   @default(false)
+  active       Boolean   @default(true)
+  sortOrder    Int       @default(0)
+  createdAt    DateTime  @default(now()) @db.Timestamptz(3)
+  updatedAt    DateTime  @updatedAt @db.Timestamptz(3)
+  bookings     Booking[]
 }
 
 // Recurring opening hours. Several rows per weekday allow split shifts
