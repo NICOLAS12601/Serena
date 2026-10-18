@@ -59,6 +59,18 @@ El gestor del monorepo es **pnpm workspaces** ([ADR-007](decisiones/ADR-007-pnpm
 
 > ⚠️ Los límites de los planes gratuitos cambian seguido. **Revisarlos al momento de desplegar.**
 
+**Revisión de octubre 2026:**
+- **Netlify** gratis: 300 créditos por mes; si se agotan, el sitio se pausa hasta el mes siguiente. Plan pago desde US$9/mes.
+- **Render** gratis: la API se duerme a los 15 min sin uso y tarda ~1 min en despertar; tampoco puede correr tareas periódicas dormida. **Para el sitio real se recomienda el plan Starter (US$7/mes)**, siempre prendido.
+- **Neon** gratis: 0,5 GB y 100 horas de cómputo por mes; tiene regiones en São Paulo y EE.UU. Este.
+- **Regiones:** la API y la base tienen que estar **en la misma región** (se consultan muchas veces por página). Render no tiene región en Sudamérica, así que la combinación es API en Render Virginia + base en Neon EE.UU. Este (Virginia). La web la sirve la CDN de Netlify desde cerca del usuario.
+
+### Dominio y DNS
+- El **dominio** (el nombre) se compra en un **registrador** y se renueva cada año; el **alojamiento** es aparte. No hace falta comprar hosting donde se compra el dominio.
+- Los **registros DNS** son las anotaciones del dominio: **A** (a qué dirección IP va), **CNAME** (alias de otro nombre), **TXT** (notas para verificar que el dominio es de Micaela y para que los emails no caigan en spam).
+- Los **nameservers** indican qué empresa guarda y publica esas anotaciones. Por defecto, el registrador; se pueden pasar a otro (Netlify, Cloudflare) si el panel del registrador es limitado.
+- Solo la **web** necesita el dominio: la API y la base no se exponen al público (la web reenvía `/api`).
+
 ### ¿Qué es una "base de datos gestionada"?
 En vez de instalar y mantener PostgreSQL en un servidor propio (backups, actualizaciones, que no se caiga), un proveedor (Neon) lo corre por nosotros y nos da una URL de conexión. Ver [ADR-003](decisiones/ADR-003-hosting-nube-y-pc-de-casa.md).
 

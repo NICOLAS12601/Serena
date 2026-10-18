@@ -26,7 +26,12 @@ Lo que falta definir. Cuando algo se resuelve, se tacha y se anota dónde quedó
 
 ## Técnico
 - [x] ~~**Archivos del logo**~~ → logo oficial en `apps/web/public/logo-serena.png`; terracota exacta `#a14d29` ([07](07-marca.md)).
-- [ ] Nombre y compra del dominio.
+- [ ] **Dominio:** Micaela lo va a comprar en **HostingenlaWeb** (registrador acreditado de .uy). Antes de pagar, confirmar con el soporte:
+  - que venden **solo el dominio**, sin plan de hosting (sus planes de hosting compartido no pueden correr la API);
+  - que desde el panel se pueden **editar los registros DNS** (A, CNAME, TXT) **o cambiar los nameservers**;
+  - el precio del primer año y el de **renovación** (referencia vieja: US$38/año en 2022).
+
+  Al registrarlo: **a nombre de Micaela** y con **su email** como contacto administrativo (ahí llegan las aprobaciones de transferencias). El dominio se puede transferir a otro registrador con el código EPP. Activar la renovación automática.
 - [ ] Revisar los límites vigentes de los planes gratuitos (Render, Neon, Resend, Netlify) antes de desplegar.
 - [x] ~~Decidir el gestor de monorepo (npm workspaces, pnpm o Turborepo).~~ → pnpm workspaces ([ADR-007](decisiones/ADR-007-pnpm-workspaces.md)).
 - [x] ~~**Descanso entre sesiones en la exclusion constraint.**~~ → se guarda `blockedUntil` en cada reserva ([ADR-008](decisiones/ADR-008-descanso-guardado-en-la-reserva.md)).
