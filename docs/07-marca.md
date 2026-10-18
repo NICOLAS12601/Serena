@@ -42,6 +42,10 @@ Hay una grilla de contenido planificada (bienvenida, el espacio, servicios, bene
 
 ## Fotos del espacio
 
+**Cargada:** la sala con la camilla (`apps/web/public/espacio.jpg`), en la página "primera vez".
+
+> ⚠️ **Antes de publicar una foto, revisar que no tenga ubicación GPS** en sus metadatos: Micaela atiende en su casa y la foto revelaría la dirección. Las fotos enviadas por WhatsApp ya llegan sin esos datos; las copiadas directo del celular pueden tenerlos.
+
 Las fotos reales generan más confianza que las de stock. Recomendaciones para la sesión de fotos:
 - Una **sábana o toalla crema** sobre la camilla (el negro queda frío frente a la paleta).
 - Sacar del cuadro cajas, alargues y papeles.

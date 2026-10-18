@@ -10,7 +10,7 @@ Lo que falta definir. Cuando algo se resuelve, se tacha y se anota dónde quedó
 - [ ] Crear cuenta de **MercadoPago** y la "aplicación" de desarrolladores.
 - [ ] Datos bancarios para transferencias.
 - [ ] Textos: "Sobre mí", descripciones de servicios, preguntas frecuentes.
-- [ ] Sesión de fotos del espacio ([07](07-marca.md#fotos-del-espacio)).
+- [ ] Sesión de fotos del espacio ([07](07-marca.md#fotos-del-espacio)). Ya hay una foto de la sala; faltan detalles (aceites, piedras, toallas) para otras páginas.
 
 ### Preguntas que surgieron de los diseños (octubre 2026)
 - [x] ~~**Medios de pago:**~~ → se mantienen **MercadoPago y transferencia** ([ADR-005](decisiones/ADR-005-pagos-mercadopago-y-transferencia.md)). El cliente elige en la confirmación.

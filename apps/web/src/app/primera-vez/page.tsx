@@ -1,5 +1,7 @@
 import { Coffee, Flower2, Leaf, MessageCircle } from "lucide-react";
+import Image from "next/image";
 import { connection } from "next/server";
+import spacePhoto from "../../../public/espacio.jpg";
 import { ActionButton } from "@/components/action-button";
 import { PageShell } from "@/components/page-shell";
 import { getServicesOrNull } from "@/lib/api";
@@ -44,10 +46,13 @@ export default async function FirstVisitPage() {
           </p>
         </div>
 
-        {/* Placeholder until the photo session of the space (docs/07-marca.md). */}
-        <div className="mt-8 flex aspect-[4/3] items-center md:mt-0 justify-center rounded-[2rem_6rem_2rem_6rem] bg-gradient-to-br from-blush via-[#e7c9b8] to-[#c99a83] text-sm tracking-widest text-cream uppercase">
-          Foto del espacio
-        </div>
+        <Image
+          src={spacePhoto}
+          alt="La sala de masajes de Serena: camilla con manta crema, toallas, aceites y una lámpara de sal"
+          placeholder="blur"
+          sizes="(min-width: 768px) 480px, 100vw"
+          className="mt-8 aspect-[4/3] w-full rounded-[2rem_6rem_2rem_6rem] object-cover object-[50%_60%] md:mt-0 md:aspect-[4/5]"
+        />
       </div>
 
       <section className="mt-8 rounded-3xl bg-blush/80 p-6 md:p-8">
