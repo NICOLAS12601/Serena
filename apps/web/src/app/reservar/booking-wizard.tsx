@@ -25,14 +25,9 @@ import { useState } from "react";
 import { ActionButton } from "@/components/action-button";
 import { BrandLogo } from "@/components/brand-logo";
 import { PageShell } from "@/components/page-shell";
-import { formatPrice, type Service } from "@/lib/api";
+import { formatPrice, type PublicSettings, type Service } from "@/lib/api";
 import {
-  DEMO_DEPOSIT_PERCENT,
-  DEMO_MAX_ADVANCE_DAYS,
   DEMO_POLICIES,
-  DEMO_TRANSFER_DISCOUNT_PERCENT,
-  DEMO_TRANSFER_HOLD_HOURS,
-  DEMO_WHATSAPP_NUMBER,
   getDemoSlots,
   isDemoDayAvailable,
   type Slot,
@@ -59,7 +54,15 @@ const EMPTY_DETAILS: ClientDetails = {
   privacyConsent: false,
 };
 
-export function BookingWizard({ service, backHref }: { service: Service; backHref: string }) {
+export function BookingWizard({
+  service,
+  settings,
+  backHref,
+}: {
+  service: Service;
+  settings: PublicSettings;
+  backHref: string;
+}) {
   const router = useRouter();
   const [step, setStep] = useState<Step>("date");
   const [date, setDate] = useState<Date | null>(null);
@@ -82,6 +85,7 @@ export function BookingWizard({ service, backHref }: { service: Service; backHre
   if (step === "done" && date && time && method && plan) {
     return (
       <DoneScreen
+        settings={settings}
         service={service}
         date={date}
         time={time}
@@ -98,6 +102,7 @@ export function BookingWizard({ service, backHref }: { service: Service; backHre
       <Stepper step={step} />
       {step === "date" && (
         <DateStep
+          maxAdvanceDays={settings.maxAdvanceDays}
           selected={date}
           onSelect={(day) => {
             setDate(day);
@@ -127,6 +132,7 @@ export function BookingWizard({ service, backHref }: { service: Service; backHre
       )}
       {step === "confirm" && date && time && (
         <ConfirmStep
+          settings={settings}
           service={service}
           date={date}
           time={time}
@@ -214,17 +220,19 @@ function sameDay(a: Date, b: Date) {
 }
 
 function DateStep({
+  maxAdvanceDays,
   selected,
   onSelect,
   onContinue,
 }: {
+  maxAdvanceDays: number;
   selected: Date | null;
   onSelect: (date: Date) => void;
   onContinue: () => void;
 }) {
   const today = startOfDay(new Date());
   const lastDay = new Date(today);
-  lastDay.setDate(today.getDate() + DEMO_MAX_ADVANCE_DAYS);
+  lastDay.setDate(today.getDate() + maxAdvanceDays);
   const [month, setMonth] = useState(new Date(today.getFullYear(), today.getMonth(), 1));
 
   // Grid starts on Monday: getDay() is 0 for Sunday, so shift it to the end.
@@ -606,18 +614,23 @@ export type PaymentMethod = "MERCADO_PAGO" | "BANK_TRANSFER";
 export type PaymentPlan = "DEPOSIT" | "FULL";
 
 /** Price actually charged: bank transfers get a discount (no Mercado Pago fee). */
-function priceFor(service: Service, method: PaymentMethod) {
+function priceFor(settings: PublicSettings, service: Service, method: PaymentMethod) {
   return method === "BANK_TRANSFER"
-    ? Math.round((service.price * (100 - DEMO_TRANSFER_DISCOUNT_PERCENT)) / 100)
+    ? Math.round((service.price * (100 - settings.transferDiscountPercent)) / 100)
     : service.price;
 }
 
-function depositFor(service: Service, method: PaymentMethod) {
-  return Math.round((priceFor(service, method) * DEMO_DEPOSIT_PERCENT) / 100);
+function depositFor(settings: PublicSettings, service: Service, method: PaymentMethod) {
+  return Math.round((priceFor(settings, service, method) * settings.depositPercent) / 100);
 }
 
-function amountNow(service: Service, method: PaymentMethod, plan: PaymentPlan) {
-  return plan === "FULL" ? priceFor(service, method) : depositFor(service, method);
+function amountNow(
+  settings: PublicSettings,
+  service: Service,
+  method: PaymentMethod,
+  plan: PaymentPlan,
+) {
+  return plan === "FULL" ? priceFor(settings, service, method) : depositFor(settings, service, method);
 }
 
 function RadioCard({
@@ -655,6 +668,7 @@ function RadioCard({
 }
 
 function ConfirmStep({
+  settings,
   service,
   date,
   time,
@@ -664,6 +678,7 @@ function ConfirmStep({
   onPlanChange,
   onConfirm,
 }: {
+  settings: PublicSettings;
   service: Service;
   date: Date;
   time: string;
@@ -682,8 +697,8 @@ function ConfirmStep({
   ];
   // Amounts shown for the plan options follow the chosen method (transfer is cheaper).
   const shownMethod = method ?? "MERCADO_PAGO";
-  const price = priceFor(service, shownMethod);
-  const deposit = depositFor(service, shownMethod);
+  const price = priceFor(settings, service, shownMethod);
+  const deposit = depositFor(settings, service, shownMethod);
 
   return (
     <>
@@ -715,8 +730,8 @@ function ConfirmStep({
             name="payment-method"
             checked={method === "BANK_TRANSFER"}
             onChange={() => onMethodChange("BANK_TRANSFER")}
-            title={`Transferencia · ${DEMO_TRANSFER_DISCOUNT_PERCENT}% de descuento`}
-            detail={`Te guardamos el turno ${DEMO_TRANSFER_HOLD_HOURS} horas para transferir; se confirma cuando Micaela recibe el pago.`}
+            title={`Transferencia · ${settings.transferDiscountPercent}% de descuento`}
+            detail={`Te guardamos el turno ${settings.transferHoldHours} horas para transferir; se confirma cuando Micaela recibe el pago.`}
           />
         </div>
 
@@ -726,7 +741,7 @@ function ConfirmStep({
             name="payment-plan"
             checked={plan === "DEPOSIT"}
             onChange={() => onPlanChange("DEPOSIT")}
-            title={`Seña del ${DEMO_DEPOSIT_PERCENT}% · ${formatPrice(deposit)}`}
+            title={`Seña del ${settings.depositPercent}% · ${formatPrice(deposit)}`}
             detail={`El resto (${formatPrice(price - deposit)}) lo pagás después del masaje.`}
           />
           <RadioCard
@@ -756,12 +771,12 @@ function ConfirmStep({
  * Opens WhatsApp with the message already written. Without Micaela's number
  * (Settings.whatsappNumber, from the panel) WhatsApp asks which chat to use.
  */
-function whatsappReceiptLink(message: string) {
-  const number = DEMO_WHATSAPP_NUMBER;
+function whatsappReceiptLink(number: string | null, message: string) {
   return `https://wa.me/${number ?? ""}?text=${encodeURIComponent(message)}`;
 }
 
 function DoneScreen({
+  settings,
   service,
   date,
   time,
@@ -769,6 +784,7 @@ function DoneScreen({
   plan,
   clientName,
 }: {
+  settings: PublicSettings;
   service: Service;
   date: Date;
   time: string;
@@ -777,8 +793,8 @@ function DoneScreen({
   clientName: string;
 }) {
   const transfer = method === "BANK_TRANSFER";
-  const paid = amountNow(service, method, plan);
-  const rest = priceFor(service, method) - paid;
+  const paid = amountNow(settings, service, method, plan);
+  const rest = priceFor(settings, service, method) - paid;
   const firstName = clientName.trim().split(/\s+/)[0] || clientName;
   const receiptMessage = `¡Hola Micaela! Soy ${clientName.trim()}. Reservé ${service.name} el ${formatLongDate(date)} a las ${time} hs. Te envío el comprobante de la transferencia de ${formatPrice(paid)}.`;
 
@@ -800,7 +816,7 @@ function DoneScreen({
           <>
             <p className="mt-3 leading-relaxed text-taupe">
               {firstName}, para confirmarlo transferí {formatPrice(paid)} dentro de las
-              próximas {DEMO_TRANSFER_HOLD_HOURS} horas y poné <strong>tu nombre</strong> como
+              próximas {settings.transferHoldHours} horas y poné <strong>tu nombre</strong> como
               referencia. Cuando Micaela reciba el pago, te llega la confirmación por email
               con la dirección.
             </p>
@@ -813,7 +829,7 @@ function DoneScreen({
               </p>
             </section>
             <a
-              href={whatsappReceiptLink(receiptMessage)}
+              href={whatsappReceiptLink(settings.whatsappNumber, receiptMessage)}
               target="_blank"
               rel="noopener noreferrer"
               className="mt-5 inline-flex w-full items-center justify-center gap-3 rounded-full bg-olive px-6 py-4 font-serif text-lg text-cream transition-colors hover:bg-olive-dark"
