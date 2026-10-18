@@ -17,10 +17,12 @@ Lo que falta definir. Cuando algo se resuelve, se tacha y se anota dónde quedó
 - [x] ~~**Fecha de nacimiento:**~~ → se mantiene en el formulario.
 - [x] ~~**Anticipación para cancelar:**~~ → **12 horas**, y con aviso a tiempo el turno se **reprograma** (la seña pasa al nuevo turno). Ver [02](02-requerimientos.md#política-de-cancelación-acordada-en-octubre-2026-editable).
 - [x] ~~**Pantalla final:**~~ → con MercadoPago, "¡Tu reserva está confirmada!"; con transferencia, "¡Tu turno está reservado!" hasta que llega la seña.
-- [ ] **Comprobante de transferencia:** propuesta (pendiente de confirmar): en la pantalla final, los datos bancarios, un **código de reserva** para poner como referencia de la transferencia y un botón **"Enviar comprobante por WhatsApp"** con el mensaje ya escrito. El comprobante ayuda a identificar el pago, pero **no es prueba**: Micaela confirma al ver la plata en el banco. Requiere el número de WhatsApp de Micaela en `Settings` (nunca en el código). Subir el comprobante a la web queda como opción para la fase 2.
+- [x] ~~**Comprobante de transferencia:**~~ → botón "Enviar comprobante por WhatsApp" con el mensaje ya escrito; como referencia, **el nombre** (sin código de reserva) ([ADR-010](decisiones/ADR-010-pago-de-sena-o-total.md)).
 - [ ] **WhatsApp automático:** el diseño dice "te enviamos los detalles a tu WhatsApp". Mandar WhatsApp automáticos requiere la API de WhatsApp Business (tiene costo); por ahora solo email (fase 2).
 - [ ] **Precios en la lista de masajes:** el diseño no los muestra; se agregaron chicos debajo de la descripción (los precios visibles generan confianza, ver [01](01-analisis-mercado.md)).
-- [ ] **Encuentro inicial:** precio y si solo lo pueden reservar clientes nuevos (hoy cada uno elige su camino; no se verifica).
+- [x] ~~**Encuentro inicial:**~~ → el cliente nuevo no elige masaje: Micaela lo define en la entrevista. El precio ($1.200) lo carga ella desde el panel (no va en el código).
+- [ ] **Pago total y cancelación tardía:** si alguien pagó **el total** y cancela con menos de 12 h, ¿pierde solo la seña y se le devuelve el resto, o pierde todo?
+- [ ] **¿Se verifica que sea cliente nuevo?** Hoy cada uno elige su camino ("primera vez" o "ya soy cliente"). Se podría avisar a Micaela si un email ya conocido reserva el encuentro inicial, o al revés.
 
 ## Técnico
 - [ ] **Archivos del logo** (SVG o PNG en alta) para reemplazar la versión de texto, y confirmar los hex exactos.

@@ -49,7 +49,7 @@ ClientLoginCode client, codeHash, expiresAt, usedAt                             
                   se usan una sola vez y se guardan hasheados
 
 Booking         client, service, startsAt, endsAt, blockedUntil, status, paymentMethod,
-                priceSnapshot, depositAmount, holdExpiresAt, reason (motivo de consulta),
+                paymentPlan (DEPOSIT | FULL), priceSnapshot, depositAmount, holdExpiresAt, reason (motivo de consulta),
                 privacyConsentAt, manageTokenHash, createdAt
                 → la reserva (el turno)
 
@@ -59,6 +59,7 @@ Payment         booking, amount, status, mercadoPagoPaymentId (único), verified
 Settings        depositPercent, transferDiscountPercent, mpHoldMinutes, transferHoldHours,
                 bufferMinutes, minAdvanceHours, maxAdvanceDays, bankDetails,
                 address (solo se envía en el email de confirmación), neighborhood (barrio, público),
+                whatsappNumber (botón de comprobante y de contacto),
                 cancellationPolicyText
                 → una sola fila con la configuración editable desde el panel
 
@@ -90,7 +91,8 @@ AdminUser       email (único), passwordHash
 
 ## Decisiones de diseño a notar
 
-- **`priceSnapshot` y `depositAmount` se copian al momento de reservar.** Si Micaela cambia los precios, las reservas ya hechas no se alteran.
+- **`priceSnapshot` y `depositAmount` se copian al momento de reservar.** Si Micaela cambia los precios, las reservas ya hechas no se alteran. `priceSnapshot` ya incluye el descuento por transferencia.
+- **`paymentPlan`** dice si el cliente pagó por adelantado la **seña** o el **total**. `depositAmount` es siempre la seña: la parte que no se devuelve ([ADR-010](decisiones/ADR-010-pago-de-sena-o-total.md)).
 - **`endsAt` = `startsAt` + duración del servicio**, y **`blockedUntil` = `endsAt` + descanso** (`bufferMinutes` vigente al reservar). La restricción anti-superposición usa `[startsAt, blockedUntil)`, así el descanso también lo garantiza la base de datos (ver [05](05-flujo-de-reserva.md) y [ADR-008](decisiones/ADR-008-descanso-guardado-en-la-reserva.md)).
 - **`Settings` es una tabla de una sola fila** en vez de constantes en el código, así todo lo operativo se edita desde el panel sin volver a desplegar.
 - `reason` (motivo de consulta) es un **dato de salud**: acceso restringido al panel y nunca se expone en APIs públicas.
@@ -120,7 +122,9 @@ El modelo está en **tercera forma normal**: cada dato vive en un solo lugar (el
 | `blockedUntil` | Ocupa el horario hasta (fin + descanso) |
 | `holdExpiresAt` | Vence el bloqueo temporal |
 | `priceSnapshot` | Precio acordado al reservar |
-| `depositAmount` | Monto de la seña |
+| `depositAmount` | Monto de la seña (no se devuelve) |
+| `paymentPlan` | Qué pagó por adelantado: seña (`DEPOSIT`) o total (`FULL`) |
+| `whatsappNumber` | Número de WhatsApp de Micaela |
 | `reason` | Motivo de consulta |
 | `birthDate` | Fecha de nacimiento |
 | `privacyConsentAt` | Fecha de aceptación de la política de privacidad |

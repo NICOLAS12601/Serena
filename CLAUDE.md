@@ -22,6 +22,8 @@ Sitio web + sistema de reservas para **SERENA · Masajes & Bienestar** (Montevid
 - Next.js (web) + NestJS (API) separados, en monorepo; PostgreSQL (Neon) + Prisma.
 - Agenda **propia**, con bloqueo temporal del horario mientras se paga (10 min MercadoPago, 2 h transferencia) y **exclusion constraint** en PostgreSQL contra la superposición.
 - Seña del 50%: MercadoPago (webhook **siempre verificado** contra la API de MP) o transferencia con descuento (confirmación manual al ver la plata en el banco).
+- El cliente elige pagar la **seña** (no se devuelve; con 12 h de aviso pasa al turno reprogramado) o el **total** (ADR-010). Comprobante de transferencia: botón de WhatsApp con mensaje armado; referencia = nombre.
+- Clientes nuevos reservan solo el **Encuentro inicial** (`isFirstVisit`); el masaje lo define Micaela en la entrevista.
 - Todo lo operativo (horarios, precios, seña, políticas, anticipación) se **configura desde el panel**, con valores por defecto vía seed.
 - Hosting gratuito en la nube; la PC de casa solo como staging.
 

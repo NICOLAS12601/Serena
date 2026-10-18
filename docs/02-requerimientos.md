@@ -14,11 +14,12 @@
 Las pantallas siguen los **diseños de Micaela** (octubre 2026): una columna pensada para celular, con el logo arriba y hojas decorativas.
 
 - **Home:** logo y **dos caminos**: *"Es mi primer masaje en Serena"* y *"Ya soy cliente"*.
-- **Primera vez** (`/primera-vez`): presenta el **Encuentro inicial** (90 min: entrevista, masaje personalizado y un café o té al final) y lleva a reservarlo. Es un servicio marcado `isFirstVisit`; no aparece en la lista de clientes que vuelven.
+- **Primera vez** (`/primera-vez`): presenta el **Encuentro inicial** (90 min: entrevista, masaje personalizado y un café o té al final) y lleva a reservarlo. El cliente nuevo **no elige masaje**: Micaela lo define en la entrevista, según lo que la persona necesita. Es un servicio marcado `isFirstVisit`; no aparece en la lista de clientes que vuelven. Su precio lo carga Micaela desde el panel.
 - **Servicios** (`/masajes`, para quien ya es cliente): ícono, nombre, descripción, duración y precio de cada masaje (cargados desde el panel).
 - **Reserva online** (`/reservar`), en pasos: **fecha** (calendario) → **horario** (agrupado en mañana, tarde y noche; los ocupados se ven tachados) → **políticas** (hay que aceptarlas) → **datos** → **confirmación** (resumen y seña) → **listo**. **Sin registro ni contraseña** ([ADR-009](decisiones/ADR-009-reserva-sin-cuenta.md)).
 - **Link de gestión** en el email de confirmación para ver esa reserva y **reprogramarla** (con 12 h o más de anticipación, la seña pasa al nuevo turno).
-- **Pago de la seña:** el cliente elige **MercadoPago** (se confirma solo) o **transferencia** con descuento (queda reservado hasta que Micaela ve la plata); ver [06](06-pagos-y-seguridad.md).
+- **Pago:** el cliente elige **MercadoPago** (se confirma solo) o **transferencia** con descuento (queda reservado hasta que Micaela ve la plata), y si paga la **seña** o el **total**; si paga la seña, el resto se paga después del masaje ([ADR-010](decisiones/ADR-010-pago-de-sena-o-total.md)).
+- **Comprobante de transferencia:** botón "Enviar comprobante por WhatsApp" con el mensaje ya escrito; como referencia de la transferencia se pide **el nombre**.
 - **Sobre mí**, **testimonios**, **preguntas frecuentes**, **política de cancelación**.
 - **Contacto:** formulario, botón flotante de WhatsApp con mensaje precargado, link a Instagram, barrio (sin dirección exacta).
 - **Política de privacidad** (requerida por la Ley 18.331; ver [06](06-pagos-y-seguridad.md#datos-personales-ley-18331)).

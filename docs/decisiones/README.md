@@ -13,6 +13,7 @@ Cada archivo registra **una** decisión: el contexto, qué se decidió, qué alt
 | [007](ADR-007-pnpm-workspaces.md) | pnpm workspaces como gestor del monorepo | Aceptada |
 | [008](ADR-008-descanso-guardado-en-la-reserva.md) | El fin del bloqueo (sesión + descanso) se guarda en cada reserva | Aceptada |
 | [009](ADR-009-reserva-sin-cuenta.md) | Reservar sin contraseña; "Mis reservas" con código por email (fase 2) | Aceptada |
+| [010](ADR-010-pago-de-sena-o-total.md) | El cliente elige pagar la seña o el total; comprobante de transferencia por WhatsApp | Aceptada |
 
 ## Plantilla
 

@@ -3,7 +3,8 @@
 ## Seña
 
 - Porcentaje configurable (**50%** por defecto) sobre el precio del servicio.
-- El resto se paga en la sesión.
+- El cliente puede pagar **solo la seña** (el resto, después del masaje) o **el total** por adelantado ([ADR-010](decisiones/ADR-010-pago-de-sena-o-total.md)).
+- La seña **no se devuelve**: con 12 h o más de aviso pasa al turno reprogramado; con menos, se pierde.
 
 ## MercadoPago (Checkout Pro)
 
@@ -30,7 +31,7 @@
 
 - Precio con **descuento** configurable (**10%** por defecto), porque no hay comisión de MercadoPago.
 - La reserva queda en `PENDING_VERIFICATION` con un bloqueo más largo (**2 h** por defecto).
-- Se le muestran al cliente los **datos bancarios** (cargados en el panel) y se le pide enviar el comprobante (WhatsApp o email).
+- Se le muestran al cliente los **datos bancarios** (cargados en el panel), se le pide poner **su nombre** como referencia y se le ofrece un botón **"Enviar comprobante por WhatsApp"** con el mensaje ya escrito (número de `Settings.whatsappNumber`).
 - Micaela **confirma manualmente** desde el panel.
 
 > ⚠️ **Regla de oro: confirmar solo al ver la plata acreditada en la cuenta del banco, nunca por un comprobante o captura de pantalla.** Las capturas truchas son el fraude más común.
