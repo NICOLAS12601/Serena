@@ -30,9 +30,9 @@
 ## Transferencia bancaria
 
 - Precio con **descuento** configurable (**10%** por defecto), porque no hay comisión de MercadoPago.
-- La reserva queda en `PENDING_VERIFICATION` con un bloqueo más largo (**2 h** por defecto).
+- La reserva queda en `PENDING_VERIFICATION` con un bloqueo más largo (**2 h** por defecto), que es el plazo para **transferir y mandar el comprobante**. Cuando llega el comprobante, Micaela lo marca en el panel y el turno queda guardado **sin vencimiento** hasta que la plata se acredite, porque entre bancos puede tardar días ([ADR-014](decisiones/ADR-014-comprobante-de-transferencia.md)).
 - Se le muestran al cliente los **datos bancarios** (cargados en el panel), se le pide poner **su nombre** como referencia y se le ofrece un botón **"Enviar comprobante por WhatsApp"** con el mensaje ya escrito (número de `Settings.whatsappNumber`). Un link de WhatsApp no puede adjuntar archivos: el cliente adjunta la captura o el PDF en el chat.
-- **Flujo de confirmación:** Micaela revisa su cuenta bancaria → al ver la plata, confirma la reserva desde el panel → la reserva pasa a `CONFIRMED` y Micaela le avisa al cliente con el botón **"Avisar por WhatsApp"** (mensaje con la confirmación y la dirección).
+- **Flujo de confirmación:** llega el comprobante por WhatsApp → Micaela toca "Recibí el comprobante" (no confirma, solo guarda el turno) → revisa su cuenta bancaria → al ver la plata, confirma la reserva desde el panel → la reserva pasa a `CONFIRMED` y Micaela le avisa al cliente con el botón **"Avisar por WhatsApp"** (mensaje con la confirmación y la dirección).
 - Micaela **confirma manualmente** desde el panel.
 
 > ⚠️ **Regla de oro: confirmar solo al ver la plata acreditada en la cuenta del banco, nunca por un comprobante o captura de pantalla.** Las capturas truchas son el fraude más común.

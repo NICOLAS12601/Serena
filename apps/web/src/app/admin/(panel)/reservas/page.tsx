@@ -32,6 +32,16 @@ const STATUS: Record<BookingStatus, { label: string; className: string }> = {
   EXPIRED: { label: "Vencida", className: "bg-red-50 text-red-700" },
 };
 
+/** The status badge; a transfer with its receipt in hand reads differently. */
+function statusBadge(booking: AdminBooking) {
+  return booking.status === "PENDING_VERIFICATION" && booking.receiptReceivedAt
+    ? {
+        label: "Comprobante recibido",
+        className: "bg-olive/15 text-olive-dark",
+      }
+    : STATUS[booking.status];
+}
+
 // ─── Formatting ─────────────────────────────────────────────────────────────
 
 const dayKey = (iso: string) =>
@@ -69,6 +79,14 @@ function timeLeft(iso: string): string {
   return hours > 0 ? `${hours} h ${minutes % 60} min` : `${minutes} min`;
 }
 
+/** "3 h" or "2 días" since the receipt arrived. */
+function timeSince(iso: string): string {
+  const hours = Math.floor((Date.now() - new Date(iso).getTime()) / 3_600_000);
+  if (hours < 1) return "hace un rato";
+  if (hours < 48) return `hace ${hours} h`;
+  return `hace ${Math.floor(hours / 24)} días`;
+}
+
 /** What the client has to pay online for this booking. */
 const amountDue = (booking: AdminBooking) =>
   booking.paymentPlan === "FULL"
@@ -98,6 +116,12 @@ function confirmationMessage(booking: AdminBooking, address: string | null) {
   ]
     .filter(Boolean)
     .join("\n");
+}
+
+/** Sent when the receipt arrives but the money is not in the account yet. */
+function receiptMessage(booking: AdminBooking) {
+  const firstName = booking.client.name.trim().split(/\s+/)[0];
+  return `¡Hola ${firstName}! Recibí tu comprobante. Apenas se acredite la transferencia te confirmo la reserva del ${longDay(booking.startsAt)} a las ${hour(booking.startsAt)} hs y te paso la dirección.`;
 }
 
 // ─── Page ───────────────────────────────────────────────────────────────────
@@ -144,6 +168,11 @@ export default function BookingsAdminPage() {
 
   if (!data) return <Loading />;
 
+  const receiptReceived = run(
+    "receipt-received",
+    (b) =>
+      `Comprobante de ${b.client.name} anotado: el turno queda guardado hasta que llegue la plata. Avisale por WhatsApp desde "Para revisar".`,
+  );
   const confirmPayment = run(
     "confirm-payment",
     (b) =>
@@ -191,14 +220,16 @@ export default function BookingsAdminPage() {
         {data.toReview.length > 0 && (
           <Card title={`Para revisar (${data.toReview.length})`}>
             <p className="-mt-2 mb-4 text-sm text-taupe">
-              Transferencias pendientes. Confirmá solo cuando veas la plata en
-              tu cuenta, nunca por una captura.
+              Transferencias pendientes. Cuando te llegue el comprobante,
+              marcalo: el turno queda guardado. Confirmá solo cuando veas la
+              plata en tu cuenta, nunca por una captura.
             </p>
             <ul className="flex flex-col gap-3">
               {data.toReview.map((booking) => (
                 <ReviewRow
                   key={booking.id}
                   booking={booking}
+                  onReceipt={receiptReceived}
                   onConfirm={confirmPayment}
                   onCancel={cancel}
                 />
@@ -278,15 +309,18 @@ function Who({ booking }: { booking: AdminBooking }) {
 
 function ReviewRow({
   booking,
+  onReceipt,
   onConfirm,
   onCancel,
 }: {
   booking: AdminBooking;
+  onReceipt: Action;
   onConfirm: Action;
   onCancel: Action;
 }) {
   const [busy, setBusy] = useState(false);
   const expired = booking.status === "EXPIRED";
+  const receipt = booking.receiptReceivedAt;
   const act = (action: Action) => async () => {
     setBusy(true);
     await action(booking);
@@ -302,9 +336,14 @@ function ReviewRow({
             {formatPrice(amountDue(booking))}
           </strong>{" "}
           ({booking.paymentPlan === "FULL" ? "total" : "seña"}) ·{" "}
-          {expired ? (
+          {receipt ? (
+            <span className="text-olive-dark">
+              comprobante recibido {timeSince(receipt)}, esperando que se
+              acredite
+            </span>
+          ) : expired ? (
             <span className="text-red-700">
-              venció: si la plata llegó igual, podés confirmarla
+              venció: si llega el comprobante o la plata, podés marcarlo igual
             </span>
           ) : (
             booking.holdExpiresAt && (
@@ -316,15 +355,36 @@ function ReviewRow({
         </p>
       </div>
       <div className="flex shrink-0 gap-2">
-        <a
-          href={whatsappLink(booking.client.phone)}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="rounded-lg border border-taupe/40 bg-white px-3 py-2 text-sm hover:border-terracotta"
-          title="Abrir el chat"
-        >
-          <MessageCircle className="h-4 w-4" strokeWidth={1.5} />
-        </a>
+        {receipt ? (
+          <a
+            href={whatsappLink(booking.client.phone, receiptMessage(booking))}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 rounded-lg bg-olive px-3 py-2 text-sm text-cream hover:bg-olive-dark"
+          >
+            <MessageCircle className="h-4 w-4" strokeWidth={1.5} />
+            Avisar por WhatsApp
+          </a>
+        ) : (
+          <>
+            <a
+              href={whatsappLink(booking.client.phone)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="rounded-lg border border-taupe/40 bg-white px-3 py-2 text-sm hover:border-terracotta"
+              title="Abrir el chat"
+            >
+              <MessageCircle className="h-4 w-4" strokeWidth={1.5} />
+            </a>
+            <Button
+              variant="secondary"
+              disabled={busy}
+              onClick={act(onReceipt)}
+            >
+              Recibí el comprobante
+            </Button>
+          </>
+        )}
         <Button disabled={busy} onClick={act(onConfirm)}>
           Llegó la plata
         </Button>
@@ -451,9 +511,9 @@ function Upcoming({
                     )}
                   </div>
                   <span
-                    className={`rounded-full px-3 py-1 text-xs ${STATUS[booking.status].className}`}
+                    className={`rounded-full px-3 py-1 text-xs ${statusBadge(booking).className}`}
                   >
-                    {STATUS[booking.status].label}
+                    {statusBadge(booking).label}
                   </span>
                   <div className="flex shrink-0 gap-2">
                     {booking.status === "CONFIRMED" && (

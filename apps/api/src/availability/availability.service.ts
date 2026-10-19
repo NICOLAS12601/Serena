@@ -86,13 +86,18 @@ export class AvailabilityService {
           startsAt: { lt: rangeEnd },
           blockedUntil: { gt: rangeStart },
           ...(admin ? { id: { not: admin.excludeBookingId } } : {}),
-          // Bookings that hold the agenda: confirmed (or already past), or
-          // pending payment while their hold has not run out (ADR-004).
+          // Bookings that hold the agenda: confirmed (or already past),
+          // pending payment while their hold has not run out (ADR-004), or
+          // transfers whose receipt Micaela already got (ADR-014).
           OR: [
             { status: { in: ['CONFIRMED', 'COMPLETED', 'NO_SHOW'] } },
             {
               status: { in: ['PENDING_PAYMENT', 'PENDING_VERIFICATION'] },
               holdExpiresAt: { gt: now },
+            },
+            {
+              status: 'PENDING_VERIFICATION',
+              receiptReceivedAt: { not: null },
             },
           ],
         },

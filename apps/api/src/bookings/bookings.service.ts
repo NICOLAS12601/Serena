@@ -225,7 +225,7 @@ export class BookingsService {
       `Cuándo: ${when(booking.startsAt, true)} hs`,
       `Tiene que transferir: ${pesos(amountDue)} (${booking.paymentPlan === 'FULL' ? 'el total' : `seña; total ${pesos(booking.priceSnapshot)}`})`,
       booking.holdExpiresAt
-        ? `El turno queda guardado hasta las ${when(booking.holdExpiresAt, false)}; si no llega la transferencia, se libera solo.`
+        ? `Tiene hasta las ${when(booking.holdExpiresAt, false)} para mandarte el comprobante; si no, el turno se libera solo. Cuando te llegue, marcalo en el panel: el turno queda guardado hasta que veas la plata.`
         : '',
       // Health data stays in the panel, never in an email (Law 18.331).
       booking.reason ? 'Dejó un comentario: miralo en el panel.' : '',

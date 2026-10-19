@@ -1129,10 +1129,12 @@ function DoneScreen({
         {transfer ? (
           <>
             <p className="mt-3 leading-relaxed text-taupe">
-              {firstName}, para confirmarlo transferí {formatPrice(paid)} dentro
-              de las próximas {settings.transferHoldHours} horas y poné{" "}
-              <strong>tu nombre</strong> como referencia. Cuando Micaela reciba
-              el pago, te confirma por WhatsApp y te pasa la dirección.
+              {firstName}, transferí {formatPrice(paid)} con{" "}
+              <strong>tu nombre</strong> como referencia y mandá el comprobante
+              por WhatsApp dentro de las próximas {settings.transferHoldHours}{" "}
+              horas. Con el comprobante te guardamos el turno aunque la
+              transferencia demore en acreditarse; cuando llegue, Micaela te
+              confirma y te pasa la dirección.
             </p>
             <section className="mt-6 w-full rounded-3xl bg-blush/70 p-5 text-left">
               <h2 className="font-serif text-xl">

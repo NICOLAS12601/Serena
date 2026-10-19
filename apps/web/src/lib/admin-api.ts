@@ -135,6 +135,8 @@ export type AdminBooking = {
   priceSnapshot: number;
   depositAmount: number;
   holdExpiresAt: string | null;
+  /** Transfer receipt received: the slot stays held until the money shows up. */
+  receiptReceivedAt: string | null;
   /** Health data: shown only here. */
   reason: string | null;
   /** Total collected so far (approved payments). */

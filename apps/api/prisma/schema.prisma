@@ -94,35 +94,38 @@ enum PaymentPlan {
 }
 
 model Booking {
-  id               Int           @id @default(autoincrement())
-  clientId         Int
-  client           Client        @relation(fields: [clientId], references: [id])
-  serviceId        Int
-  service          Service       @relation(fields: [serviceId], references: [id])
-  startsAt         DateTime      @db.Timestamptz(3)
-  endsAt           DateTime      @db.Timestamptz(3)
+  id                Int           @id @default(autoincrement())
+  clientId          Int
+  client            Client        @relation(fields: [clientId], references: [id])
+  serviceId         Int
+  service           Service       @relation(fields: [serviceId], references: [id])
+  startsAt          DateTime      @db.Timestamptz(3)
+  endsAt            DateTime      @db.Timestamptz(3)
   // endsAt + buffer in force when booked; the no-overlap constraint uses
   // [startsAt, blockedUntil) (ADR-008). Added by a manual SQL migration.
-  blockedUntil     DateTime      @db.Timestamptz(3)
-  status           BookingStatus
-  paymentMethod    PaymentMethod
-  paymentPlan      PaymentPlan
+  blockedUntil      DateTime      @db.Timestamptz(3)
+  status            BookingStatus
+  paymentMethod     PaymentMethod
+  paymentPlan       PaymentPlan
   // Agreed at booking time; later price changes do not affect this booking.
   // The transfer discount, if any, is already applied.
-  priceSnapshot    Int
+  priceSnapshot     Int
   // The non-refundable part: lost when cancelling with less notice than the
   // policy allows; otherwise it carries over to the rescheduled booking.
-  depositAmount    Int
-  holdExpiresAt    DateTime?     @db.Timestamptz(3)
+  depositAmount     Int
+  holdExpiresAt     DateTime?     @db.Timestamptz(3)
+  // Bank transfers: Micaela got the receipt (ADR-014). From then on the slot
+  // stays held (holdExpiresAt = null) until she sees the money and confirms.
+  receiptReceivedAt DateTime?     @db.Timestamptz(3)
   // Reason for the visit (optional; Micaela follows up by WhatsApp).
   // Health data (Law 18.331): admin panel only.
-  reason           String?
-  privacyConsentAt DateTime      @db.Timestamptz(3)
+  reason            String?
+  privacyConsentAt  DateTime      @db.Timestamptz(3)
   // Hash of the secret in the management link (ADR-009, ADR-012).
-  manageTokenHash  String        @unique
-  createdAt        DateTime      @default(now()) @db.Timestamptz(3)
-  updatedAt        DateTime      @updatedAt @db.Timestamptz(3)
-  payments         Payment[]
+  manageTokenHash   String        @unique
+  createdAt         DateTime      @default(now()) @db.Timestamptz(3)
+  updatedAt         DateTime      @updatedAt @db.Timestamptz(3)
+  payments          Payment[]
 
   @@index([clientId])
   @@index([serviceId])

@@ -93,3 +93,41 @@ describe('AdminBookingsService', () => {
     expect(tx.payment.create).not.toHaveBeenCalled();
   });
 });
+
+describe('AdminBookingsService.markReceiptReceived', () => {
+  it('keeps the slot held with no deadline, without confirming', async () => {
+    const { service, tx } = setup({
+      status: 'PENDING_VERIFICATION',
+      paymentMethod: 'BANK_TRANSFER',
+    });
+    await service.markReceiptReceived(7, NOW);
+    expect(tx.booking.update).toHaveBeenCalledWith({
+      where: { id: 7 },
+      data: {
+        status: 'PENDING_VERIFICATION',
+        holdExpiresAt: null,
+        receiptReceivedAt: NOW,
+      },
+    });
+    expect(tx.payment.create).not.toHaveBeenCalled();
+  });
+
+  it('frees stale holds first when the receipt comes after expiry', async () => {
+    const { service, tx } = setup({
+      status: 'EXPIRED',
+      paymentMethod: 'BANK_TRANSFER',
+    });
+    await service.markReceiptReceived(7, NOW);
+    expect(tx.booking.updateMany).toHaveBeenCalled();
+  });
+
+  it('only applies to bank transfers', async () => {
+    const { service } = setup({
+      status: 'PENDING_PAYMENT',
+      paymentMethod: 'MERCADO_PAGO',
+    });
+    await expect(service.markReceiptReceived(7, NOW)).rejects.toThrow(
+      'Esta reserva no es por transferencia.',
+    );
+  });
+});

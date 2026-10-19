@@ -29,6 +29,12 @@ export class AdminBookingsController {
     return this.bookings.overview();
   }
 
+  @Post(':id/receipt-received')
+  @HttpCode(200)
+  receiptReceived(@Param('id', ParseIntPipe) id: number) {
+    return this.bookings.markReceiptReceived(id);
+  }
+
   @Post(':id/confirm-payment')
   @HttpCode(200)
   confirmPayment(@Param('id', ParseIntPipe) id: number) {

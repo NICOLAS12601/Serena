@@ -22,6 +22,7 @@ const LIST_SELECT = {
   priceSnapshot: true,
   depositAmount: true,
   holdExpiresAt: true,
+  receiptReceivedAt: true,
   reason: true,
   client: { select: { id: true, name: true, phone: true } },
   service: { select: { id: true, name: true, durationMin: true } },
@@ -63,14 +64,15 @@ export class AdminBookingsService {
   /** The three blocks of the panel's bookings screen. */
   async overview(now = new Date()) {
     const [toReview, toClose, upcoming] = await Promise.all([
-      // Transfers waiting for Micaela to check the bank, plus recently
-      // expired ones: the money can arrive after the hold ran out.
+      // Transfers waiting for Micaela to check the bank (even if the session
+      // date passed: she still has to resolve them), plus recently expired
+      // ones for the future: the money can arrive after the hold ran out.
       this.prisma.booking.findMany({
         where: {
-          startsAt: { gt: now },
           OR: [
             { status: 'PENDING_VERIFICATION' },
             {
+              startsAt: { gt: now },
               status: 'EXPIRED',
               paymentMethod: 'BANK_TRANSFER',
               holdExpiresAt: {
@@ -103,6 +105,49 @@ export class AdminBookingsService {
       toClose: toClose.map(withPaid),
       upcoming: upcoming.map(withPaid),
     };
+  }
+
+  /**
+   * Micaela got the transfer receipt by WhatsApp (ADR-014). Not a payment
+   * yet (receipts can be fake): the slot stays held, with no deadline, until
+   * she sees the money and confirms, or cancels.
+   */
+  async markReceiptReceived(id: number, now = new Date()) {
+    const booking = await this.find(id);
+    if (booking.paymentMethod !== 'BANK_TRANSFER') {
+      throw new BadRequestException('Esta reserva no es por transferencia.');
+    }
+    this.expectStatus(booking.status, ['PENDING_VERIFICATION', 'EXPIRED']);
+    try {
+      await this.prisma.$transaction(async (tx) => {
+        if (booking.status === 'EXPIRED') {
+          // The receipt came after the hold ran out: only if the slot is free.
+          await expireStaleHolds(
+            tx,
+            booking.startsAt,
+            booking.blockedUntil,
+            now,
+          );
+        }
+        await tx.booking.update({
+          where: { id },
+          data: {
+            status: 'PENDING_VERIFICATION',
+            holdExpiresAt: null,
+            // Marking it twice keeps the first time it arrived.
+            receiptReceivedAt: booking.receiptReceivedAt ?? now,
+          },
+        });
+      });
+    } catch (error) {
+      if (isOverlapError(error)) {
+        throw new ConflictException(
+          'Ese horario ya lo ocupó otra reserva. Escribile a la persona para reprogramar.',
+        );
+      }
+      throw error;
+    }
+    return this.findListed(id);
   }
 
   /** Micaela saw the money: the booking is confirmed and the payment recorded. */

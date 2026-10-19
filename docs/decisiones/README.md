@@ -17,6 +17,7 @@ Cada archivo registra **una** decisión: el contexto, qué se decidió, qué alt
 | [011](ADR-011-panel-de-administracion.md) | Panel de administración: sesión con cookie segura, solo computadora y aviso por WhatsApp con un botón | Aceptada |
 | [012](ADR-012-cliente-por-celular-y-aviso-por-whatsapp.md) | El cliente se reconoce por su celular; email opcional; confirmación manual por WhatsApp | Aceptada |
 | [013](ADR-013-calculo-de-horarios-libres.md) | Horarios libres: descanso solo entre reservas, intervalo configurable desde el inicio de cada franja | Aceptada |
+| [014](ADR-014-comprobante-de-transferencia.md) | Con el comprobante de transferencia, el turno queda guardado hasta que se acredite | Aceptada |
 
 ## Plantilla
 
