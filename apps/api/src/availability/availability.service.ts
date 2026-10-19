@@ -8,6 +8,12 @@ import {
 import { PrismaService } from '../prisma/prisma.service.js';
 import { computeSlots, type Slot } from './slots.js';
 
+/** Used when Micaela reschedules a booking from the panel. */
+export type AdminSlotOptions = {
+  /** The booking being moved: it must not block its own new time. */
+  excludeBookingId: number;
+};
+
 @Injectable()
 export class AvailabilityService {
   constructor(private readonly prisma: PrismaService) {}
@@ -15,6 +21,21 @@ export class AvailabilityService {
   /** Start times of one day ("YYYY-MM-DD"), available or not. */
   async daySlots(serviceId: number, date: string, now = new Date()) {
     const context = await this.load(serviceId, date, date, now);
+    return context.slotsFor(date);
+  }
+
+  /**
+   * Same calculation for Micaela: opening hours, time off and other bookings
+   * still apply, but not the minimum notice or the booking window (she can
+   * move a session to tomorrow), and the service may be inactive.
+   */
+  async adminDaySlots(
+    serviceId: number,
+    date: string,
+    options: AdminSlotOptions,
+    now = new Date(),
+  ) {
+    const context = await this.load(serviceId, date, date, now, options);
     return context.slotsFor(date);
   }
 
@@ -40,9 +61,15 @@ export class AvailabilityService {
    * Reads everything the calculation needs for the dates from..to in a few
    * queries, and returns a function that computes the slots of one date.
    */
-  private async load(serviceId: number, from: string, to: string, now: Date) {
+  private async load(
+    serviceId: number,
+    from: string,
+    to: string,
+    now: Date,
+    admin?: AdminSlotOptions,
+  ) {
     const service = await this.prisma.service.findFirst({
-      where: { id: serviceId, active: true },
+      where: { id: serviceId, ...(admin ? {} : { active: true }) },
     });
     if (!service) throw new NotFoundException('El servicio no existe.');
 
@@ -58,6 +85,7 @@ export class AvailabilityService {
         where: {
           startsAt: { lt: rangeEnd },
           blockedUntil: { gt: rangeStart },
+          ...(admin ? { id: { not: admin.excludeBookingId } } : {}),
           // Bookings that hold the agenda: confirmed (or already past), or
           // pending payment while their hold has not run out (ADR-004).
           OR: [
@@ -73,10 +101,12 @@ export class AvailabilityService {
     ]);
 
     const today = localDate(now);
-    const lastDay = addDays(today, settings.maxAdvanceDays);
-    const earliestStart = new Date(
-      now.getTime() + settings.minAdvanceHours * 3_600_000,
-    );
+    const lastDay = admin
+      ? '9999-12-31'
+      : addDays(today, settings.maxAdvanceDays);
+    const earliestStart = admin
+      ? now
+      : new Date(now.getTime() + settings.minAdvanceHours * 3_600_000);
 
     return {
       slotsFor: (date: string): Slot[] => {

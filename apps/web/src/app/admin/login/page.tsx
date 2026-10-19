@@ -23,7 +23,7 @@ export default function LoginPage() {
         method: "POST",
         body: { email, password },
       });
-      router.push("/admin/servicios");
+      router.push("/admin/reservas");
     } catch (caught) {
       setError(
         (caught as Error).message.includes("ThrottlerException")

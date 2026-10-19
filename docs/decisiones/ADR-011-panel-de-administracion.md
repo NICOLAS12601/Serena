@@ -8,7 +8,7 @@ Micaela necesita un panel para manejar su negocio sin tocar código ni la base d
 
 ## Decisión
 - **Ubicación:** dentro de la web, en `/admin`. Pensado **solo para computadora** (Micaela lo usa desde la PC); las páginas públicas siguen siendo responsive.
-- **Primera versión:** servicios, horario semanal, días bloqueados, configuración (incluye WhatsApp, datos bancarios, dirección y políticas), mi cuenta (cambiar contraseña) y clientes. La sección de **reservas** llega cuando las reservas se guarden de verdad.
+- **Primera versión:** servicios, horario semanal, días bloqueados, configuración (incluye WhatsApp, datos bancarios, dirección y políticas), mi cuenta (cambiar contraseña) y clientes. La sección de **reservas** se agregó después, cuando las reservas empezaron a guardarse (lista por día con bloques "para revisar", "para cerrar" y "próximas"; ver [02](../02-requerimientos.md)).
 - **Sesión:** al iniciar sesión, la API crea una sesión en la base (`AdminSession`, se guarda solo el **hash** del token) y lo envía en una **cookie `httpOnly`** (el código de la página no puede leerla), `SameSite=Lax` y `Secure` en producción. Cerrar sesión o cambiar la contraseña borra las sesiones. Las sesiones vencen a los 7 días.
 - **Un solo dominio para el navegador:** la web reenvía a la API todo lo que va a `/api/...` (*rewrites* de Next.js). Así la cookie es "de primera parte" y los navegadores no la bloquean.
 - **Protección del login:** límite de intentos por minuto (*rate limiting*) y contraseña verificada con scrypt en tiempo constante.

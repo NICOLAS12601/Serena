@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  CalendarCheck,
   CalendarClock,
   KeyRound,
   LogOut,
@@ -16,6 +17,7 @@ import logo from "../../../../public/logo-serena.png";
 import { adminFetch } from "@/lib/admin-api";
 
 const NAV = [
+  { href: "/admin/reservas", label: "Reservas", icon: CalendarCheck },
   { href: "/admin/servicios", label: "Servicios", icon: Sparkles },
   {
     href: "/admin/horarios",

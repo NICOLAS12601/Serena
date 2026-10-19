@@ -10,6 +10,7 @@ import { AvailabilityService } from '../availability/availability.service.js';
 import { normalizeMobile } from '../common/phone.js';
 import { TIME_ZONE, zonedTimeToUtc } from '../common/time.js';
 import { NotificationsService } from '../notifications/notifications.service.js';
+import type { Prisma } from '../generated/prisma/client.js';
 import { PrismaService } from '../prisma/prisma.service.js';
 import type { CreateBookingDto } from './bookings.dto.js';
 import { priceBooking } from './pricing.js';
@@ -23,6 +24,28 @@ const SLOT_TAKEN = 'Ese horario se acaba de ocupar. Elegí otro, por favor.';
 export function isOverlapError(error: unknown): boolean {
   const text = `${String(error)} ${JSON.stringify(error)}`;
   return text.includes('Booking_no_overlap') || text.includes('23P01');
+}
+
+/**
+ * Pending bookings whose hold ran out still count for the no-overlap
+ * constraint until their status changes, so free the ones overlapping
+ * [startsAt, blockedUntil) before saving there (ADR-004).
+ */
+export function expireStaleHolds(
+  tx: Prisma.TransactionClient,
+  startsAt: Date,
+  blockedUntil: Date,
+  now: Date,
+) {
+  return tx.booking.updateMany({
+    where: {
+      status: { in: ['PENDING_PAYMENT', 'PENDING_VERIFICATION'] },
+      holdExpiresAt: { lte: now },
+      startsAt: { lt: blockedUntil },
+      blockedUntil: { gt: startsAt },
+    },
+    data: { status: 'EXPIRED' },
+  });
 }
 
 @Injectable()
@@ -87,17 +110,7 @@ export class BookingsService {
     let booking;
     try {
       booking = await this.prisma.$transaction(async (tx) => {
-        // Pending bookings whose hold ran out still count for the constraint
-        // until their status changes, so free them first (ADR-004).
-        await tx.booking.updateMany({
-          where: {
-            status: { in: ['PENDING_PAYMENT', 'PENDING_VERIFICATION'] },
-            holdExpiresAt: { lte: now },
-            startsAt: { lt: blockedUntil },
-            blockedUntil: { gt: startsAt },
-          },
-          data: { status: 'EXPIRED' },
-        });
+        await expireStaleHolds(tx, startsAt, blockedUntil, now);
 
         // Recognized by phone (ADR-012). Existing data is kept; only a missing
         // email is filled in, and only if no other client uses it.
@@ -197,6 +210,7 @@ export class BookingsService {
         timeZone: TIME_ZONE,
         ...(withDay ? { weekday: 'long', day: 'numeric', month: 'long' } : {}),
         hour: '2-digit',
+        hourCycle: 'h23',
         minute: '2-digit',
       });
     const pesos = (amount: number) => `$ ${amount.toLocaleString('es-UY')}`;

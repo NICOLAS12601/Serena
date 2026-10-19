@@ -116,6 +116,39 @@ export type ClientDetail = Omit<ClientSummary, "_count" | "bookings"> & {
   }[];
 };
 
+export type BookingStatus =
+  | "PENDING_PAYMENT"
+  | "PENDING_VERIFICATION"
+  | "CONFIRMED"
+  | "COMPLETED"
+  | "NO_SHOW"
+  | "CANCELLED"
+  | "EXPIRED";
+
+export type AdminBooking = {
+  id: number;
+  startsAt: string;
+  endsAt: string;
+  status: BookingStatus;
+  paymentMethod: "MERCADO_PAGO" | "BANK_TRANSFER";
+  paymentPlan: "DEPOSIT" | "FULL";
+  priceSnapshot: number;
+  depositAmount: number;
+  holdExpiresAt: string | null;
+  /** Health data: shown only here. */
+  reason: string | null;
+  /** Total collected so far (approved payments). */
+  paid: number;
+  client: { id: number; name: string; phone: string };
+  service: { id: number; name: string; durationMin: number };
+};
+
+export type BookingsOverview = {
+  toReview: AdminBooking[];
+  toClose: AdminBooking[];
+  upcoming: AdminBooking[];
+};
+
 // ─── Formatting helpers ────────────────────────────────────────────────────
 
 /** "09:00" <-> 540 */
@@ -139,6 +172,7 @@ export function formatDateTime(iso: string): string {
     month: "short",
     year: "numeric",
     hour: "2-digit",
+    hourCycle: "h23",
     minute: "2-digit",
   });
 }

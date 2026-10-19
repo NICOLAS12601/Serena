@@ -52,7 +52,11 @@ Decisiones en [ADR-011](decisiones/ADR-011-panel-de-administracion.md). Estado: 
 - ✅ **Horarios y bloqueos:** horario semanal con varias franjas por día y días bloqueados (vacaciones, feriados).
 - ✅ **Configuración:** WhatsApp, barrio, dirección, seña, descuento, plazos para pagar, datos bancarios, descanso, anticipación, ventana y texto de las políticas (ver la tabla de abajo).
 - ✅ **Clientes:** búsqueda, contacto, edad e historial de reservas con el motivo de consulta.
-- ⏳ **Reservas** (cuando el sitio las guarde): agenda, pendientes con el tiempo que les queda, confirmar el pago (seña o total), cancelar, reprogramar, marcar "completada" o "no vino", registrar el resto cobrado. Al confirmar: botón **"Avisar por WhatsApp"** que abre el chat del cliente con el mensaje ya escrito (confirmación, dirección y link de gestión); no hay email automático ([ADR-012](decisiones/ADR-012-cliente-por-celular-y-aviso-por-whatsapp.md)).
+- ✅ **Reservas** (primera pantalla del panel), en una lista con tres bloques:
+  - **Para revisar:** transferencias pendientes con el tiempo que les queda, y las vencidas de las últimas 48 h (la plata puede llegar tarde: se confirman si el horario sigue libre). Botones **"Llegó la plata"** (registra el pago de la seña o el total) y **Cancelar**.
+  - **Para cerrar:** sesiones que ya pasaron; **Completada** (con lo **cobrado en el momento**, que queda registrado como pago) o **No vino**.
+  - **Próximas**, agrupadas por día, con el comentario del cliente: **"Avisar por WhatsApp"** (mensaje con día, hora, dirección y lo que falta pagar), **Reprogramar** (horarios libres de ese día sin contar la propia reserva; sin anticipación mínima ni ventana) y **Cancelar**.
+  - No hay email automático al cliente ([ADR-012](decisiones/ADR-012-cliente-por-celular-y-aviso-por-whatsapp.md)). Falta el link de gestión en el mensaje (todavía no existe esa página).
 - Más adelante: subir fotos desde el panel.
 
 ### Configuración inicial (editable desde el panel)
