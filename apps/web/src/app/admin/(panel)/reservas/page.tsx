@@ -80,15 +80,17 @@ function whatsappLink(phone: string, text?: string) {
   return text ? `${base}?text=${encodeURIComponent(text)}` : base;
 }
 
-/** The confirmation Micaela sends: day, time, address and what is left to pay. */
+/**
+ * The confirmation Micaela sends: day, time, address and what is left to pay.
+ * No emojis: WhatsApp Web and Desktop can garble them when they come in a
+ * wa.me link (they show up as "�").
+ */
 function confirmationMessage(booking: AdminBooking, address: string | null) {
   const firstName = booking.client.name.trim().split(/\s+/)[0];
   const rest = booking.priceSnapshot - booking.paid;
   return [
     `¡Hola ${firstName}! Te confirmo tu reserva de ${booking.service.name} el ${longDay(booking.startsAt)} a las ${hour(booking.startsAt)} hs.`,
-    address
-      ? `📍 La dirección es ${address}.`
-      : "📍 Te paso la dirección por acá.",
+    address ? `La dirección es ${address}.` : "Te paso la dirección por acá.",
     booking.paid > 0
       ? `Recibí ${formatPrice(booking.paid)}${rest > 0 ? `; el resto (${formatPrice(rest)}) lo abonás el día de la sesión` : ""}.`
       : "",
