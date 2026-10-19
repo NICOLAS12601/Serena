@@ -34,6 +34,13 @@ import {
   isoDate,
   type Slot,
 } from "@/lib/availability";
+import {
+  BookingError,
+  createBooking,
+  type CreatedBooking,
+  type PaymentMethod,
+  type PaymentPlan,
+} from "@/lib/bookings";
 import { DEMO_POLICIES } from "@/lib/demo";
 
 type Step = "date" | "time" | "policies" | "details" | "confirm" | "done";
@@ -87,6 +94,9 @@ export function BookingWizard({
   const [details, setDetails] = useState<ClientDetails>(EMPTY_DETAILS);
   const [method, setMethod] = useState<PaymentMethod | null>(null);
   const [plan, setPlan] = useState<PaymentPlan | null>(null);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<BookingError | null>(null);
+  const [booking, setBooking] = useState<CreatedBooking | null>(null);
 
   const go = (next: Step) => {
     setStep(next);
@@ -98,7 +108,38 @@ export function BookingWizard({
     else go(ORDER[index - 1]);
   };
 
-  if (step === "done" && date && time && method && plan) {
+  async function confirm() {
+    if (!date || !time || !method || !plan) return;
+    setSubmitting(true);
+    setSubmitError(null);
+    try {
+      const created = await createBooking({
+        serviceId: service.id,
+        date: isoDate(date),
+        time,
+        name: details.name.trim(),
+        phone: details.phoneE164,
+        email: details.email.trim(),
+        birthDate: details.birthDate,
+        reason: details.reason.trim(),
+        policiesAccepted,
+        privacyConsent: details.privacyConsent,
+        paymentMethod: method,
+        paymentPlan: plan,
+      });
+      setBooking(created);
+      go("done");
+    } catch (error) {
+      setSubmitError(
+        error instanceof BookingError
+          ? error
+          : new BookingError("Algo salió mal. Probá de nuevo.", false),
+      );
+    }
+    setSubmitting(false);
+  }
+
+  if (step === "done" && booking && date && time && method) {
     return (
       <DoneScreen
         settings={settings}
@@ -106,7 +147,7 @@ export function BookingWizard({
         date={date}
         time={time}
         method={method}
-        plan={plan}
+        booking={booking}
         clientName={details.name}
       />
     );
@@ -162,7 +203,14 @@ export function BookingWizard({
           plan={plan}
           onMethodChange={setMethod}
           onPlanChange={setPlan}
-          onConfirm={() => go("done")}
+          submitting={submitting}
+          error={submitError}
+          onConfirm={confirm}
+          onPickAnotherTime={() => {
+            setSubmitError(null);
+            setTime(null);
+            go("time");
+          }}
         />
       )}
     </PageShell>
@@ -174,8 +222,7 @@ export function BookingWizard({
 function DemoNotice() {
   return (
     <p className="mx-auto mb-6 w-full max-w-xl rounded-xl border border-dashed border-terracotta/50 px-4 py-2 text-center text-xs text-terracotta">
-      Modo demostración: los horarios son reales, pero la reserva todavía no se
-      guarda.
+      Modo prueba: el pago con Mercado Pago todavía no está conectado.
     </p>
   );
 }
@@ -821,9 +868,8 @@ function Field({
 
 // ─── Step 4: confirm ────────────────────────────────────────────────────────
 
-export type PaymentMethod = "MERCADO_PAGO" | "BANK_TRANSFER";
-/** How much is paid online now; the rest is paid after the session. */
-export type PaymentPlan = "DEPOSIT" | "FULL";
+// Same math as the API (apps/api/src/bookings/pricing.ts), only to show the
+// options; the amounts that count are the ones the API returns.
 
 /** Price actually charged: bank transfers get a discount (no Mercado Pago fee). */
 function priceFor(
@@ -846,17 +892,6 @@ function depositFor(
   return Math.round(
     (priceFor(settings, service, method) * settings.depositPercent) / 100,
   );
-}
-
-function amountNow(
-  settings: PublicSettings,
-  service: Service,
-  method: PaymentMethod,
-  plan: PaymentPlan,
-) {
-  return plan === "FULL"
-    ? priceFor(settings, service, method)
-    : depositFor(settings, service, method);
 }
 
 function RadioCard({
@@ -904,7 +939,10 @@ function ConfirmStep({
   plan,
   onMethodChange,
   onPlanChange,
+  submitting,
+  error,
   onConfirm,
+  onPickAnotherTime,
 }: {
   settings: PublicSettings;
   service: Service;
@@ -914,7 +952,10 @@ function ConfirmStep({
   plan: PaymentPlan | null;
   onMethodChange: (method: PaymentMethod) => void;
   onPlanChange: (plan: PaymentPlan) => void;
+  submitting: boolean;
+  error: BookingError | null;
   onConfirm: () => void;
+  onPickAnotherTime: () => void;
 }) {
   const rows = [
     { icon: Flower2, label: "Servicio", value: service.name },
@@ -971,7 +1012,11 @@ function ConfirmStep({
               name="payment-method"
               checked={method === "BANK_TRANSFER"}
               onChange={() => onMethodChange("BANK_TRANSFER")}
-              title={`Transferencia · ${settings.transferDiscountPercent}% de descuento`}
+              title={
+                settings.transferDiscountPercent > 0
+                  ? `Transferencia · ${settings.transferDiscountPercent}% de descuento`
+                  : "Transferencia"
+              }
               detail={`Te guardamos el turno ${settings.transferHoldHours} horas para transferir; se confirma cuando Micaela recibe el pago.`}
             />
           </div>
@@ -1001,14 +1046,34 @@ function ConfirmStep({
         </section>
       </div>
 
+      {error && (
+        <div
+          role="alert"
+          className="mt-6 rounded-2xl bg-terracotta/10 px-5 py-4 text-center text-terracotta"
+        >
+          <p>{error.message}</p>
+          {error.slotTaken && (
+            <button
+              type="button"
+              onClick={onPickAnotherTime}
+              className="mt-2 underline underline-offset-4"
+            >
+              Elegir otro horario
+            </button>
+          )}
+        </div>
+      )}
+
       <ActionButton
         onClick={onConfirm}
-        disabled={!method || !plan}
+        disabled={!method || !plan || submitting}
         className={CONTINUE}
       >
-        {method === "MERCADO_PAGO"
-          ? "Pagar con Mercado Pago"
-          : "Confirmar reserva"}
+        {submitting
+          ? "Guardando tu reserva…"
+          : method === "MERCADO_PAGO"
+            ? "Pagar con Mercado Pago"
+            : "Confirmar reserva"}
       </ActionButton>
     </>
   );
@@ -1030,7 +1095,7 @@ function DoneScreen({
   date,
   time,
   method,
-  plan,
+  booking,
   clientName,
 }: {
   settings: PublicSettings;
@@ -1038,12 +1103,12 @@ function DoneScreen({
   date: Date;
   time: string;
   method: PaymentMethod;
-  plan: PaymentPlan;
+  booking: CreatedBooking;
   clientName: string;
 }) {
   const transfer = method === "BANK_TRANSFER";
-  const paid = amountNow(settings, service, method, plan);
-  const rest = priceFor(settings, service, method) - paid;
+  const paid = booking.amountDue;
+  const rest = booking.priceSnapshot - paid;
   const firstName = clientName.trim().split(/\s+/)[0] || clientName;
   const receiptMessage = `¡Hola Micaela! Soy ${clientName.trim()}. Reservé ${service.name} el ${formatLongDate(date)} a las ${time} hs. Te envío el comprobante de la transferencia de ${formatPrice(paid)}.`;
 
@@ -1055,9 +1120,7 @@ function DoneScreen({
           <Check className="h-8 w-8" strokeWidth={1.25} />
         </span>
         <h1 className="mt-6 font-serif text-5xl font-medium">
-          {transfer
-            ? "¡Tu turno está reservado!"
-            : "¡Tu reserva está confirmada!"}
+          ¡Tu turno está reservado!
         </h1>
         <p className="mt-5 text-lg leading-relaxed">
           {service.name}, {formatLongDate(date)} a las {time} hs.
@@ -1075,11 +1138,16 @@ function DoneScreen({
               <h2 className="font-serif text-xl">
                 Datos para la transferencia
               </h2>
-              {/* Replaced by Settings.bankDetails, loaded by Micaela from the panel. */}
-              <p className="mt-2 text-sm text-taupe">
-                Acá van a aparecer el banco, la cuenta y el titular que cargue
-                Micaela desde el panel.
-              </p>
+              {/* Settings.bankDetails, loaded by Micaela from the panel. */}
+              {booking.bankDetails ? (
+                <p className="mt-2 whitespace-pre-line">
+                  {booking.bankDetails}
+                </p>
+              ) : (
+                <p className="mt-2 text-sm text-taupe">
+                  Micaela te va a pasar los datos por WhatsApp.
+                </p>
+              )}
             </section>
             <a
               href={whatsappReceiptLink(
@@ -1101,8 +1169,9 @@ function DoneScreen({
           </>
         ) : (
           <p className="mt-3 leading-relaxed text-taupe">
-            Recibimos tu pago de {formatPrice(paid)}. Micaela te va a escribir
-            por WhatsApp con la confirmación y la dirección. ¡Nos vemos pronto!
+            Cuando se acredite el pago de {formatPrice(paid)}, Micaela te va a
+            escribir por WhatsApp con la confirmación y la dirección. ¡Nos vemos
+            pronto!
           </p>
         )}
 
@@ -1111,10 +1180,12 @@ function DoneScreen({
             El resto ({formatPrice(rest)}) lo pagás después del masaje.
           </p>
         )}
-        <p className="mt-6 rounded-xl border border-dashed border-terracotta/50 px-4 py-2 text-xs text-terracotta">
-          Modo demostración: esta reserva no se guardó
-          {transfer ? "." : " y no se cobró nada."}
-        </p>
+        {!transfer && (
+          <p className="mt-6 rounded-xl border border-dashed border-terracotta/50 px-4 py-2 text-xs text-terracotta">
+            Modo prueba: el pago con Mercado Pago todavía no está conectado. No
+            se cobró nada y el turno se libera solo en unos minutos.
+          </p>
+        )}
         <ActionButton href="/" className="mt-8">
           Volver al inicio
         </ActionButton>

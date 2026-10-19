@@ -1,0 +1,18 @@
+import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import { Throttle, ThrottlerGuard } from '@nestjs/throttler';
+import { CreateBookingDto } from './bookings.dto.js';
+import { BookingsService } from './bookings.service.js';
+
+@Controller('bookings')
+export class BookingsController {
+  constructor(private readonly bookings: BookingsService) {}
+
+  // POST /bookings — public. Limited so a script cannot fill the agenda with
+  // pending bookings (the hold also expires on its own).
+  @Post()
+  @UseGuards(ThrottlerGuard)
+  @Throttle({ default: { limit: 10, ttl: 60_000 } })
+  create(@Body() body: CreateBookingDto) {
+    return this.bookings.create(body);
+  }
+}

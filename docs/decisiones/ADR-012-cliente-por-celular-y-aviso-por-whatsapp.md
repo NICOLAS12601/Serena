@@ -9,6 +9,7 @@ Los clientes de SERENA llegan desde Instagram y se comunican con Micaela por Wha
 
 ## Decisión
 - **El cliente se reconoce por su celular** (`Client.phone`, único, en formato E.164: `+59899123456`). Si ya existe, la reserva se asocia a ese cliente; si no, se crea. La base exige el formato con un `CHECK`, así "099 123 456" y "+598 99 123 456" nunca son dos clientes distintos.
+- **Cliente que vuelve: se conservan sus datos y solo se completa lo que falta.** Si reserva con un celular que ya existe, no se pisan el nombre, la fecha de nacimiento ni el email guardados; solo se agrega el email si antes no lo tenía y ningún otro cliente lo usa. Así nadie puede cambiarle los datos a otra persona escribiendo su celular; si algo cambió, Micaela lo corrige en el panel.
 - **El email es opcional** (`Client.email`, puede quedar vacío; si se carga, es único y en minúsculas). Por ahora **no se usa para mandar nada**; se guarda por si más adelante se suman los emails.
 - **En la fase 1 no se envían emails a los clientes.** La confirmación es **manual por WhatsApp**:
   1. El cliente reserva. Si paga por transferencia, manda el comprobante por WhatsApp.
@@ -16,7 +17,7 @@ Los clientes de SERENA llegan desde Instagram y se comunican con Micaela por Wha
   3. En el panel toca **"Avisar por WhatsApp"**: se abre el chat del cliente con el mensaje ya escrito (confirmación, día y hora, **dirección** y link de gestión) y ella lo envía.
 - La **dirección exacta** viaja solo en ese mensaje, después de cobrada la seña.
 - El **link de gestión** de la reserva (ADR-009) se muestra en la pantalla final y va en el mensaje de Micaela. Como en la base se guarda solo el hash del token, el botón genera un token nuevo al armar el mensaje (se define al hacer la sección de reservas).
-- **Aviso a Micaela de cada reserva nueva: por email** a su casilla (`Settings.notificationEmail`, se carga en el panel), enviado con **Resend** desde la API. Es el único email de la fase 1 y va a una sola persona. Mientras no haya dominio verificado en Resend se envía desde `onboarding@resend.dev`, que solo puede mandar al email de la cuenta de Resend: alcanza, porque la destinataria es ella. En Configuración hay un botón **"Enviar mail de prueba"**.
+- **Aviso a Micaela de cada reserva nueva: por email** a su casilla (`Settings.notificationEmail`, se carga en el panel), enviado con **Resend** desde la API. Es el único email de la fase 1 y va a una sola persona. Se manda al crearse una reserva **por transferencia** (Micaela tiene que revisar el banco); las de **Mercado Pago** se avisan cuando llega el pago, porque muchas se abandonan antes de pagar. El mail **no incluye el motivo de consulta** (dato de salud): solo dice que hay un comentario para ver en el panel. Mientras no haya dominio verificado en Resend se envía desde `onboarding@resend.dev`, que solo puede mandar al email de la cuenta de Resend: alcanza, porque la destinataria es ella. En Configuración hay un botón **"Enviar mail de prueba"**.
 
 ## Alternativas consideradas
 - **Sin email en el formulario:** igual de simple, pero si algún día se suman los emails no habría datos de los clientes anteriores.

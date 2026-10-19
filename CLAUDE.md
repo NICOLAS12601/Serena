@@ -19,7 +19,8 @@ Sitio web + sistema de reservas para **SERENA · Masajes & Bienestar** (Montevid
 - ✅ **Panel de Micaela** en `/admin` (solo computadora, ADR-011): login con cookie `httpOnly` + tabla `AdminSession` (hash del token), límite de 5 intentos/min, proxy `/api/*` → API en `next.config.ts`; secciones servicios, horarios y bloqueos, configuración, clientes y mi cuenta. Endpoints `/admin/*` protegidos con `AdminGuard`; DTOs con `class-validator`. Falta la sección de reservas.
 - ✅ Cliente reconocido por su **celular** (E.164, único); email opcional (ADR-012). Aviso a Micaela por **email con Resend** (`NotificationsService`, sin SDK); botón "Enviar mail de prueba" en Configuración. Sin `RESEND_API_KEY` el mail se escribe en la consola.
 - ✅ **Horarios libres** (`GET /availability`, `GET /availability/days`, ADR-013): cálculo en hora de Montevideo (`common/time.ts`), funciones puras con tests en `availability/slots.ts`. El flujo de reserva ya los usa; la reserva todavía no se guarda.
-- ⏭️ Próximo paso: el primer ítem sin tachar de la **hoja de ruta** en `docs/pendientes.md` (hoy: crear reserva). Ahí también está cómo levantar el entorno.
+- ✅ **Crear reserva** (`POST /bookings`, `apps/api/src/bookings/`): la API calcula los montos (`pricing.ts`), guarda con bloqueo temporal en una transacción y traduce el error de superposición a 409. Cliente que vuelve: se conservan sus datos. Aviso por email a Micaela de las reservas por transferencia (sin el motivo de consulta). Mercado Pago todavía no está conectado.
+- ⏭️ Próximo paso: el primer ítem sin tachar de la **hoja de ruta** en `docs/pendientes.md` (hoy: panel, sección de reservas). Ahí también está cómo levantar el entorno.
 - Pendientes de explicar al desarrollador: hosting y webhooks. Decisión abierta: pago de MercadoPago que llega tarde (ver `docs/pendientes.md`).
 - Next.js 16 tiene cambios respecto de versiones anteriores: leer `apps/web/AGENTS.md` antes de tocar la web.
 

@@ -81,10 +81,10 @@ ALTER TABLE "Booking" ADD CONSTRAINT "Booking_no_overlap"
 
 `blockedUntil` es el fin de la sesión más el descanso, calculado y guardado al reservar. Así la base también garantiza el descanso, incluso si dos personas reservan horarios contiguos en el mismo instante ([ADR-008](decisiones/ADR-008-descanso-guardado-en-la-reserva.md)).
 
-Si dos pedidos llegan a la vez, **uno se guarda y el otro falla**. La API atrapa ese error y le responde al cliente: *"Ese horario se acaba de ocupar, elegí otro"*.
+Si dos pedidos llegan a la vez, **uno se guarda y el otro falla**. La API atrapa ese error (PostgreSQL `23P01`, que Prisma informa como `P2039`) y le responde al cliente con un 409: *"Ese horario se acaba de ocupar. Elegí otro"*; la web le ofrece volver a elegir horario. Antes de intentar guardar, la API también verifica que el horario siga en la lista de libres (horario de atención, bloqueos, anticipación), pero esa verificación sola no alcanza: entre la consulta y el guardado se puede colar otra persona. Se probó con 6 pedidos simultáneos al mismo horario: uno entra y cinco reciben 409.
 
 **Detalle importante:** la condición `WHERE` no puede depender de la hora actual. Entonces una reserva pendiente **vencida** seguiría "ocupando" el lugar hasta que su estado cambie a `EXPIRED`. Lo resolvemos así:
 - **Antes de crear una reserva**, dentro de la misma transacción, se marcan como `EXPIRED` las pendientes vencidas que se superponen.
-- Además, una **tarea periódica** (cada minuto) expira las pendientes vencidas, para mantener la tabla prolija.
+- Además, una **tarea periódica** (cada minuto) expira las pendientes vencidas, para mantener la tabla prolija (pendiente: ver [pendientes](pendientes.md)).
 
 (Ver [ADR-004](decisiones/ADR-004-bloqueo-temporal-y-exclusion-constraint.md). Prisma no soporta exclusion constraints en el esquema, así que la regla está escrita a mano al final de la primera migración, `apps/api/prisma/migrations/20261012214526_init/migration.sql`, junto con los controles de valores (`CHECK`). Se probó en vivo: con dos reservas simultáneas al mismo horario, la segunda espera a que la primera termine y es rechazada.)

@@ -37,7 +37,10 @@ Lo que falta definir. Cuando algo se resuelve, se tacha y se anota dónde quedó
 - [x] ~~**Descanso entre sesiones en la exclusion constraint.**~~ → se guarda `blockedUntil` en cada reserva ([ADR-008](decisiones/ADR-008-descanso-guardado-en-la-reserva.md)).
 - [x] ~~**Dirección en `Settings`.**~~ → agregada a [04](04-modelo-de-datos.md), junto con el barrio (público).
 - [ ] **Pago de MercadoPago que llega tarde con el horario ya ocupado** ([05](05-flujo-de-reserva.md#bloqueo-temporal-patrón-venta-de-entradas)): definir si el reintegro es automático (API de MercadoPago) o lo hace Micaela a mano.
-- [ ] **Qué datos del `Client` se actualizan** cuando alguien reserva con un celular que ya existe (nombre, email, fecha de nacimiento) ([ADR-012](decisiones/ADR-012-cliente-por-celular-y-aviso-por-whatsapp.md)).
+- [x] ~~**Qué datos del `Client` se actualizan** con un celular que ya existe~~ → se **conservan** y solo se completa el email si faltaba ([ADR-012](decisiones/ADR-012-cliente-por-celular-y-aviso-por-whatsapp.md)).
+- [ ] **Tarea periódica que expira las reservas pendientes vencidas** (cada minuto). Hoy se expiran al crear una reserva superpuesta y los horarios libres ya ignoran los bloqueos vencidos, así que no es urgente; hace falta para el panel de reservas y para avisar.
+- [ ] **Límite de intentos detrás del proxy:** la API ve todas las llamadas con la IP del servidor de Next, así que el límite (login 5/min, reservas 10/min) es compartido por todos. Al desplegar, leer la IP real del cliente (`X-Forwarded-For` con `trust proxy` bien configurado).
+- [ ] **Link de gestión de la reserva:** falta la página para verla y reprogramarla; hoy se guarda el hash del token pero el link no se muestra.
 - [x] ~~**¿Email obligatorio?**~~ → el cliente se reconoce por su **celular**; el email es opcional y por ahora no se usa; la confirmación va por WhatsApp ([ADR-012](decisiones/ADR-012-cliente-por-celular-y-aviso-por-whatsapp.md)).
 - [x] ~~**Aviso a Micaela de cada reserva nueva:**~~ → **email a su casilla con Resend** (`Settings.notificationEmail`), con botón de prueba en Configuración ([ADR-012](decisiones/ADR-012-cliente-por-celular-y-aviso-por-whatsapp.md)).
 
@@ -54,7 +57,7 @@ Orden de construcción. Al retomar, seguir por el primer ítem sin tachar.
 - [x] ~~**Front según los diseños de Micaela:** home con dos caminos, primera vez, lista de masajes y el flujo de reserva completo. Los horarios, la seña y las políticas son **datos de demostración** (`apps/web/src/lib/demo.ts`) y la reserva todavía no se guarda.~~
 - [x] ~~**Panel de Micaela, primera parte** (`/admin`, solo computadora): login seguro, servicios, horarios y bloqueos, configuración, clientes y mi cuenta ([ADR-011](decisiones/ADR-011-panel-de-administracion.md)).~~
 - [x] ~~**Horarios libres**~~ (`GET /availability` y `GET /availability/days`): descanso solo entre reservas e intervalo configurable ([05](05-flujo-de-reserva.md#cálculo-de-horarios-libres), [ADR-013](decisiones/ADR-013-calculo-de-horarios-libres.md)). El flujo de reserva ya muestra los días y horarios reales.
-- [ ] **Crear reserva** con bloqueo temporal, expiración de pendientes y manejo del error de superposición.
+- [x] ~~**Crear reserva**~~ (`POST /bookings`): montos calculados por la API, bloqueo temporal, expiración de pendientes vencidas que se superponen, error de superposición traducido a "Ese horario se acaba de ocupar" y aviso por email a Micaela de las reservas por transferencia. Pendiente: la tarea periódica de expiración (arriba).
 - [ ] **Panel: sección de reservas** (agenda, pendientes, confirmar pago, cancelar, reprogramar, completar) con el botón "Avisar por WhatsApp" al confirmar.
 - [ ] **Pagos:** MercadoPago (modo de pruebas, webhook verificado) y transferencia.
 - [x] ~~**Aviso a Micaela por email** (Resend): servicio de envío y botón "Enviar mail de prueba" en Configuración.~~ El aviso de cada reserva se dispara al hacer "crear reserva". Los emails a clientes quedan fuera de la fase 1 ([ADR-012](decisiones/ADR-012-cliente-por-celular-y-aviso-por-whatsapp.md)).

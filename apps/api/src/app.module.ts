@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { AuthModule } from './auth/auth.module.js';
 import { AvailabilityModule } from './availability/availability.module.js';
+import { BookingsModule } from './bookings/bookings.module.js';
 import { ClientsModule } from './clients/clients.module.js';
 import { NotificationsModule } from './notifications/notifications.module.js';
 import { PrismaModule } from './prisma/prisma.module.js';
@@ -18,6 +19,7 @@ import { SettingsModule } from './settings/settings.module.js';
     ScheduleModule,
     ClientsModule,
     AvailabilityModule,
+    BookingsModule,
     NotificationsModule,
   ],
 })
