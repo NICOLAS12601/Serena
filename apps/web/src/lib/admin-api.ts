@@ -80,6 +80,7 @@ export type AdminSettings = {
   mpHoldMinutes: number;
   transferHoldHours: number;
   bufferMinutes: number;
+  slotIntervalMinutes: number;
   minAdvanceHours: number;
   maxAdvanceDays: number;
   bankDetails: string | null;

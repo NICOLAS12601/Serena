@@ -22,18 +22,19 @@ import {
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import type { CountryCode } from "libphonenumber-js/mobile";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ActionButton } from "@/components/action-button";
 import { BrandLogo } from "@/components/brand-logo";
 import { PageShell } from "@/components/page-shell";
 import { formatPrice, type PublicSettings, type Service } from "@/lib/api";
 import { checkMobile, countryOptions } from "@/lib/phone";
 import {
-  DEMO_POLICIES,
-  getDemoSlots,
-  isDemoDayAvailable,
+  fetchAvailableDays,
+  fetchDaySlots,
+  isoDate,
   type Slot,
-} from "@/lib/demo";
+} from "@/lib/availability";
+import { DEMO_POLICIES } from "@/lib/demo";
 
 type Step = "date" | "time" | "policies" | "details" | "confirm" | "done";
 const ORDER: Step[] = [
@@ -117,6 +118,7 @@ export function BookingWizard({
       <Stepper step={step} />
       {step === "date" && (
         <DateStep
+          serviceId={service.id}
           maxAdvanceDays={settings.maxAdvanceDays}
           selected={date}
           onSelect={(day) => {
@@ -128,6 +130,7 @@ export function BookingWizard({
       )}
       {step === "time" && date && (
         <TimeStep
+          serviceId={service.id}
           date={date}
           selected={time}
           onSelect={setTime}
@@ -171,7 +174,7 @@ export function BookingWizard({
 function DemoNotice() {
   return (
     <p className="mx-auto mb-6 w-full max-w-xl rounded-xl border border-dashed border-terracotta/50 px-4 py-2 text-center text-xs text-terracotta">
-      Modo demostración: los horarios son de ejemplo y la reserva todavía no se
+      Modo demostración: los horarios son reales, pero la reserva todavía no se
       guarda.
     </p>
   );
@@ -245,6 +248,39 @@ function capitalize(text: string) {
   return text.charAt(0).toUpperCase() + text.slice(1);
 }
 
+/**
+ * Loads data identified by `key` (e.g. a month or a date) and reloads when the
+ * key changes. `data` is null while loading or if the request failed.
+ */
+function useLoaded<T>(key: string, load: () => Promise<T>) {
+  const [state, setState] = useState<{ key: string; data: T | null } | null>(
+    null,
+  );
+  useEffect(() => {
+    let cancelled = false;
+    load().then(
+      (data) => !cancelled && setState({ key, data }),
+      () => !cancelled && setState({ key, data: null }),
+    );
+    return () => {
+      cancelled = true;
+    };
+    // `key` identifies what `load` fetches; `load` itself is a new function each render.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [key]);
+  const loading = state?.key !== key;
+  return {
+    loading,
+    data: loading ? null : state.data,
+    failed: !loading && state.data === null,
+  };
+}
+
+/** Message shown instead of the calendar or the times. */
+function StatusText({ children }: { children: React.ReactNode }) {
+  return <p className="py-6 text-center text-taupe">{children}</p>;
+}
+
 // ─── Step 1: date ───────────────────────────────────────────────────────────
 
 const WEEKDAYS = ["L", "M", "M", "J", "V", "S", "D"];
@@ -258,11 +294,13 @@ function sameDay(a: Date, b: Date) {
 }
 
 function DateStep({
+  serviceId,
   maxAdvanceDays,
   selected,
   onSelect,
   onContinue,
 }: {
+  serviceId: number;
   maxAdvanceDays: number;
   selected: Date | null;
   onSelect: (date: Date) => void;
@@ -290,8 +328,11 @@ function DateStep({
     ),
   ];
 
-  const isBookable = (day: Date) =>
-    day > today && day <= lastDay && isDemoDayAvailable(day);
+  const monthKey = isoDate(month).slice(0, 7);
+  const days = useLoaded(`${serviceId}/${monthKey}`, () =>
+    fetchAvailableDays(serviceId, monthKey).then((list) => new Set(list)),
+  );
+  const isBookable = (day: Date) => days.data?.has(isoDate(day)) ?? false;
   const canGoBack = month > new Date(today.getFullYear(), today.getMonth(), 1);
   const canGoForward =
     new Date(month.getFullYear(), month.getMonth() + 1, 1) <= lastDay;
@@ -371,6 +412,19 @@ function DateStep({
             </div>
           </div>
 
+          {days.loading && <StatusText>Buscando días disponibles…</StatusText>}
+          {days.failed && (
+            <StatusText>
+              No pudimos cargar los días disponibles. Probá de nuevo en un rato.
+            </StatusText>
+          )}
+          {days.data?.size === 0 && (
+            <StatusText>
+              No quedan días disponibles este mes.
+              {canGoForward && " Probá con el mes siguiente."}
+            </StatusText>
+          )}
+
           <ul className="mt-5 flex flex-col items-center gap-1 text-sm text-taupe md:hidden">
             <Legend />
           </ul>
@@ -419,19 +473,25 @@ function minutesOf(time: string) {
 }
 
 function TimeStep({
+  serviceId,
   date,
   selected,
   onSelect,
   onChangeDate,
   onContinue,
 }: {
+  serviceId: number;
   date: Date;
   selected: string | null;
   onSelect: (time: string) => void;
   onChangeDate: () => void;
   onContinue: () => void;
 }) {
-  const slots = getDemoSlots(date);
+  const dateKey = isoDate(date);
+  const loaded = useLoaded(`${serviceId}/${dateKey}`, () =>
+    fetchDaySlots(serviceId, dateKey),
+  );
+  const slots = loaded.data ?? [];
   return (
     <>
       <StepTitle
@@ -451,6 +511,18 @@ function TimeStep({
           Cambiar fecha
         </button>
       </div>
+
+      {loaded.loading && <StatusText>Buscando horarios…</StatusText>}
+      {loaded.failed && (
+        <StatusText>
+          No pudimos cargar los horarios. Probá de nuevo en un rato.
+        </StatusText>
+      )}
+      {loaded.data && !slots.some((slot) => slot.available) && (
+        <StatusText>
+          Ya no quedan horarios libres para este día. Elegí otra fecha.
+        </StatusText>
+      )}
 
       {PERIODS.map(({ label, icon: Icon, from, to }) => {
         const periodSlots = slots.filter(

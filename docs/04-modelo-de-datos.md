@@ -57,7 +57,7 @@ Payment         booking, amount, status, mercadoPagoPaymentId (único), verified
                 → cada pago asociado a una reserva. El medio de pago está en Booking
 
 Settings        depositPercent, transferDiscountPercent, mpHoldMinutes, transferHoldHours,
-                bufferMinutes, minAdvanceHours, maxAdvanceDays, bankDetails,
+                bufferMinutes, slotIntervalMinutes, minAdvanceHours, maxAdvanceDays, bankDetails,
                 address (solo se envía en el WhatsApp de confirmación), neighborhood (barrio, público),
                 whatsappNumber (botón de comprobante y de contacto),
                 notificationEmail (donde le llega a Micaela el aviso de cada reserva),
@@ -138,4 +138,5 @@ El modelo está en **tercera forma normal**: cada dato vive en un solo lugar (el
 | `isFirstVisit` | Es el "Encuentro inicial" para clientes nuevos |
 | `weekday` | Día de la semana |
 | `bufferMinutes` | Descanso entre sesiones (min) |
+| `slotIntervalMinutes` | Cada cuántos minutos se ofrecen horarios ([ADR-013](decisiones/ADR-013-calculo-de-horarios-libres.md)) |
 | `status` | Estado |

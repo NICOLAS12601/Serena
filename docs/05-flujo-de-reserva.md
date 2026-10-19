@@ -37,13 +37,32 @@ Los tiempos de bloqueo son configurables en `Settings`.
 
 ## Cálculo de horarios libres
 
+Lo hace la API (`apps/api/src/availability/`), siempre en hora de **Montevideo** ([ADR-013](decisiones/ADR-013-calculo-de-horarios-libres.md)):
+- `GET /availability/days?serviceId&month=AAAA-MM` → los días del mes con al menos un horario libre (el calendario).
+- `GET /availability?serviceId&date=AAAA-MM-DD` → los inicios de ese día, libres y ocupados (los ocupados se muestran tachados).
+
 Para un día y un servicio (duración `D`):
 
-1. Tomar las franjas de `WeeklySchedule` de ese día de la semana.
-2. Restar los `TimeOff` que caen ese día.
-3. Restar las reservas que **ocupan el horario** (confirmadas, o pendientes con bloqueo vigente), cada una desde `startsAt` hasta `blockedUntil` (fin de la sesión + descanso).
-4. Generar los inicios posibles (ej. cada 15 o 30 min) donde entren `D` minutos.
-5. Descartar los que no cumplan la anticipación mínima o superen la ventana máxima.
+1. Si el día ya pasó o supera la **ventana máxima** (`maxAdvanceDays`), no hay horarios.
+2. Tomar las franjas de `WeeklySchedule` de ese día de la semana.
+3. Generar inicios cada **`slotIntervalMinutes`** (30 por defecto) **desde el comienzo de cada franja**, mientras la sesión (`D` minutos) termine dentro de la franja.
+4. Un inicio está **ocupado** si:
+   - la sesión se superpone con un **bloqueo** (`TimeOff`);
+   - la sesión **más el descanso** (`bufferMinutes`) se superpone con una reserva que **ocupa el horario** (confirmada, o pendiente con bloqueo vigente), cada una desde `startsAt` hasta `blockedUntil`. Es la misma regla que la exclusion constraint;
+   - empieza antes de la **anticipación mínima** (`minAdvanceHours`).
+
+El descanso **solo importa entre reservas**: la última sesión de una franja puede terminar justo al cierre.
+
+### Ejemplo (está como test en `apps/api/src/availability/slots.spec.ts`)
+Jueves de 09:00 a 13:00 y de 15:00 a 19:00, un bloqueo de 17:00 a 19:00, una reserva a las 10:00 de 60 min (ocupa hasta 11:15 con el descanso), masaje de 60 min, descanso de 15 e intervalo de 30:
+
+| Inicio | ¿Libre? | Por qué |
+|---|---|---|
+| 09:00, 09:30 | No | Con el descanso, se pisa con la reserva de las 10:00 |
+| 10:00, 10:30, 11:00 | No | Se pisan con la reserva (que ocupa hasta 11:15) |
+| 11:30, 12:00 | **Sí** | La de 12:00 termina 13:00, justo al cierre de la franja |
+| 15:00, 15:30, 16:00 | **Sí** | La de 16:00 termina 17:00, justo cuando empieza el bloqueo |
+| 16:30, 17:00, 17:30, 18:00 | No | Se pisan con el bloqueo |
 
 ## El problema de concurrencia (dos personas, mismo horario, mismo segundo)
 

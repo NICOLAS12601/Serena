@@ -41,6 +41,12 @@ export class UpdateSettingsDto {
 
   @IsOptional()
   @IsInt()
+  @Min(5)
+  @Max(120)
+  slotIntervalMinutes?: number;
+
+  @IsOptional()
+  @IsInt()
   @Min(0)
   @Max(168)
   minAdvanceHours?: number;

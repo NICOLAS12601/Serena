@@ -53,7 +53,7 @@ Orden de construcción. Al retomar, seguir por el primer ítem sin tachar.
 - [x] ~~`GET /services` y home de la web que los muestra (demo).~~
 - [x] ~~**Front según los diseños de Micaela:** home con dos caminos, primera vez, lista de masajes y el flujo de reserva completo. Los horarios, la seña y las políticas son **datos de demostración** (`apps/web/src/lib/demo.ts`) y la reserva todavía no se guarda.~~
 - [x] ~~**Panel de Micaela, primera parte** (`/admin`, solo computadora): login seguro, servicios, horarios y bloqueos, configuración, clientes y mi cuenta ([ADR-011](decisiones/ADR-011-panel-de-administracion.md)).~~
-- [ ] **Horarios libres** (`GET /availability?serviceId&date`): franjas del horario semanal − bloqueos − reservas que ocupan, con descanso, anticipación mínima, ventana máxima y zona horaria `America/Montevideo` ([05](05-flujo-de-reserva.md#cálculo-de-horarios-libres)). Explicar la lógica con un ejemplo antes de programar. Al terminar, reemplazar `getDemoSlots` / `isDemoDayAvailable` en la web.
+- [x] ~~**Horarios libres**~~ (`GET /availability` y `GET /availability/days`): descanso solo entre reservas e intervalo configurable ([05](05-flujo-de-reserva.md#cálculo-de-horarios-libres), [ADR-013](decisiones/ADR-013-calculo-de-horarios-libres.md)). El flujo de reserva ya muestra los días y horarios reales.
 - [ ] **Crear reserva** con bloqueo temporal, expiración de pendientes y manejo del error de superposición.
 - [ ] **Panel: sección de reservas** (agenda, pendientes, confirmar pago, cancelar, reprogramar, completar) con el botón "Avisar por WhatsApp" al confirmar.
 - [ ] **Pagos:** MercadoPago (modo de pruebas, webhook verificado) y transferencia.

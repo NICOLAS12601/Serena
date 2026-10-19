@@ -1,25 +1,5 @@
-// DEMO DATA for the booking screens while the API endpoints don't exist yet.
-// Each block says what replaces it; delete it when that endpoint is ready.
-
-/**
- * Replaced by GET /availability. Mirrors the sample opening hours of the seed:
- * Monday to Saturday, no Sundays.
- */
-export function isDemoDayAvailable(date: Date): boolean {
-  return date.getDay() !== 0;
-}
-
-export type Slot = { time: string; available: boolean };
-
-/** Replaced by GET /availability?serviceId&date. One slot looks taken, to show that state. */
-export function getDemoSlots(date: Date): Slot[] {
-  const saturday = date.getDay() === 6;
-  const times = saturday
-    ? ["09:00", "10:30", "12:00"]
-    : ["09:00", "10:30", "12:00", "15:00", "16:30", "18:00"];
-  const taken = date.getDate() % times.length;
-  return times.map((time, index) => ({ time, available: index !== taken }));
-}
+// DEMO DATA for the booking screens while the API doesn't provide it yet.
+// Delete it when the policies come from the database.
 
 /**
  * Replaced by Settings.cancellationPolicyText, edited by Micaela from the panel.

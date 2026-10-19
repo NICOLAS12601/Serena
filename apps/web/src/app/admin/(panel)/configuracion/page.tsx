@@ -27,6 +27,7 @@ const EDITABLE: (keyof AdminSettings)[] = [
   "mpHoldMinutes",
   "transferHoldHours",
   "bufferMinutes",
+  "slotIntervalMinutes",
   "minAdvanceHours",
   "maxAdvanceDays",
   "bankDetails",
@@ -249,12 +250,20 @@ export default function SettingsAdminPage() {
         </Card>
 
         <Card title="Agenda">
-          <div className="grid grid-cols-3 gap-6">
+          <div className="grid grid-cols-2 gap-6">
             {number(
               "bufferMinutes",
               "Descanso entre sesiones (minutos)",
               0,
               120,
+              "Se respeta entre dos reservas. La última sesión de una franja puede terminar justo al cierre.",
+            )}
+            {number(
+              "slotIntervalMinutes",
+              "Cada cuánto se ofrecen horarios (minutos)",
+              5,
+              120,
+              "Con 30, los turnos empiezan 09:00, 09:30, 10:00… desde el inicio de cada franja.",
             )}
             {number(
               "minAdvanceHours",

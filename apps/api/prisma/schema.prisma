@@ -164,6 +164,8 @@ model Settings {
   mpHoldMinutes           Int      @default(10)
   transferHoldHours       Int      @default(2)
   bufferMinutes           Int      @default(15)
+  // Bookable start times are offered every this many minutes (ADR-013).
+  slotIntervalMinutes     Int      @default(30)
   minAdvanceHours         Int      @default(12)
   maxAdvanceDays          Int      @default(30)
   // Real business data is loaded from the panel, never committed (public repo).

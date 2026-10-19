@@ -16,6 +16,7 @@ Cada archivo registra **una** decisión: el contexto, qué se decidió, qué alt
 | [010](ADR-010-pago-de-sena-o-total.md) | El cliente elige pagar la seña o el total; comprobante de transferencia por WhatsApp | Aceptada |
 | [011](ADR-011-panel-de-administracion.md) | Panel de administración: sesión con cookie segura, solo computadora y aviso por WhatsApp con un botón | Aceptada |
 | [012](ADR-012-cliente-por-celular-y-aviso-por-whatsapp.md) | El cliente se reconoce por su celular; email opcional; confirmación manual por WhatsApp | Aceptada |
+| [013](ADR-013-calculo-de-horarios-libres.md) | Horarios libres: descanso solo entre reservas, intervalo configurable desde el inicio de cada franja | Aceptada |
 
 ## Plantilla
 

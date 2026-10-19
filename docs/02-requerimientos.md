@@ -63,7 +63,8 @@ Decisiones en [ADR-011](decisiones/ADR-011-panel-de-administracion.md). Estado: 
 | Descuento por transferencia | 10% |
 | Minutos de bloqueo pagando con MercadoPago | 10 |
 | Horas de bloqueo pagando por transferencia | 2 |
-| Descanso entre sesiones | 15 min |
+| Descanso entre sesiones (solo entre reservas) | 15 min |
+| Cada cuánto se ofrecen horarios | 30 min |
 | Anticipación mínima para reservar | 12 h |
 | Ventana máxima hacia adelante | 30 días |
 | Horario semanal | Vacío (lo carga ella) |
