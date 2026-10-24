@@ -19,6 +19,19 @@ Navegador ──► Netlify (la web, Next.js)        serena-xxx.netlify.app → 
 - En Cloudflare (DNS) va **solo la web** ([ADR-015](decisiones/ADR-015-dominio-uy-y-dns-en-cloudflare.md)).
 - Orden para crear las cuentas: **Neon → Render → Netlify**, porque cada pieza necesita la dirección de la anterior.
 
+## Estado del despliegue de prueba
+
+| Pieza | Estado | Dónde |
+|---|---|---|
+| Base (Neon) | ✅ Creada (2026-10-23) | Proyecto `serena`, rama `production`, PostgreSQL 18, N. Virginia, plan Free |
+| Tablas | ✅ Las creó Render con `prisma migrate deploy` (`btree_gist` funciona en Neon) | — |
+| API (Render) | ✅ Live (2026-10-23) | `https://serena-api-atje.onrender.com` (Blueprint `serena`; el nombre `serena-api` ya estaba usado y Render agregó `-atje`) |
+| Datos iniciales (seed) | ⏳ Falta | Sin la fila de `Settings`, `GET /settings/public` da 500 |
+| Web (Netlify) | ⏳ Falta | — |
+| `TRUST_PROXY` | ⏳ Falta medir | Ver abajo |
+
+**Lo que se vio en la API (2026-10-23):** `GET /health` llamado directo a Render devolvió `198.41.230.66`, una IP de **Cloudflare**, no la del visitante: Render tiene a Cloudflare adelante, así que hay un proxy más de lo supuesto y `TRUST_PROXY=2` se queda corto en la llamada directa. Con `X-Forwarded-For: 6.6.6.6` siguió devolviendo la IP de Cloudflare: **no se deja falsificar**. El valor final se mide por el camino real (navegador → Netlify → Render), en el paso 4.
+
 ## 1. Base de datos: Neon
 1. Crear una cuenta en [neon.com](https://neon.com) y un proyecto `serena`: **PostgreSQL 18**, región **AWS US East (N. Virginia)**.
 2. Copiar la **connection string** (*Connect* → la opción **sin** *pooling*, que termina en `?sslmode=require`). Es la `DATABASE_URL`: **secreta**, no va en el repo ni en el chat.
