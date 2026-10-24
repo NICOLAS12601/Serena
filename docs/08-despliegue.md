@@ -28,7 +28,8 @@ Navegador ──► Netlify (la web, Next.js)        serena-xxx.netlify.app → 
 | API (Render) | ✅ Live (2026-10-23) | `https://serena-api-atje.onrender.com` (Blueprint `serena`; el nombre `serena-api` ya estaba usado y Render agregó `-atje`) |
 | Datos iniciales (seed) | ✅ Corrido desde la PC (2026-10-23) | Admin real, servicios y horarios de prueba |
 | Web (Netlify) | ✅ Publicada (2026-10-23) | `https://serena-masajes.netlify.app`. Visibilidad: producción pública, *Deploy Previews* privadas |
-| `TRUST_PROXY` | ✅ Medido: **5** (2026-10-23) | Ver "Cadena de proxies" abajo |
+| `TRUST_PROXY` | ✅ Medido: **6** (2026-10-24; era 5 antes del `proxy.ts`) | Ver "Cadena de proxies" abajo |
+| Clave compartida | ✅ Activa (2026-10-24) | Render directo: 403 (salvo `/health`); por la web anda todo |
 
 **Lo que pasó con Netlify:** el primer proyecto (`luxury-biscuit-d4099c`) se creó sin elegir `apps/web`: Netlify miró la raíz, quedó con *Runtime: Not set* y publicaba archivos sin el adaptador de Next.js (`0 new function(s)`). Se borró y se creó de nuevo: esta vez preguntó *Project to deploy* (`apps/web`), detectó Next.js y subió **1 función** (el adaptador). Señal de que está bien: el log de *Deploying* dice `1 new function(s)`, no 0.
 
@@ -39,6 +40,8 @@ visitante → Netlify (borde) → Netlify (función de Next, 18.221.42.42) → C
 ```
 
 `X-Forwarded-For` llega como `visitante, borde Netlify, función Netlify, Cloudflare, Render interno`: la IP real está **5** lugares atrás, igual con IPv4, IPv6 y con un `X-Forwarded-For` falso (queda a la izquierda y se ignora). Por eso `TRUST_PROXY=5`.
+
+**Con el `proxy.ts` de la clave compartida (2026-10-24)** se sumó un salto más (el proxy de Next corre aparte en Netlify): `visitante, proxy Next, borde Netlify, función Netlify, Cloudflare, Render interno` → **`TRUST_PROXY=6`**. Cada vez que cambie el camino (otro proveedor, el dominio con proxy de Cloudflare, más código en el proxy) hay que **volver a medir** con `/api/health`: si `ip` no es la propia, el número cambió.
 
 ⚠️ **Llamando a Render directo** (sin pasar por la web) hay solo 3 saltos: con `TRUST_PROXY=5` la API tomaría la primera IP del encabezado, que escribe el que llama. Por eso la API solo atiende pedidos con la clave de la web ([ADR-016](decisiones/ADR-016-clave-compartida-web-api.md)); el camino directo da 403.
 
