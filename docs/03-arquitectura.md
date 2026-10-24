@@ -63,7 +63,7 @@ El gestor del monorepo es **pnpm workspaces** ([ADR-007](decisiones/ADR-007-pnpm
 **Revisión de octubre 2026:**
 - **Netlify** gratis: 300 créditos por mes; si se agotan, el sitio se pausa hasta el mes siguiente. Plan pago desde US$9/mes.
 - **Render** gratis: la API se duerme a los 15 min sin uso y tarda ~1 min en despertar; tampoco puede correr tareas periódicas dormida. **Para el sitio real se recomienda el plan Starter (US$7/mes)**, siempre prendido.
-- **Neon** gratis: 0,5 GB y 100 horas de cómputo por mes; tiene regiones en São Paulo y EE.UU. Este.
+- **Neon** gratis: 1 GB (dato de la consola, octubre 2026) y 100 horas de cómputo por mes; tiene regiones en São Paulo y EE.UU. Este.
 - **Regiones:** la API y la base tienen que estar **en la misma región** (se consultan muchas veces por página). Render no tiene región en Sudamérica, así que la combinación es API en Render Virginia + base en Neon EE.UU. Este (Virginia). La web la sirve la CDN de Netlify desde cerca del usuario.
 
 ### Dominio y DNS
