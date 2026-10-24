@@ -2,6 +2,15 @@
 
 Lo que falta definir. Cuando algo se resuelve, se tacha y se anota dónde quedó documentado.
 
+## Para retomar (dejado el 2026-10-24)
+1. [ ] **Certificado HTTPS de `serenabienestar.uy`:** el DNS ya apunta a Netlify (Cloudflare: `@` CNAME → `apex-loadbalancer.netlify.com` y `www` CNAME → `serena-masajes.netlify.app`, los dos *DNS only*) y Netlify dijo "DNS verification was successful"; quedó en *Waiting on DNS propagation* para emitir el certificado de Let's Encrypt. Comprobar que `https://serenabienestar.uy` abra con candado y que `www` redirija. Si a las 24 h sigue igual: revisar que las nubes sigan grises, tocar *Verify DNS configuration* otra vez y buscar en Cloudflare registros **CAA** que no permitan a Let's Encrypt.
+2. [ ] **Render → `WEB_ORIGIN`** = `https://serenabienestar.uy` (cuando ande el HTTPS).
+3. [ ] **Confirmar que la IP la manda la web** (`x-client-ip` desde `x-nf-client-connection-ip`) y no el respaldo: poner `TRUST_PROXY=1` un momento en Render y ver que `/api/health` siga mostrando la IP propia en `ip`; después volver a `6`.
+4. [ ] **Resend con el dominio:** verificar `serenabienestar.uy` en Resend, cargar sus registros en Cloudflare (*DNS only*) y cambiar `MAIL_FROM` en Render a `SERENA <avisos@serenabienestar.uy>`; probar con "Enviar mail de prueba". Cargar `RESEND_API_KEY` en Render.
+5. [ ] **Panel del dominio en HostingenlaWeb:** titular y contacto a nombre de Micaela, renovación automática, DNSSEC apagado.
+6. [ ] **Probar el sitio publicado** desde el celular con Mica (reservas de prueba, panel con el usuario del seed). El panel no borra reservas: al lanzar, base limpia.
+7. [ ] **Mercado Pago:** decidir A/B del pago que llega tarde (abajo) y conseguir con Mica la aplicación *Checkout Pro*, credenciales de prueba, clave del webhook y usuarios de prueba. El webhook entra por la web (`/api/...`, ADR-016).
+
 ## Negocio (Micaela)
 - [ ] Horario de atención (se carga desde el panel).
 - [ ] Duraciones y precios de cada servicio (se cargan desde el panel).

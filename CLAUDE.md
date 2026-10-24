@@ -23,7 +23,8 @@ Sitio web + sistema de reservas para **SERENA · Masajes & Bienestar** (Montevid
 - ✅ **Panel de reservas** (`/admin/reservas`, `AdminBookingsService`): para revisar / para cerrar / próximas; "Recibí el comprobante" (guarda el turno sin vencimiento hasta que se acredite, ADR-014); confirmar pago (registra `Payment`), cancelar, reprogramar (`adminDaySlots`, sin contar la propia reserva), completada con lo cobrado, no vino, "Avisar por WhatsApp". `BookingsExpiryService` vence las pendientes cada minuto.
 - ✅ **Dominio `serenabienestar.uy`** (HostingenlaWeb, solo el dominio) con el **DNS en Cloudflare Free** (ADR-015). Cloudflare no aloja nada: el hosting sigue según ADR-003. Lo que falta del dominio está en `docs/pendientes.md`.
 - ✅ **Despliegue de prueba** (planes gratis, sin dominio, datos de prueba): web en `https://serena-masajes.netlify.app` (Netlify, `apps/web/netlify.toml`), API en `https://serena-api-atje.onrender.com` (Render, `render.yaml`), base en Neon. Guía, estado y lo que falló en `docs/08-despliegue.md`. `GET /health` devuelve la IP que ve la API; `TRUST_PROXY=5`, medido. Un push a `main` despliega solo en Render y Netlify.
-- ⏭️ Próximo paso: el primer ítem sin tachar de la **hoja de ruta** en `docs/pendientes.md` (hoy: Mercado Pago). Ahí también está cómo levantar el entorno.
+- ✅ **La API solo atiende a la web** (ADR-016): clave `INTERNAL_API_KEY` en Netlify y Render; la IP del visitante la manda la web (`x-client-ip`). Dominio conectado a Netlify (falta que salga el certificado HTTPS).
+- ⏭️ Próximo paso: la lista **"Para retomar"** al principio de `docs/pendientes.md`; después, la hoja de ruta (Mercado Pago). Ahí también está cómo levantar el entorno.
 - Decisión abierta: pago de MercadoPago que llega tarde (ver `docs/pendientes.md`).
 - Next.js 16 tiene cambios respecto de versiones anteriores: leer `apps/web/AGENTS.md` antes de tocar la web.
 
