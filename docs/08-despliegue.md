@@ -28,9 +28,19 @@ Navegador ──► Netlify (la web, Next.js)        serena-xxx.netlify.app → 
 | API (Render) | ✅ Live (2026-10-23) | `https://serena-api-atje.onrender.com` (Blueprint `serena`; el nombre `serena-api` ya estaba usado y Render agregó `-atje`) |
 | Datos iniciales (seed) | ✅ Corrido desde la PC (2026-10-23) | Admin real, servicios y horarios de prueba |
 | Web (Netlify) | ✅ Publicada (2026-10-23) | `https://serena-masajes.netlify.app`. Visibilidad: producción pública, *Deploy Previews* privadas |
-| `TRUST_PROXY` | ⏳ Falta medir | Ver abajo |
+| `TRUST_PROXY` | ✅ Medido: **5** (2026-10-23) | Ver "Cadena de proxies" abajo |
 
 **Lo que pasó con Netlify:** el primer proyecto (`luxury-biscuit-d4099c`) se creó sin elegir `apps/web`: Netlify miró la raíz, quedó con *Runtime: Not set* y publicaba archivos sin el adaptador de Next.js (`0 new function(s)`). Se borró y se creó de nuevo: esta vez preguntó *Project to deploy* (`apps/web`), detectó Next.js y subió **1 función** (el adaptador). Señal de que está bien: el log de *Deploying* dice `1 new function(s)`, no 0.
+
+**Cadena de proxies (medida con `forwardedFor` de `/api/health`, 2026-10-23):**
+
+```
+visitante → Netlify (borde) → Netlify (función de Next, 18.221.42.42) → Cloudflare (adelante de Render) → Render (interno 10.x) → API
+```
+
+`X-Forwarded-For` llega como `visitante, borde Netlify, función Netlify, Cloudflare, Render interno`: la IP real está **5** lugares atrás, igual con IPv4, IPv6 y con un `X-Forwarded-For` falso (queda a la izquierda y se ignora). Por eso `TRUST_PROXY=5`.
+
+⚠️ **Llamando a Render directo** (sin pasar por la web) hay solo 3 saltos: con `TRUST_PROXY=5` la API toma la primera IP del encabezado, que escribe el que llama, y un script podría esquivar el límite de reservas. Pendiente antes del lanzamiento: que la API solo acepte pedidos de la web (clave compartida). Ver [pendientes](pendientes.md).
 
 **Build de Render que falló (2026-10-23):** el segundo despliegue dio 62 errores de TypeScript (`Property 'booking' does not exist on type 'PrismaService'`, `Cannot find module '../generated/prisma/client.js'`). Con la caché de Render, `pnpm install` encontró todo "Already up to date" y no corrió el `postinstall` que genera el cliente de Prisma (`src/generated`, que no está en git). Se agregó `prisma generate` explícito al build en `render.yaml`. Mientras un build falla, Render sigue sirviendo la versión anterior.
 
