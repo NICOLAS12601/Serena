@@ -59,6 +59,8 @@ Navegador ──► Netlify (la web, Next.js)        serena-xxx.netlify.app → 
 ## 3. Web: Netlify
 1. Crear una cuenta en [netlify.com](https://netlify.com) entrando con GitHub.
 2. *Add new project* → *Import an existing project* → el repo. Netlify detecta el monorepo: elegir **`apps/web`** como proyecto. Detecta Next.js solo (usa el adaptador OpenNext; Next.js 16 está soportado).
+   - Si no lo pregunta (pasó en la primera prueba: publicó la raíz del repo sin compilar y todo daba *Not Found*): *Project configuration → Build & deploy → Build settings* → **Base directory** vacío y **Package directory** `apps/web`. El comando y la carpeta de salida salen de [`apps/web/netlify.toml`](../apps/web/netlify.toml).
+   - El proyecto nuevo puede quedar con **protección de acceso** (*Visitor access*): solo entra quien tenga sesión en Netlify (devuelve 401). Se cambia en *Project configuration → Access & security*.
 3. En *Environment variables*: `API_URL` = la dirección de Render, **sin** barra final (`https://serena-api.onrender.com`).
 4. Desplegar y abrir la dirección `*.netlify.app`. Volver a Render y poner esa dirección en `WEB_ORIGIN`.
 

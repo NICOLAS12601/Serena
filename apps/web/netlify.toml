@@ -1,0 +1,7 @@
+# Netlify build settings for the web (docs/08-despliegue.md).
+# In the Netlify UI: Base directory empty (repo root, so pnpm sees the whole
+# workspace) and Package directory "apps/web" (the UI is the only place it can
+# be set). Paths here are relative to the repo root.
+[build]
+  command = "pnpm --filter web build"
+  publish = "apps/web/.next"
