@@ -1,0 +1,32 @@
+# Render Blueprint for the API (docs/08-despliegue.md).
+# Secrets are marked sync: false: Render asks for them when the Blueprint is
+# created and they never live in the repo.
+services:
+  - type: web
+    name: serena-api
+    runtime: node
+    region: virginia # same region as the Neon database (docs/03-arquitectura.md)
+    plan: free
+    # The whole workspace is installed (pnpm workspaces), only the API is built.
+    # Migrations run on every deploy; they only apply what is new.
+    buildCommand: >-
+      pnpm install --frozen-lockfile &&
+      pnpm --filter api build &&
+      pnpm --filter api exec prisma migrate deploy
+    startCommand: pnpm --filter api start:prod
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        sync: false
+      - key: WEB_ORIGIN
+        sync: false
+      - key: TRUST_PROXY
+        sync: false
+      - key: RESEND_API_KEY
+        sync: false
+      - key: MAIL_FROM
+        sync: false

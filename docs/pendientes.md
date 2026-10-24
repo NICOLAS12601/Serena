@@ -38,13 +38,13 @@ Lo que falta definir. Cuando algo se resuelve, se tacha y se anota dónde quedó
 - [ ] **Pago de MercadoPago que llega tarde con el horario ya ocupado** ([05](05-flujo-de-reserva.md#bloqueo-temporal-patrón-venta-de-entradas)): definir si el reintegro es automático (A, API de MercadoPago) o lo resuelve Micaela a mano con un aviso por mail (B, recomendada). Si el horario sigue libre, se confirma igual.
 - [x] ~~**Qué datos del `Client` se actualizan** con un celular que ya existe~~ → se **conservan** y solo se completa el email si faltaba ([ADR-012](decisiones/ADR-012-cliente-por-celular-y-aviso-por-whatsapp.md)).
 - [x] ~~**Tarea periódica que expira las reservas pendientes vencidas**~~ → `BookingsExpiryService`, cada minuto (un `setInterval`, sin librería).
-- [ ] **Límite de intentos detrás del proxy:** la API ve todas las llamadas con la IP del servidor de Next, así que el límite (login 5/min, reservas 10/min) es compartido por todos. Al desplegar, leer la IP real del cliente (`X-Forwarded-For` con `trust proxy` bien configurado).
+- [ ] **Límite de intentos detrás del proxy:** la API ve todas las llamadas con la IP del servidor de Next, así que el límite (login 5/min, reservas 10/min) es compartido por todos. Ya está `TRUST_PROXY` en la API y `GET /health` devuelve la IP que ve; falta **medir el valor correcto** en la nube ([08](08-despliegue.md#4-comprobar-la-ip-real-límite-de-intentos)).
 - [ ] **Link de gestión de la reserva:** falta la página para verla y reprogramarla; hoy se guarda el hash del token pero el link no se muestra.
 - [x] ~~**¿Email obligatorio?**~~ → el cliente se reconoce por su **celular**; el email es opcional y por ahora no se usa; la confirmación va por WhatsApp ([ADR-012](decisiones/ADR-012-cliente-por-celular-y-aviso-por-whatsapp.md)).
 - [x] ~~**Aviso a Micaela de cada reserva nueva:**~~ → **email a su casilla con Resend** (`Settings.notificationEmail`), con botón de prueba en Configuración ([ADR-012](decisiones/ADR-012-cliente-por-celular-y-aviso-por-whatsapp.md)).
 
 ## Para explicar antes de avanzar
-- [ ] **Hosting:** cómo se conectan Netlify/Cloudflare (web), Render (API) y Neon (base) y qué es cada uno.
+- [x] ~~**Hosting:**~~ explicado (2026-10-23): ver [08](08-despliegue.md#cómo-se-conectan-las-piezas).
 - [x] ~~**Webhooks:**~~ explicado (2026-10-18): firma, consultar siempre el pago a MercadoPago, avisos repetidos sin efecto (`mercadoPagoPaymentId` único), túnel en desarrollo y cuentas de prueba.
 
 ## Hoja de ruta (fase 1)
@@ -58,6 +58,7 @@ Orden de construcción. Al retomar, seguir por el primer ítem sin tachar.
 - [x] ~~**Horarios libres**~~ (`GET /availability` y `GET /availability/days`): descanso solo entre reservas e intervalo configurable ([05](05-flujo-de-reserva.md#cálculo-de-horarios-libres), [ADR-013](decisiones/ADR-013-calculo-de-horarios-libres.md)). El flujo de reserva ya muestra los días y horarios reales.
 - [x] ~~**Crear reserva**~~ (`POST /bookings`): montos calculados por la API, bloqueo temporal, expiración de pendientes vencidas que se superponen, error de superposición traducido a "Ese horario se acaba de ocupar" y aviso por email a Micaela de las reservas por transferencia. Pendiente: la tarea periódica de expiración (arriba).
 - [x] ~~**Panel: sección de reservas**~~: para revisar, para cerrar y próximas; confirmar pago (también transferencias que llegan tarde), cancelar, reprogramar, completada con lo cobrado, no vino y "Avisar por WhatsApp" ([02](02-requerimientos.md#panel-de-administración-solo-micaela-en-admin-pensado-para-computadora)).
+- [ ] **Despliegue de prueba** (adelantado, 2026-10-23): Neon + Render + Netlify en planes gratis, sin dominio, con datos de prueba ([08](08-despliegue.md)). Así Mercado Pago ya tiene una dirección pública para los webhooks.
 - [ ] **Pagos con MercadoPago** (modo de pruebas, webhook verificado). Excluir el pago en efectivo (Abitab/Redpagos): queda pendiente días y no entra en el bloqueo de 10 min. Las transferencias ya funcionan ([ADR-014](decisiones/ADR-014-comprobante-de-transferencia.md)).
 - [x] ~~**Aviso a Micaela por email** (Resend): servicio de envío y botón "Enviar mail de prueba" en Configuración.~~ El aviso de cada reserva se dispara al hacer "crear reserva". Los emails a clientes quedan fuera de la fase 1 ([ADR-012](decisiones/ADR-012-cliente-por-celular-y-aviso-por-whatsapp.md)).
 - [ ] **Páginas públicas:** sobre mí, preguntas frecuentes, política de cancelación, política de privacidad, contacto y WhatsApp.

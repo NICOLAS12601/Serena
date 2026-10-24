@@ -22,8 +22,9 @@ Sitio web + sistema de reservas para **SERENA · Masajes & Bienestar** (Montevid
 - ✅ **Crear reserva** (`POST /bookings`, `apps/api/src/bookings/`): la API calcula los montos (`pricing.ts`), guarda con bloqueo temporal en una transacción y traduce el error de superposición a 409. Cliente que vuelve: se conservan sus datos. Aviso por email a Micaela de las reservas por transferencia (sin el motivo de consulta). Mercado Pago todavía no está conectado.
 - ✅ **Panel de reservas** (`/admin/reservas`, `AdminBookingsService`): para revisar / para cerrar / próximas; "Recibí el comprobante" (guarda el turno sin vencimiento hasta que se acredite, ADR-014); confirmar pago (registra `Payment`), cancelar, reprogramar (`adminDaySlots`, sin contar la propia reserva), completada con lo cobrado, no vino, "Avisar por WhatsApp". `BookingsExpiryService` vence las pendientes cada minuto.
 - ✅ **Dominio `serenabienestar.uy`** (HostingenlaWeb, solo el dominio) con el **DNS en Cloudflare Free** (ADR-015). Cloudflare no aloja nada: el hosting sigue según ADR-003. Lo que falta del dominio está en `docs/pendientes.md`.
-- ⏭️ Próximo paso: el primer ítem sin tachar de la **hoja de ruta** en `docs/pendientes.md` (hoy: pagos con Mercado Pago; antes, explicar webhooks). Ahí también está cómo levantar el entorno.
-- Pendientes de explicar al desarrollador: hosting y webhooks. Decisión abierta: pago de MercadoPago que llega tarde (ver `docs/pendientes.md`).
+- 🔄 **Despliegue de prueba** en curso (Neon + Render + Netlify, planes gratis, sin dominio): guía en `docs/08-despliegue.md`, API en `render.yaml`. La API tiene `GET /health` (devuelve la IP que ve) y `TRUST_PROXY` para leer la IP real detrás de los proxies; el valor se mide en la nube.
+- ⏭️ Próximo paso: el primer ítem sin tachar de la **hoja de ruta** en `docs/pendientes.md` (hoy: terminar el despliegue de prueba; después, Mercado Pago). Ahí también está cómo levantar el entorno.
+- Decisión abierta: pago de MercadoPago que llega tarde (ver `docs/pendientes.md`).
 - Next.js 16 tiene cambios respecto de versiones anteriores: leer `apps/web/AGENTS.md` antes de tocar la web.
 
 ## Decisiones clave (resumen; el detalle está en `docs/decisiones/`)

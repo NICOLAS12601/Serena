@@ -13,6 +13,7 @@ Esta carpeta es la **memoria del proyecto**: qué se construye, por qué y cómo
 | 05 | [Flujo de reserva](05-flujo-de-reserva.md) | Bloqueo temporal y cómo evitamos turnos superpuestos |
 | 06 | [Pagos y seguridad](06-pagos-y-seguridad.md) | MercadoPago, transferencia, webhooks, datos personales |
 | 07 | [Marca](07-marca.md) | Identidad visual y fotos |
+| 08 | [Despliegue](08-despliegue.md) | Neon, Render y Netlify, paso a paso |
 | — | [Decisiones (ADR)](decisiones/) | Una ficha por cada decisión importante |
 | — | [Pendientes](pendientes.md) | Lo que falta definir |
 

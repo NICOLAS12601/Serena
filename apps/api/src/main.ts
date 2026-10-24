@@ -1,5 +1,6 @@
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
+import type { NestExpressApplication } from '@nestjs/platform-express';
 import { AppModule } from './app.module.js';
 
 // Load .env for local development. In production the variables are set by the
@@ -11,7 +12,17 @@ try {
 }
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  // Every request reaches the API through proxies (the web's /api rewrite and
+  // the hosting's load balancer), so req.ip would be the last proxy's address
+  // and the rate limits would be shared by all visitors. TRUST_PROXY = how many
+  // proxies sit in front of the API; Express then takes the visitor's IP from
+  // X-Forwarded-For. Only the last N entries are trusted: anything a visitor
+  // writes in that header themselves is ignored. Unset locally (no proxy).
+  const trustProxy = Number(process.env['TRUST_PROXY'] ?? 0);
+  if (trustProxy > 0) {
+    app.set('trust proxy', trustProxy);
+  }
   // Validate every request body against its DTO; unknown fields are rejected.
   app.useGlobalPipes(
     new ValidationPipe({
