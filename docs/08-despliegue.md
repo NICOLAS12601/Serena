@@ -26,9 +26,13 @@ Navegador ──► Netlify (la web, Next.js)        serena-xxx.netlify.app → 
 | Base (Neon) | ✅ Creada (2026-10-23) | Proyecto `serena`, rama `production`, PostgreSQL 18, N. Virginia, plan Free |
 | Tablas | ✅ Las creó Render con `prisma migrate deploy` (`btree_gist` funciona en Neon) | — |
 | API (Render) | ✅ Live (2026-10-23) | `https://serena-api-atje.onrender.com` (Blueprint `serena`; el nombre `serena-api` ya estaba usado y Render agregó `-atje`) |
-| Datos iniciales (seed) | ⏳ Falta | Sin la fila de `Settings`, `GET /settings/public` da 500 |
-| Web (Netlify) | ⏳ Falta | — |
+| Datos iniciales (seed) | ✅ Corrido desde la PC (2026-10-23) | Admin real, servicios y horarios de prueba |
+| Web (Netlify) | ✅ Publicada (2026-10-23) | `https://serena-masajes.netlify.app`. Visibilidad: producción pública, *Deploy Previews* privadas |
 | `TRUST_PROXY` | ⏳ Falta medir | Ver abajo |
+
+**Lo que pasó con Netlify:** el primer proyecto (`luxury-biscuit-d4099c`) se creó sin elegir `apps/web`: Netlify miró la raíz, quedó con *Runtime: Not set* y publicaba archivos sin el adaptador de Next.js (`0 new function(s)`). Se borró y se creó de nuevo: esta vez preguntó *Project to deploy* (`apps/web`), detectó Next.js y subió **1 función** (el adaptador). Señal de que está bien: el log de *Deploying* dice `1 new function(s)`, no 0.
+
+**Arranque en frío:** la primera visita después de un rato dio **504** en `/masajes`: la función de Netlify tiene un tiempo límite y Render (dormido) + Neon (apagado) tardan más en despertar. Recargando anda. En el sitio real se resuelve con el plan pago de Render.
 
 **Lo que se vio en la API (2026-10-23):** `GET /health` llamado directo a Render devolvió `198.41.230.66`, una IP de **Cloudflare**, no la del visitante: Render tiene a Cloudflare adelante, así que hay un proxy más de lo supuesto y `TRUST_PROXY=2` se queda corto en la llamada directa. Con `X-Forwarded-For: 6.6.6.6` siguió devolviendo la IP de Cloudflare: **no se deja falsificar**. El valor final se mide por el camino real (navegador → Netlify → Render), en el paso 4.
 
