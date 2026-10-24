@@ -8,9 +8,13 @@ services:
     region: virginia # same region as the Neon database (docs/03-arquitectura.md)
     plan: free
     # The whole workspace is installed (pnpm workspaces), only the API is built.
+    # The Prisma client (src/generated, not in git) is generated explicitly:
+    # with Render's build cache, pnpm finds node_modules "already up to date"
+    # and skips the postinstall that normally generates it.
     # Migrations run on every deploy; they only apply what is new.
     buildCommand: >-
       pnpm install --frozen-lockfile &&
+      pnpm --filter api exec prisma generate &&
       pnpm --filter api build &&
       pnpm --filter api exec prisma migrate deploy
     startCommand: pnpm --filter api start:prod
