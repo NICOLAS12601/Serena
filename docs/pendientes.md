@@ -39,7 +39,7 @@ Lo que falta definir. Cuando algo se resuelve, se tacha y se anota dónde quedó
 - [x] ~~**Qué datos del `Client` se actualizan** con un celular que ya existe~~ → se **conservan** y solo se completa el email si faltaba ([ADR-012](decisiones/ADR-012-cliente-por-celular-y-aviso-por-whatsapp.md)).
 - [x] ~~**Tarea periódica que expira las reservas pendientes vencidas**~~ → `BookingsExpiryService`, cada minuto (un `setInterval`, sin librería).
 - [x] ~~**Límite de intentos detrás del proxy**~~ → `TRUST_PROXY=5`, medido en la nube ([08](08-despliegue.md#estado-del-despliegue-de-prueba)).
-- [ ] **Que la API solo atienda a la web** (decidir antes del lanzamiento): llamando a Render directo, con `TRUST_PROXY=5` la API cree la IP que escriba el que llama y un script puede esquivar el límite de reservas. Opción habitual: la web agrega a cada pedido una clave secreta compartida y la API rechaza los que no la traen. Hay que explicarlo y que el desarrollador decida (ADR nueva).
+- [x] ~~**Que la API solo atienda a la web**~~ → clave compartida `INTERNAL_API_KEY` ([ADR-016](decisiones/ADR-016-clave-compartida-web-api.md)). Al conectar Mercado Pago, el webhook tiene que entrar por la web (`/api/...`).
 - [ ] Sacar `forwardedFor` de `GET /health` cuando ya no haga falta (se agregó para medir la cadena de proxies).
 - [ ] **Link de gestión de la reserva:** falta la página para verla y reprogramarla; hoy se guarda el hash del token pero el link no se muestra.
 - [x] ~~**¿Email obligatorio?**~~ → el cliente se reconoce por su **celular**; el email es opcional y por ahora no se usa; la confirmación va por WhatsApp ([ADR-012](decisiones/ADR-012-cliente-por-celular-y-aviso-por-whatsapp.md)).

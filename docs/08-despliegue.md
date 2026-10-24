@@ -40,7 +40,17 @@ visitante → Netlify (borde) → Netlify (función de Next, 18.221.42.42) → C
 
 `X-Forwarded-For` llega como `visitante, borde Netlify, función Netlify, Cloudflare, Render interno`: la IP real está **5** lugares atrás, igual con IPv4, IPv6 y con un `X-Forwarded-For` falso (queda a la izquierda y se ignora). Por eso `TRUST_PROXY=5`.
 
-⚠️ **Llamando a Render directo** (sin pasar por la web) hay solo 3 saltos: con `TRUST_PROXY=5` la API toma la primera IP del encabezado, que escribe el que llama, y un script podría esquivar el límite de reservas. Pendiente antes del lanzamiento: que la API solo acepte pedidos de la web (clave compartida). Ver [pendientes](pendientes.md).
+⚠️ **Llamando a Render directo** (sin pasar por la web) hay solo 3 saltos: con `TRUST_PROXY=5` la API tomaría la primera IP del encabezado, que escribe el que llama. Por eso la API solo atiende pedidos con la clave de la web ([ADR-016](decisiones/ADR-016-clave-compartida-web-api.md)); el camino directo da 403.
+
+### Clave compartida (`INTERNAL_API_KEY`)
+1. Generarla en la PC (no se guarda en ningún archivo del repo):
+   ```powershell
+   node -e "console.log(require('crypto').randomBytes(32).toString('base64url'))"
+   ```
+2. **Render** → `serena-api` → *Environment*: `INTERNAL_API_KEY` = la clave.
+3. **Netlify** → *Project configuration → Environment variables*: `INTERNAL_API_KEY` = la misma clave, marcada como **secreta**.
+4. Recién después, pushear el código que la usa (o redesplegar la web): si la API la exige antes de que la web la mande, el sitio da 403.
+5. Comprobar: `https://<web>/masajes` carga y `https://serena-api-atje.onrender.com/services` da **403**.
 
 **Build de Render que falló (2026-10-23):** el segundo despliegue dio 62 errores de TypeScript (`Property 'booking' does not exist on type 'PrismaService'`, `Cannot find module '../generated/prisma/client.js'`). Con la caché de Render, `pnpm install` encontró todo "Already up to date" y no corrió el `postinstall` que genera el cliente de Prisma (`src/generated`, que no está en git). Se agregó `prisma generate` explícito al build en `render.yaml`. Mientras un build falla, Render sigue sirviendo la versión anterior.
 

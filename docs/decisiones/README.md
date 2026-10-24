@@ -19,6 +19,7 @@ Cada archivo registra **una** decisión: el contexto, qué se decidió, qué alt
 | [013](ADR-013-calculo-de-horarios-libres.md) | Horarios libres: descanso solo entre reservas, intervalo configurable desde el inicio de cada franja | Aceptada |
 | [014](ADR-014-comprobante-de-transferencia.md) | Con el comprobante de transferencia, el turno queda guardado hasta que se acredite | Aceptada |
 | [015](ADR-015-dominio-uy-y-dns-en-cloudflare.md) | Dominio `serenabienestar.uy` en HostingenlaWeb, con el DNS en Cloudflare (gratis) | Aceptada |
+| [016](ADR-016-clave-compartida-web-api.md) | La API solo atiende a la web (clave compartida `INTERNAL_API_KEY`) | Aceptada |
 
 ## Plantilla
 

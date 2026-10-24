@@ -1,6 +1,9 @@
 import { Controller, Get, Req } from '@nestjs/common';
 import type { Request } from 'express';
+import { SkipInternalKey } from '../common/internal-key.guard.js';
 
+// Render's health check calls the API directly, without the web's key.
+@SkipInternalKey()
 @Controller('health')
 export class HealthController {
   // GET /health — used by the hosting provider to know the API is up. It also

@@ -12,6 +12,14 @@ try {
 }
 
 async function bootstrap() {
+  // Without the shared key the API would serve anyone who finds its address
+  // (InternalKeyGuard). Better not to start than to run unprotected.
+  if (
+    process.env['NODE_ENV'] === 'production' &&
+    !process.env['INTERNAL_API_KEY']
+  ) {
+    throw new Error('INTERNAL_API_KEY is required in production');
+  }
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   // Every request reaches the API through proxies (the web's /api rewrite and
   // the hosting's load balancer), so req.ip would be the last proxy's address
