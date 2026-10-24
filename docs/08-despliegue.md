@@ -41,7 +41,9 @@ visitante → Netlify (borde) → Netlify (función de Next, 18.221.42.42) → C
 
 `X-Forwarded-For` llega como `visitante, borde Netlify, función Netlify, Cloudflare, Render interno`: la IP real está **5** lugares atrás, igual con IPv4, IPv6 y con un `X-Forwarded-For` falso (queda a la izquierda y se ignora). Por eso `TRUST_PROXY=5`.
 
-**Con el `proxy.ts` de la clave compartida (2026-10-24)** se sumó un salto más (el proxy de Next corre aparte en Netlify): `visitante, proxy Next, borde Netlify, función Netlify, Cloudflare, Render interno` → **`TRUST_PROXY=6`**. Cada vez que cambie el camino (otro proveedor, el dominio con proxy de Cloudflare, más código en el proxy) hay que **volver a medir** con `/api/health`: si `ip` no es la propia, el número cambió.
+**Con el `proxy.ts` de la clave compartida (2026-10-24)** se sumó un salto más (el proxy de Next corre aparte en Netlify): `visitante, proxy Next, borde Netlify, función Netlify, Cloudflare, Render interno` → **`TRUST_PROXY=6`**.
+
+**Desde entonces la IP la manda la web** (`x-client-ip`, tomada de `x-nf-client-connection-ip` de Netlify, creída solo con la clave: [ADR-016](decisiones/ADR-016-clave-compartida-web-api.md)) y contar proxies quedó como **respaldo**. `/api/health` muestra las dos: `ip` (la que usan los límites) y `proxyIp` (la del respaldo). Si `ip` es la propia, todo bien aunque `proxyIp` no lo sea.
 
 ⚠️ **Llamando a Render directo** (sin pasar por la web) hay solo 3 saltos: con `TRUST_PROXY=5` la API tomaría la primera IP del encabezado, que escribe el que llama. Por eso la API solo atiende pedidos con la clave de la web ([ADR-016](decisiones/ADR-016-clave-compartida-web-api.md)); el camino directo da 403.
 

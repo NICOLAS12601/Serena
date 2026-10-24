@@ -9,7 +9,8 @@ import {
   Res,
   UseGuards,
 } from '@nestjs/common';
-import { Throttle, ThrottlerGuard } from '@nestjs/throttler';
+import { Throttle } from '@nestjs/throttler';
+import { ClientIpThrottlerGuard } from '../common/client-ip.js';
 import type { CookieOptions, Request, Response } from 'express';
 import { AdminGuard, CurrentAdmin, type AdminRequest } from './admin.guard.js';
 import { ChangePasswordDto, LoginDto } from './auth.dto.js';
@@ -34,7 +35,7 @@ export class AuthController {
   // POST /auth/login — at most 5 attempts per minute, to stop password guessing.
   @Post('login')
   @HttpCode(200)
-  @UseGuards(ThrottlerGuard)
+  @UseGuards(ClientIpThrottlerGuard)
   @Throttle({ default: { limit: 5, ttl: 60_000 } })
   async login(
     @Body() body: LoginDto,
