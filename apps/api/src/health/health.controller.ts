@@ -7,8 +7,14 @@ export class HealthController {
   // returns the IP the API sees for the caller, to check that TRUST_PROXY is
   // right behind the web's /api proxy (it is the caller's own IP: nothing
   // private). No database access, so it answers even if the database is down.
+  // forwardedFor is the raw proxy chain (the caller's own IP and the proxies'),
+  // to count how many proxies there are.
   @Get()
   check(@Req() req: Request) {
-    return { status: 'ok', ip: req.ip };
+    return {
+      status: 'ok',
+      ip: req.ip,
+      forwardedFor: req.headers['x-forwarded-for'] ?? null,
+    };
   }
 }
