@@ -54,7 +54,8 @@ El gestor del monorepo es **pnpm workspaces** ([ADR-007](decisiones/ADR-007-pnpm
 | API | Render (free) | Gratis | La API "se duerme" después de un rato sin uso: la primera visita tarda ~30–50 s. Plan pago ≈ US$7/mes si molesta |
 | Base de datos | Neon (free) | Gratis | Sobra para este volumen |
 | Emails | Resend (free) | Gratis | Solo los avisos a Micaela; sobra el límite diario |
-| Dominio | `.uy` / `.com.uy` | **Pago anual** | Se puede arrancar con el subdominio gratis del hosting |
+| Dominio | `serenabienestar.uy` en HostingenlaWeb | **US$ 10 + IVA por año** | Comprado el 2026-10-23 ([ADR-015](decisiones/ADR-015-dominio-uy-y-dns-en-cloudflare.md)) |
+| DNS | Cloudflare (Free) | Gratis | Nameservers `lamar` y `roxy.ns.cloudflare.com` |
 | MercadoPago | — | Comisión por venta | Sin costo fijo |
 
 > ⚠️ Los límites de los planes gratuitos cambian seguido. **Revisarlos al momento de desplegar.**
@@ -70,6 +71,8 @@ El gestor del monorepo es **pnpm workspaces** ([ADR-007](decisiones/ADR-007-pnpm
 - Los **registros DNS** son las anotaciones del dominio: **A** (a qué dirección IP va), **CNAME** (alias de otro nombre), **TXT** (notas para verificar que el dominio es de Micaela y para que los emails no caigan en spam).
 - Los **nameservers** indican qué empresa guarda y publica esas anotaciones. Por defecto, el registrador; se pueden pasar a otro (Netlify, Cloudflare) si el panel del registrador es limitado.
 - Solo la **web** necesita el dominio: la API y la base no se exponen al público (la web reenvía `/api`).
+- **Cómo quedó:** el DNS de `serenabienestar.uy` está en **Cloudflare** ([ADR-015](decisiones/ADR-015-dominio-uy-y-dns-en-cloudflare.md)). Ahí se cargan los registros: el de la web (raíz y `www`) cuando haya hosting, y los TXT que pida Resend para mandar los avisos desde el dominio. Cloudflare no aloja nada: solo publica las anotaciones.
+- **Proxied** (nube naranja) vs. **DNS only** (nube gris): con proxy, las visitas pasan por Cloudflare (oculta la IP del servidor, cachea, filtra ataques); sin proxy, Cloudflare solo da la dirección. Para la web, normalmente Proxied; los registros de email van siempre DNS only.
 
 ### ¿Qué es una "base de datos gestionada"?
 En vez de instalar y mantener PostgreSQL en un servidor propio (backups, actualizaciones, que no se caiga), un proveedor (Neon) lo corre por nosotros y nos da una URL de conexión. Ver [ADR-003](decisiones/ADR-003-hosting-nube-y-pc-de-casa.md).

@@ -26,12 +26,11 @@ Lo que falta definir. Cuando algo se resuelve, se tacha y se anota dónde quedó
 
 ## Técnico
 - [x] ~~**Archivos del logo**~~ → logo oficial en `apps/web/public/logo-serena.png`; terracota exacta `#a14d29` ([07](07-marca.md)).
-- [ ] **Dominio:** Micaela lo va a comprar en **HostingenlaWeb** (registrador acreditado de .uy). Antes de pagar, confirmar con el soporte:
-  - que venden **solo el dominio**, sin plan de hosting (sus planes de hosting compartido no pueden correr la API);
-  - que desde el panel se pueden **editar los registros DNS** (A, CNAME, TXT) **o cambiar los nameservers**;
-  - el precio del primer año y el de **renovación** (referencia vieja: US$38/año en 2022).
-
-  Al registrarlo: **a nombre de Micaela** y con **su email** como contacto administrativo (ahí llegan las aprobaciones de transferencias). El dominio se puede transferir a otro registrador con el código EPP. Activar la renovación automática.
+- [x] ~~**Dominio:**~~ → **`serenabienestar.uy`** comprado en HostingenlaWeb el 2026-10-23 (US$ 10 + IVA por año, sin hosting ni "Gestionar DNS"); DNS en **Cloudflare Free** ([ADR-015](decisiones/ADR-015-dominio-uy-y-dns-en-cloudflare.md)). Falta:
+  - [ ] Esperar el mail de Cloudflare con el dominio **Active** (nameservers cambiados el 2026-10-23; ese día `a.nic.uy` todavía no publicaba el dominio). Si pasan más de 24–48 h, consultar a HostingenlaWeb.
+  - [ ] Revisar en el panel del dominio: titular y contacto administrativo **a nombre de Micaela** y con **su email** (ahí llegan las aprobaciones de transferencias), **renovación automática** activada y **DNSSEC** apagado.
+  - [ ] Cargar en Cloudflare los registros de **Resend** (verificar el dominio) para mandar los avisos desde `@serenabienestar.uy`. Se puede hacer antes de tener hosting.
+  - [ ] Al desplegar: registros de la web (raíz y `www`) y, opcionalmente, que el servidor solo acepte visitas que vengan de Cloudflare.
 - [ ] Revisar los límites vigentes de los planes gratuitos (Render, Neon, Resend, Netlify) antes de desplegar.
 - [x] ~~Decidir el gestor de monorepo (npm workspaces, pnpm o Turborepo).~~ → pnpm workspaces ([ADR-007](decisiones/ADR-007-pnpm-workspaces.md)).
 - [x] ~~**Descanso entre sesiones en la exclusion constraint.**~~ → se guarda `blockedUntil` en cada reserva ([ADR-008](decisiones/ADR-008-descanso-guardado-en-la-reserva.md)).

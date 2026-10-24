@@ -18,6 +18,7 @@ Cada archivo registra **una** decisión: el contexto, qué se decidió, qué alt
 | [012](ADR-012-cliente-por-celular-y-aviso-por-whatsapp.md) | El cliente se reconoce por su celular; email opcional; confirmación manual por WhatsApp | Aceptada |
 | [013](ADR-013-calculo-de-horarios-libres.md) | Horarios libres: descanso solo entre reservas, intervalo configurable desde el inicio de cada franja | Aceptada |
 | [014](ADR-014-comprobante-de-transferencia.md) | Con el comprobante de transferencia, el turno queda guardado hasta que se acredite | Aceptada |
+| [015](ADR-015-dominio-uy-y-dns-en-cloudflare.md) | Dominio `serenabienestar.uy` en HostingenlaWeb, con el DNS en Cloudflare (gratis) | Aceptada |
 
 ## Plantilla
 
