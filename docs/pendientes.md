@@ -27,7 +27,7 @@ Lo que falta definir. Cuando algo se resuelve, se tacha y se anota dónde quedó
 ## Técnico
 - [x] ~~**Archivos del logo**~~ → logo oficial en `apps/web/public/logo-serena.png`; terracota exacta `#a14d29` ([07](07-marca.md)).
 - [x] ~~**Dominio:**~~ → **`serenabienestar.uy`** comprado en HostingenlaWeb el 2026-10-23 (US$ 10 + IVA por año, sin hosting ni "Gestionar DNS"); DNS en **Cloudflare Free** ([ADR-015](decisiones/ADR-015-dominio-uy-y-dns-en-cloudflare.md)). Falta:
-  - [ ] Esperar el mail de Cloudflare con el dominio **Active** (nameservers cambiados el 2026-10-23; ese día `a.nic.uy` todavía no publicaba el dominio). Si pasan más de 24–48 h, consultar a HostingenlaWeb.
+  - [x] ~~Esperar el mail de Cloudflare con el dominio **Active**~~ → activo el 2026-10-23 (los nameservers de Cloudflare ya responden).
   - [ ] Revisar en el panel del dominio: titular y contacto administrativo **a nombre de Micaela** y con **su email** (ahí llegan las aprobaciones de transferencias), **renovación automática** activada y **DNSSEC** apagado.
   - [ ] Cargar en Cloudflare los registros de **Resend** (verificar el dominio) para mandar los avisos desde `@serenabienestar.uy`. Se puede hacer antes de tener hosting.
   - [ ] Al desplegar: registros de la web (raíz y `www`) y, opcionalmente, que el servidor solo acepte visitas que vengan de Cloudflare.

@@ -20,6 +20,8 @@ Comprar el dominio y gestionar su DNS son dos servicios distintos: el registro h
 - El DNS lo maneja **Cloudflare, plan Free** (permite uso comercial). En el panel del dominio se pusieron los nameservers personalizados de Cloudflare:
   - `lamar.ns.cloudflare.com`
   - `roxy.ns.cloudflare.com`
+
+  El dominio quedó **activo** en Cloudflare el mismo día.
 - En Cloudflare: verificación en dos pasos activada; bots de buscadores y de asistentes de IA permitidos (el sitio tiene que aparecer en búsquedas); *Bot Preference Sync* activado.
 - Cloudflare **no aloja** el sitio: solo publica los registros. El hosting sigue siendo el de [ADR-003](ADR-003-hosting-nube-y-pc-de-casa.md).
 
